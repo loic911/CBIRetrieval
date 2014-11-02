@@ -1,14 +1,18 @@
 package retrieval.testvector;
 
+import retrieval.storage.index.ValueStructure;
+import retrieval.storage.index.Entry;
+import retrieval.storage.index.PictureIndex;
+import retrieval.storage.index.IndexStructAbs;
+import retrieval.storage.index.IndexStructClassic;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.dist.RequestPictureVisualWord;
-import retrieval.server.exception.CloseIndexException;
-import retrieval.server.exception.ReadIndexException;
-import retrieval.server.exception.StartIndexException;
-import retrieval.server.index.*;
+import retrieval.storage.exception.CloseIndexException;
+import retrieval.storage.exception.ReadIndexException;
+import retrieval.storage.exception.StartIndexException;
 
 /**
  * A tests vector or Server used so it has an index

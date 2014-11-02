@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import retrieval.multiserver.MultiServer;
-import retrieval.server.Storage;
+import retrieval.storage.Storage;
 
 /**
  * This class is a list of server information

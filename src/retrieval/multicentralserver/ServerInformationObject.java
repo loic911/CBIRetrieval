@@ -1,7 +1,7 @@
 package retrieval.multicentralserver;
 
 import retrieval.multiserver.MultiServer;
-import retrieval.server.Storage;
+import retrieval.storage.Storage;
 
 /**
  * Server Information class

@@ -18,9 +18,9 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import retrieval.dist.NotValidMessageXMLException;
 import retrieval.exception.CBIRException;
-import retrieval.server.exception.InvalidPictureException;
-import retrieval.server.exception.TooMuchIndexRequestException;
-import retrieval.server.index.NoValidPictureException;
+import retrieval.storage.exception.InvalidPictureException;
+import retrieval.storage.exception.TooMuchIndexRequestException;
+import retrieval.storage.index.NoValidPictureException;
 
 /**
  * Interface for a retrieval indexer.

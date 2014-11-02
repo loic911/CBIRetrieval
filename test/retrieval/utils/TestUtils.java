@@ -4,16 +4,18 @@
  */
 
 package retrieval.utils;
+import com.google.common.collect.ImmutableMap;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import retrieval.centralserver.CentralServer;
 import retrieval.multicentralserver.ListServerInformationSocket;
 import retrieval.multicentralserver.ServerInformationSocket;
 import retrieval.client.Client;
@@ -23,8 +25,8 @@ import retrieval.dist.ResultsSimilarities;
 import retrieval.multicentralserver.MultiCentralServer;
 import retrieval.multiserver.MultiServer;
 import retrieval.multiserver.globaldatabase.GlobalDatabase;
-import retrieval.server.Storage;
-import retrieval.server.index.ResultSim;
+import retrieval.storage.Storage;
+import retrieval.storage.index.ResultSim;
 /**
 /**
  *
@@ -65,7 +67,7 @@ public class TestUtils {
         String result = "";
 
         for(int i=0;i<res.getResults().size();i++) {
-            result = result + i + " => " + res.getResults().get(i).getPicturePath() + " (" + res.getResults().get(i).getSimilarities() + ")\n";
+            result = result + i + " => " + res.getResults().get(i).getId() + " (" + res.getResults().get(i).getSimilarities() + ")\n";
         }
 
         String server = "";
@@ -102,6 +104,12 @@ public class TestUtils {
     
     public static String LOCALPICTUREPATH = "testdata/pictures/cyto/";
     public static String LOCALPICTURE1 = LOCALPICTUREPATH+"crop1.jpg";
+    
+    public static final Map<String, String> LOCALPICTURE1MAP = ImmutableMap.of(
+        "name", "CROP1",
+        "date", new Date().toString()
+    );
+    
     public static String LOCALPICTURE2 = LOCALPICTUREPATH+"crop2.jpg";
     public static String LOCALPICTURE3 = LOCALPICTUREPATH+"crop3.jpg";
     public static String LOCALPICTURE4 = LOCALPICTUREPATH+"crop4.jpg";
@@ -110,26 +118,26 @@ public class TestUtils {
     public static String LOCALPICTURE7 = LOCALPICTUREPATH+"crop7.jpg";
     public static String LOCALPICTURE8 = LOCALPICTUREPATH+"crop8.jpg";    
     
-    public static String URLPICTURENOAUTH = "http://www.google.be/images/srpr/logo3w.png";
-    
-    public static String BASICAUTHPICTURE1 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-1.png";
-    public static String BASICAUTHPICTURE2 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-2.png";
-    public static String BASICAUTHPICTURE3 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-3.png";
-    public static String BASICAUTHPICTURE4 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-4.png";
-    
-    public static String KEYSAUTHPICTURE1 = "http://beta.cytomine.be/api/userannotation/404941/crop.jpg";
-    public static String KEYSAUTHPICTURE2 = "http://beta.cytomine.be/api/userannotation/649140/crop.jpg";
-    public static String KEYSAUTHPICTURE3 = "http://beta.cytomine.be/api/userannotation/593954/crop.jpg";
-    public static String KEYSAUTHPICTURE4 = "http://beta.cytomine.be/api/userannotation/593791/crop.jpg";
+//    public static String URLPICTURENOAUTH = "http://www.google.be/images/srpr/logo3w.png";
+//    
+//    public static String BASICAUTHPICTURE1 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-1.png";
+//    public static String BASICAUTHPICTURE2 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-2.png";
+//    public static String BASICAUTHPICTURE3 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-3.png";
+//    public static String BASICAUTHPICTURE4 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-4.png";
+//    
+//    public static String KEYSAUTHPICTURE1 = "http://beta.cytomine.be/api/userannotation/404941/crop.jpg";
+//    public static String KEYSAUTHPICTURE2 = "http://beta.cytomine.be/api/userannotation/649140/crop.jpg";
+//    public static String KEYSAUTHPICTURE3 = "http://beta.cytomine.be/api/userannotation/593954/crop.jpg";
+//    public static String KEYSAUTHPICTURE4 = "http://beta.cytomine.be/api/userannotation/593791/crop.jpg";
     
     public static String BADPICTURE1 = "testdata/badpicture1.jpg"; 
     public static String BADPICTURE2 = "testdata/badpicture2.jpg"; 
     
     public static String PICTURETOOHOMOGENOUS = "testdata/pictures/homogenous.jpg"; 
     
-    public static String PUBLIC = "xxxxx";
-    public static String PRIVATE = "xxxxxxx";
-    public static String HOST = "http://beta.cytomine.be";    
+//    public static String PUBLIC = "xxxxx";
+//    public static String PRIVATE = "xxxxxxx";
+//    public static String HOST = "http://beta.cytomine.be";    
  
     public static String LOGIN = "retrievaltest";
     public static String PASSWORD = "test123";
@@ -231,10 +239,11 @@ public class TestUtils {
                 return centralServer;
     }
 
-    public static CentralServer createCentralServer(ConfigCentralServer ccs, HashMap<Storage,Storage> servers) throws Exception {
-             logger.info("Start SuperCentralServer...");
-              CentralServer centralServer = new CentralServer(ccs, servers);
-                return centralServer;
+    public static MultiCentralServer createCentralServer(ConfigCentralServer ccs, HashMap<Storage,Storage> servers) throws Exception {
+//             logger.info("Start SuperCentralServer...");
+//              MultiCentralServer centralServer = new MultiCentralServer(ccs, servers);
+//                return centralServer;
+        throw new Exception();
     }
 
     public static Client createClient(MultiCentralServer cs) throws Exception{
@@ -242,15 +251,11 @@ public class TestUtils {
         return new Client(cs);
     }
 
-    public static Client createClient(CentralServer cs) throws Exception{
-        logger.info("Start Client...");
-        return new Client(cs);
-    }
     
-    public static boolean containsPictures(ResultsSimilarities rs, String path) {
+    public static boolean containsPictures(ResultsSimilarities rs, Long id) {
         List<ResultSim> list = rs.getResults();
         for(ResultSim res : list) {
-            if(res.getPicturePath().equals(path)) return true;
+            if(res.getId()==id) return true;
         }
         return false;
     }   

@@ -173,8 +173,9 @@ public class FileUtils {
         }
         return true;
     }
+    
 
-    public static BufferedImage readPictureFromPath(String uri) throws Exception {
+    public static BufferedImage readPicture(String uri) throws Exception {
         
         File f = new File(uri);
         boolean isURL = false;

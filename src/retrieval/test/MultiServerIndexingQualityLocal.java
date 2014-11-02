@@ -18,8 +18,8 @@ import retrieval.indexer.RetrievalIndexerLocalStorage;
 import retrieval.multicentralserver.MultiCentralServer;
 import retrieval.multiserver.MultiServer;
 import retrieval.multiserver.globaldatabase.KyotoCabinetDatabase;
-import retrieval.server.Storage;
-import retrieval.server.index.ResultSim;
+import retrieval.storage.Storage;
+import retrieval.storage.index.ResultSim;
 import retrieval.utils.CollectionUtils;
 import retrieval.utils.FileUtils;
 

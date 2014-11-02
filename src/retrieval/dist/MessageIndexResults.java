@@ -1,9 +1,9 @@
 package retrieval.dist;
 
+import retrieval.storage.exception.NoException;
 import java.util.*;
 import org.jdom.*;
 import retrieval.exception.*;
-import retrieval.server.exception.*;
 
 /**
  * Message XML which contains pictur path and their state (index,in queue,...)

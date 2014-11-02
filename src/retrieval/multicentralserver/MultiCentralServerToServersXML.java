@@ -19,7 +19,7 @@ import retrieval.dist.MultiServerMessageSimilarities;
 import retrieval.dist.NotValidMessageXMLException;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.exception.CBIRException;
-import retrieval.server.index.ResultSim;
+import retrieval.storage.index.ResultSim;
 import retrieval.utils.Chrono;
 import retrieval.utils.NetworkUtils;
 

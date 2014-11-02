@@ -19,7 +19,7 @@ import retrieval.multicentralserver.MultiCentralServer;
 import retrieval.multiserver.MultiServer;
 import retrieval.multiserver.globaldatabase.GlobalDatabase;
 import retrieval.multiserver.globaldatabase.KyotoCabinetDatabase;
-import retrieval.server.Storage;
+import retrieval.storage.Storage;
 /**
  *
  * @author lrollus

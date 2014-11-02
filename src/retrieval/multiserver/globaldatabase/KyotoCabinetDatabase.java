@@ -8,8 +8,8 @@ import java.io.File;
 import kyotocabinet.DB;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
-import retrieval.server.Storage;
-import retrieval.server.exception.ReadIndexException;
+import retrieval.storage.Storage;
+import retrieval.storage.exception.ReadIndexException;
 
 /**
  *

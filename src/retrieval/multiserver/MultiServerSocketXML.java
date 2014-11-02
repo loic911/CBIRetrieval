@@ -10,13 +10,13 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import retrieval.dist.*;
 import retrieval.exception.CBIRException;
-import retrieval.server.Storage;
-import retrieval.server.StorageNetworkInterface;
-import retrieval.server.exception.InternalServerException;
-import retrieval.server.exception.NoException;
-import retrieval.server.exception.TooMuchSimilarPicturesAskException;
-import retrieval.server.exception.WrongNumberOfTestsVectorsException;
-import retrieval.server.index.ResultSim;
+import retrieval.storage.Storage;
+import retrieval.storage.StorageNetworkInterface;
+import retrieval.storage.exception.InternalServerException;
+import retrieval.storage.exception.NoException;
+import retrieval.storage.exception.TooMuchSimilarPicturesAskException;
+import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
+import retrieval.storage.index.ResultSim;
 import retrieval.utils.NetworkUtils;
 
 /**

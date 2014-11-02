@@ -18,9 +18,9 @@ import retrieval.dist.MessageSimilarities;
 import retrieval.dist.MultiServerMessageResults;
 import retrieval.dist.MultiServerMessageSimilarities;
 import retrieval.dist.ResultsSimilarities;
-import retrieval.server.Storage;
-import retrieval.server.exception.WrongNumberOfTestsVectorsException;
-import retrieval.server.index.ResultSim;
+import retrieval.storage.Storage;
+import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
+import retrieval.storage.index.ResultSim;
 
 /**
  * Central server side of Communication class between Central Server and servers

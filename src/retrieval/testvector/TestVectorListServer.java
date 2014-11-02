@@ -3,8 +3,8 @@ package retrieval.testvector;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import retrieval.server.exception.CloseIndexException;
-import retrieval.server.index.PictureIndex;
+import retrieval.storage.exception.CloseIndexException;
+import retrieval.storage.index.PictureIndex;
 
 /**
  * Tests Vectors List from central server which extends Abstract class for

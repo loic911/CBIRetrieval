@@ -3,7 +3,7 @@ package retrieval.dist;
 import retrieval.multicentralserver.ListServerInformationObject;
 import retrieval.multicentralserver.ListServerInformationSocket;
 import java.util.*;
-import retrieval.server.index.ResultSim;
+import retrieval.storage.index.ResultSim;
 
 /**
  * A result object wich contains:

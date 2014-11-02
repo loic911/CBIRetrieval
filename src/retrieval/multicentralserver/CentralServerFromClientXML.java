@@ -14,8 +14,8 @@ import org.jdom.Document;
 import retrieval.dist.*;
 import retrieval.multicentralserver.exception.ImageNotValidException;
 import retrieval.multicentralserver.exception.TooMuchSimilaritiesAskException;
-import retrieval.server.exception.InternalServerException;
-import retrieval.server.exception.TooMuchSearchRequestException;
+import retrieval.storage.exception.InternalServerException;
+import retrieval.storage.exception.TooMuchSearchRequestException;
 import retrieval.utils.FileUtils;
 import retrieval.utils.NetworkUtils;
 

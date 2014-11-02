@@ -7,7 +7,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import retrieval.multicentralserver.ListServerInformationSocket;
 import retrieval.multicentralserver.ServerInformationSocket;
-import retrieval.server.index.ResultSim;
+import retrieval.storage.index.ResultSim;
 
 /**
  * Message for XML results

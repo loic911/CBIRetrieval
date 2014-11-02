@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import retrieval.config.ConfigServer;
-import retrieval.server.index.ValueStructure;
+import retrieval.storage.index.ValueStructure;
 import retrieval.utils.Value.EntryInfo;
 import retrieval.utils.Value.ValueInfo;
 /**

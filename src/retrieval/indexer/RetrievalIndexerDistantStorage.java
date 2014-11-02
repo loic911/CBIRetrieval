@@ -13,10 +13,10 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import retrieval.dist.*;
 import retrieval.exception.CBIRException;
-import retrieval.server.Storage;
-import retrieval.server.exception.InvalidPictureException;
-import retrieval.server.exception.PictureTooHomogeneous;
-import retrieval.server.exception.TooMuchIndexRequestException;
+import retrieval.storage.Storage;
+import retrieval.storage.exception.InvalidPictureException;
+import retrieval.storage.exception.PictureTooHomogeneous;
+import retrieval.storage.exception.TooMuchIndexRequestException;
 import retrieval.utils.NetworkUtils;
 
 /**
