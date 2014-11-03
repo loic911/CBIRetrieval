@@ -46,6 +46,7 @@ public class SimpleHashMapPathIndex implements PicturePathIndex {
     }
     
     public Map<String,String> getPictureProperties(Long id) {
+        if(map.get(id)==null) return new HashMap<String,String>();
         return map.get(id);
     }
 
@@ -83,6 +84,9 @@ public class SimpleHashMapPathIndex implements PicturePathIndex {
      * @return Picture ID
      */
     public Long addPicture(Long id, Map<String,String> properties) {
+        if(properties==null) {
+            properties = new HashMap<String,String>();
+        }
         map.put(id, properties);
         Date date = Calendar.getInstance().getTime();
         logger.info(";"+date.getTime() + ";" +"" + id + ";" + properties);

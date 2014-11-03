@@ -76,11 +76,12 @@ public abstract class KyotoCabinetPathIndexAbstract implements PicturePathIndex{
       
     
     public static Map<String,String> convertStringToMap(String str) {
-        if(str==null) return null;
-        if(str.equals("NULL")) return new HashMap<String,String>();
-        String[] properties = str.split(";#;");
+        System.out.println("1659:"+str);
+        if(str==null) return new HashMap<String,String>();
+        if(str.equals("NULL") || str.equals("")) return new HashMap<String,String>();
+        String[] properties = str.split(";@;");
         System.out.println("propertiesproperties="+str);
-        System.out.println("propertiesproperties="+properties);
+        System.out.println("propertiesproperties="+properties.length);
         Map<String,String> map = new HashMap<String,String>();
         for(int i=0;i<properties.length;i=i+2) {
             map.put(properties[i], properties[i+1]);
@@ -97,7 +98,7 @@ public abstract class KyotoCabinetPathIndexAbstract implements PicturePathIndex{
             
         } else if(!strMap.isEmpty()) {
             for(Map.Entry<String,String> entry : strMap.entrySet()) {
-                str = str + entry.getKey() + ";#;" + entry.getValue() + ";#;";
+                str = str + entry.getKey() + ";@;" + entry.getValue() + ";@;";
             }  
             System.out.println("strstr="+str);
             str = str.substring(0, str.length()-3);
@@ -118,7 +119,9 @@ public abstract class KyotoCabinetPathIndexAbstract implements PicturePathIndex{
         String[] rec;
         while ((rec = cur.get_str(true)) != null) {
             if(!rec[0].startsWith("COUNT#") && rec[0].startsWith(prefix)) {
-               hashmap.put(Long.parseLong(rec[0].replaceFirst(prefix, "")),convertStringToMap(rec[1].split("#")[1])); 
+                System.out.println("1652:"+rec[0]);
+                System.out.println("1652:"+rec[1]);
+               hashmap.put(Long.parseLong(rec[0].replaceFirst(prefix, "")),convertStringToMap(rec[1])); 
             }                
         }
         cur.disable();

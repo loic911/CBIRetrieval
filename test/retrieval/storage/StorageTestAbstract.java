@@ -77,7 +77,7 @@ public abstract class StorageTestAbstract extends TestUtils {
         Long id = storage.indexPicture(FileUtils.readPicture(LOCALPICTURE1),5l,null);
         assertEquals(1, storage.getNumberOfItem()); 
         Map<String,String> properties = storage.getProperties(id);
-        assertNull(properties); 
+        assertEquals(0,properties.size()); 
         assertEquals(new Long(5l), id); 
     }    
     
@@ -106,7 +106,8 @@ public abstract class StorageTestAbstract extends TestUtils {
         ids.add(id);
         storage.deletePictures(ids);
         assertEquals(0, storage.getNumberOfItem()); 
-        assertNull(storage.getProperties(id)); 
+        assertNotNull(storage.getProperties(id)); 
+        assertEquals(0,storage.getProperties(id).size()); 
         assertEquals(false, storage.isPictureInIndex(id)); 
     }
     
@@ -219,7 +220,8 @@ public abstract class StorageTestAbstract extends TestUtils {
         assertEquals("CROP1",map.get(id1).get("name"));
         
         assertTrue(map.containsKey(id2));
-        assertNull(map.get(id2));
+        assertNotNull(map.get(id2));
+        assertEquals(0,map.get(id2).size());
     }
 
     /**

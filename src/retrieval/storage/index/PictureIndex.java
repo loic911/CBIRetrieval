@@ -106,6 +106,9 @@ public final class PictureIndex implements Serializable {
             throw new AlreadyIndexedException("Key already exist in picture index");
         }
         
+        if(properties==null) {
+            properties = new HashMap<String,String>();
+        }
         picturePathIndex.addPicture(id,properties);
         picturePatchsIndex.put(id, new Integer(numberOfPatch));
         return id;
