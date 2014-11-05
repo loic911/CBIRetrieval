@@ -7,7 +7,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import retrieval.exception.CBIRException;
-import retrieval.multiserver.MultiServer;
+import retrieval.server.RetrievalServer;
 
 /**
  * This class is a list of server information

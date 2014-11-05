@@ -1,6 +1,6 @@
 package retrieval.multicentralserver;
 
-import retrieval.multiserver.MultiServer;
+import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;
 
 /**
@@ -13,13 +13,13 @@ import retrieval.storage.Storage;
 public class ServerInformationObject extends ServerInformation implements Cloneable {
 
 
-    private MultiServer server;
+    private RetrievalServer server;
     /**
      * Constructor for a server information
      * @param address Server Address
      * @param port Server Port
      */
-    public ServerInformationObject(MultiServer server) {
+    public ServerInformationObject(RetrievalServer server) {
         this.server = server;
     }
 
@@ -29,7 +29,7 @@ public class ServerInformationObject extends ServerInformation implements Clonea
      * @param port Server Port
      * @param timeout Timeout
      */
-    public ServerInformationObject(MultiServer server, int timeout) {
+    public ServerInformationObject(RetrievalServer server, int timeout) {
         this.server  = server;
         super.timeout = timeout;
     }
@@ -60,7 +60,7 @@ public class ServerInformationObject extends ServerInformation implements Clonea
      * Get Address of server
      * @return Address of server
      */
-    public MultiServer getServer() {
+    public RetrievalServer getServer() {
         return server;
     }
 
@@ -68,7 +68,7 @@ public class ServerInformationObject extends ServerInformation implements Clonea
      * Set Server address
      * @param address Server address
      */
-    public void setServer(MultiServer server) {
+    public void setServer(RetrievalServer server) {
         this.server = server;
     }
 }

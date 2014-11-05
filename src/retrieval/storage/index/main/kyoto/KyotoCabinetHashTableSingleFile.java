@@ -11,7 +11,7 @@ import kyotocabinet.Cursor;
 import kyotocabinet.DB;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
-import retrieval.multiserver.globaldatabase.KyotoCabinetDatabase;
+import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.index.ValueStructure;
 import retrieval.storage.index.main.HashTableIndex;

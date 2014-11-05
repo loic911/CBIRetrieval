@@ -11,7 +11,7 @@ import java.util.Map;
 import kyotocabinet.*;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
-import retrieval.multiserver.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.GlobalDatabase;
 
 public class KyotoCompressIndexSingleFile extends KyotoCompressIndexAbstract {
 

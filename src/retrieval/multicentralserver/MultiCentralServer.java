@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import retrieval.config.ConfigCentralServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.exception.CBIRException;
-import retrieval.multiserver.MultiServer;
+import retrieval.server.RetrievalServer;
 import retrieval.testvector.TestVectorListCentralServer;
 import retrieval.testvector.generator.TestVectorReading;
 
@@ -72,14 +72,14 @@ public class MultiCentralServer implements CentralServerInterface{
         readTestsVectors(configCentralServer);
     }
 
-    public MultiCentralServer(ConfigCentralServer configCentralServer,List<MultiServer> servers) throws CBIRException {
+    public MultiCentralServer(ConfigCentralServer configCentralServer,List<RetrievalServer> servers) throws CBIRException {
         this.configCentralServer = configCentralServer;    
         this.listsServerObject = new ListServerInformationObject(servers,this.configCentralServer.getTimeout());
         readTestsVectors(configCentralServer);
     } 
     
-    public MultiCentralServer(ConfigCentralServer configCentralServer,MultiServer server) throws CBIRException {
-        List<MultiServer> servers = new ArrayList<MultiServer>();
+    public MultiCentralServer(ConfigCentralServer configCentralServer,RetrievalServer server) throws CBIRException {
+        List<RetrievalServer> servers = new ArrayList<RetrievalServer>();
         servers.add(server);
         this.configCentralServer = configCentralServer;    
         this.listsServerObject = new ListServerInformationObject(servers,this.configCentralServer.getTimeout());

@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.dist.RequestPictureVisualWord;
 import retrieval.exception.CBIRException;
-import retrieval.multiserver.globaldatabase.GlobalDatabase;
-import retrieval.multiserver.globaldatabase.KyotoCabinetDatabase;
+import retrieval.server.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.storage.index.Index;
 import retrieval.storage.index.IndexMultiThread;
 import retrieval.storage.index.NoValidPictureException;
@@ -140,15 +140,15 @@ public final class Storage {
             //if database is shared with multiple server, return it
             database=this.globalDatabase; 
         } else if(config.getStoreName().equals("KYOTOMULTIPLEFILE")) {
-            //if database is juste for this server, create it
-                     //String file, String indexPath, String apox, String bnum, String cache, String funit
-            database=KyotoCabinetDatabase.openDatabase(
-                    "main.kch",
-                    config.getIndexPath(),
-                    config.getKyotoApox(),
-                    config.getKyotoBNum(),
-                    config.getKyotoCacheSizeForMainIndexWith1T(), 
-                    config.getKyotoFUnit());
+//            //if database is juste for this server, create it
+//                     //String file, String indexPath, String apox, String bnum, String cache, String funit
+//            database=KyotoCabinetDatabase.openDatabase(
+//                    "main.kch",
+//                    config.getIndexPath(),
+//                    config.getKyotoApox(),
+//                    config.getKyotoBNum(),
+//                    config.getKyotoCacheSizeForMainIndexWith1T(), 
+//                    config.getKyotoFUnit());
         }
         return database;
     } 

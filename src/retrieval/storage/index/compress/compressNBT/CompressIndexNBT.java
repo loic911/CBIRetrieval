@@ -7,7 +7,7 @@ package retrieval.storage.index.compress.compressNBT;
 
 import java.util.Map;
 import retrieval.config.ConfigServer;
-import retrieval.multiserver.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.exception.StartIndexException;
 
 /**

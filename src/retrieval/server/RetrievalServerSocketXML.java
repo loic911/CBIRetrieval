@@ -1,4 +1,4 @@
-package retrieval.multiserver;
+package retrieval.server;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -25,12 +25,12 @@ import retrieval.utils.NetworkUtils;
  * This include NBT and similarities exchange
  * @author Rollus Loic
  */
-public class MultiServerSocketXML implements StorageNetworkInterface {
+public class RetrievalServerSocketXML implements StorageNetworkInterface {
 
     /**
      * Server which will carry request
      */
-    private MultiServer multiServer;
+    private RetrievalServer multiServer;
     /**
      * Socket for this server
      */
@@ -38,7 +38,7 @@ public class MultiServerSocketXML implements StorageNetworkInterface {
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(MultiServerSocketXML.class);
+    private static Logger logger = Logger.getLogger(RetrievalServerSocketXML.class);
 
     /**
      * Constructor for a central server vs server communication
@@ -48,7 +48,7 @@ public class MultiServerSocketXML implements StorageNetworkInterface {
      * @param maxK Max number of similar pictures server will answer
      * @throws InternalServerException Exception during the start of the request thread
      */
-    public MultiServerSocketXML(MultiServer multiServer,int port)
+    public RetrievalServerSocketXML(RetrievalServer multiServer,int port)
             throws InternalServerException {
         logger.info("MultiServerSocketXML: start on " + port);
 
@@ -107,7 +107,7 @@ class NewClientThread extends Thread {
     /**
      * Server which will carry the request
      */
-    private MultiServer multiServer;
+    private RetrievalServer multiServer;
     /**
      * Logger
      */
@@ -120,7 +120,7 @@ class NewClientThread extends Thread {
      * @param tg Thread Group which will be group of this thread
      * @param maxK Max number of similar picture for a request
      */
-    NewClientThread(MultiServer multiServer, Socket client) {
+    NewClientThread(RetrievalServer multiServer, Socket client) {
         this.client = client;
         this.multiServer = multiServer;
     }

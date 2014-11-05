@@ -1,4 +1,4 @@
-package retrieval.multiserver;
+package retrieval.server;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -17,8 +17,8 @@ import org.json.simple.JSONValue;
 import retrieval.config.ConfigServer;
 import retrieval.dist.MultiServerMessageNBT;
 import retrieval.dist.RequestPictureVisualWord;
-import retrieval.multiserver.globaldatabase.GlobalDatabase;
-import retrieval.multiserver.globaldatabase.KyotoCabinetDatabase;
+import retrieval.server.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.InternalServerException;
 import retrieval.storage.exception.ReadIndexException;
@@ -30,7 +30,7 @@ import retrieval.utils.FileUtils;
  * A retrieval super server can carry n local object servers.
  * @author lrollus
  */
-public final class MultiServer {
+public final class RetrievalServer {
 
     /**
      * Map with id server and the server
@@ -55,7 +55,7 @@ public final class MultiServer {
     /**
      * Socket interface to wait request (index, search, infos,...)
      */
-    private MultiServerSocketXML socketInterface;
+    private RetrievalServerSocketXML socketInterface;
     private WaitRequestThread threadRequest;
     
     /**
@@ -71,7 +71,7 @@ public final class MultiServer {
     GlobalDatabase globalDatabase = null;
     
     
-    private static Logger logger = Logger.getLogger(MultiServer.class);
+    private static Logger logger = Logger.getLogger(RetrievalServer.class);
 
 
     /**
@@ -81,11 +81,11 @@ public final class MultiServer {
      * @param totalServer Number of server to create
      * @param deleteIndex Delete index path or not
      */
-    public MultiServer(ConfigServer configMain, String environment, int totalServer, boolean deleteIndex) {
-        this(configMain, environment, deleteIndex, MultiServer.createNewContainers(totalServer));
+    public RetrievalServer(ConfigServer configMain, String environment, int totalServer, boolean deleteIndex) {
+        this(configMain, environment, deleteIndex, RetrievalServer.createNewContainers(totalServer));
     }
     
-    public MultiServer(ConfigServer configMain, String environment,boolean deleteIndex) {
+    public RetrievalServer(ConfigServer configMain, String environment,boolean deleteIndex) {
         this(configMain, environment,deleteIndex,null);
     } 
     
@@ -98,7 +98,7 @@ public final class MultiServer {
      * @param deleteIndex Delete index path or not
      * @param serverKeys Servers name (size must be equals to totalServer)
      */   
-    public MultiServer(ConfigServer configMain, String environment, boolean deleteIndex, String[] serverKeys) {
+    public RetrievalServer(ConfigServer configMain, String environment, boolean deleteIndex, String[] serverKeys) {
         try {
             
             logger.info("Init retrieval super server withwith  env=" + environment + " deleteIndex=" + deleteIndex);
@@ -359,7 +359,7 @@ public final class MultiServer {
     public void loadWithSocket(int port) {
         try {
             this.port = port;
-            socketInterface = new MultiServerSocketXML(this, port);
+            socketInterface = new RetrievalServerSocketXML(this, port);
             threadRequest = new WaitRequestThread(socketInterface);
             threadRequest.start();
 
@@ -445,6 +445,15 @@ public final class MultiServer {
      public void indexPictureAsynchrone(BufferedImage picture,Long id,Map<String,String> properties, Storage storage) throws Exception {
          storage.addToIndexQueue(picture,id,properties);
     } 
+     
+     public void indexPictureAsynchrone(BufferedImage picture,Long id,Map<String,String> properties, String storageName) throws Exception {
+         Storage storage = getServer(storageName);
+         if(storage==null) {
+             createServer(storageName);
+             storage = getServer(storageName);
+         }
+         storage.addToIndexQueue(picture,id,properties);
+    }      
          
     /**
      * Index picture synchrone on next server
@@ -455,6 +464,15 @@ public final class MultiServer {
     public void indexPictureSynchrone(BufferedImage picture,Long id,Map<String,String> properties, Storage storage) throws Exception {
         storage.indexPicture(picture,id,properties);
     }    
+    
+    public void indexPictureSynchrone(BufferedImage picture,Long id,Map<String,String> properties, String storageName) throws Exception {
+         Storage storage = getServer(storageName);
+         if(storage==null) {
+             createServer(storageName);
+             storage = getServer(storageName);
+         }
+         storage.indexPicture(picture,id,properties);
+    } 
 
     /**
      * Index picture synchrone on next server
@@ -704,11 +722,11 @@ class SimRequestThread extends Thread {
 
 class WaitRequestThread extends Thread {
 
-    private MultiServerSocketXML server;
+    private RetrievalServerSocketXML server;
     
     private static Logger logger = Logger.getLogger(WaitRequestThread.class);
 
-    public WaitRequestThread(MultiServerSocketXML server) {
+    public WaitRequestThread(RetrievalServerSocketXML server) {
         this.server = server;
     }
 

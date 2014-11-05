@@ -245,9 +245,8 @@ public abstract class KyotoCabinetPathIndexAbstract implements PicturePathIndex{
         for (int i = 0; i < ids.size(); i++) {
             //logger.info("delete: " + ids.get(i));
             System.out.println(map.get(this.prefix+ids.get(i)));
-            Map<String,String> prop = convertStringToMap(map.get(this.prefix+ids.get(i)));
-            System.out.println(ids.get(i) + " prop="+prop);
-            if(prop!=null) {
+            String value = map.get(this.prefix+ids.get(i));
+            if(value!=null) {
                 //map.
                 logger.info("delete: id=" + ids.get(i));
                 //if(id!=null) {

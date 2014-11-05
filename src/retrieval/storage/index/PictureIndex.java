@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.*;
 import org.apache.log4j.*;
 import retrieval.config.*;
-import retrieval.multiserver.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.GlobalDatabase;
 
 /**
  * Picture index (not visual word index!)

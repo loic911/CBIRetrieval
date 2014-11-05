@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import retrieval.multiserver.MultiServer;
+import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;
 
 /**
@@ -35,12 +35,12 @@ public class ListServerInformationObject {
      * @param servers Servers based list
      * @param timeout Max timeout for each server 
      */
-    public ListServerInformationObject(List<MultiServer> servers, int timeout)  {
+    public ListServerInformationObject(List<RetrievalServer> servers, int timeout)  {
         this.serversMap = new TreeMap();
         this.timeout = timeout;
         
         int i = 0;
-        for(MultiServer server : servers) {
+        for(RetrievalServer server : servers) {
             serversMap.put(i + "",new ServerInformationObject(server, timeout));
             i++;
         }
@@ -56,7 +56,7 @@ public class ListServerInformationObject {
 
          for (Map.Entry<String, ServerInformationObject> entry : serversMap.entrySet()) {
              ServerInformationObject sio = (ServerInformationObject)entry.getValue();
-             MultiServer multi = sio.getServer();
+             RetrievalServer multi = sio.getServer();
              List<Storage> storages = multi.getServerList();
              
              for(Storage storage : storages) {
@@ -86,7 +86,7 @@ public class ListServerInformationObject {
         for(int i=0;i<keys.length;i++) {
             for (Map.Entry<String, ServerInformationObject> entry : serversMap.entrySet()) {
                 ServerInformationObject sio = (ServerInformationObject)entry.getValue();
-                MultiServer multi = sio.getServer();
+                RetrievalServer multi = sio.getServer();
                 Storage storage = multi.getServer(keys[i]);
                 if(storage!=null) {
                     ser.put(entry.getKey()+"#"+storage.getStorageName(),storage);       
