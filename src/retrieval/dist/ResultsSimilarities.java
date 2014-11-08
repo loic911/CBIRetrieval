@@ -1,8 +1,9 @@
 package retrieval.dist;
 
-import retrieval.multicentralserver.ListServerInformationObject;
-import retrieval.multicentralserver.ListServerInformationSocket;
+import retrieval.centralserver.ListServerInformationObject;
+import retrieval.centralserver.ListServerInformationSocket;
 import java.util.*;
+import retrieval.server.RetrievalServer;
 import retrieval.storage.index.ResultSim;
 
 /**
@@ -22,7 +23,7 @@ public class ResultsSimilarities {
      * List of server and their state
      */
     private ListServerInformationSocket servers;
-    private ListServerInformationObject serversObject;
+    private List<RetrievalServer> listsServer;
     /**
      * Total number of pictures indexed on all server (available)
      */
@@ -39,10 +40,10 @@ public class ResultsSimilarities {
         this.servers = servers;
         this.totalSize = 0;
     }
-    public ResultsSimilarities(List<ResultSim> results, ListServerInformationObject servers)
+    public ResultsSimilarities(List<ResultSim> results, List<RetrievalServer> listsServer)
     {
         this.results = results;
-        this.serversObject = servers;
+        this.listsServer = listsServer;
         this.totalSize = 0;
     }
 
@@ -94,8 +95,8 @@ public class ResultsSimilarities {
     public ListServerInformationSocket getServersSocket() {
         return servers;
     }
-    public ListServerInformationObject getServersObject() {
-        return serversObject;
+    public List<RetrievalServer> getServersObject() {
+        return listsServer;
     }
 
     /**
@@ -105,8 +106,8 @@ public class ResultsSimilarities {
     public void setServers(ListServerInformationSocket servers) {
         this.servers = servers;
     }
-    public void setServers(ListServerInformationObject servers) {
-        this.serversObject = servers;
+    public void setServers(List<RetrievalServer> servers) {
+        this.listsServer = servers;
     }
 
     /**

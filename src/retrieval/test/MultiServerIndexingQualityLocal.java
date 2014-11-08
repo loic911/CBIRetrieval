@@ -15,7 +15,7 @@ import retrieval.config.*;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.exception.CBIRException;
 import retrieval.indexer.RetrievalIndexerLocalStorage;
-import retrieval.multicentralserver.MultiCentralServer;
+import retrieval.centralserver.MultiCentralServer;
 import retrieval.server.RetrievalServer;
 import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.storage.Storage;

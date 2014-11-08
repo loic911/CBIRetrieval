@@ -9,7 +9,7 @@ import retrieval.client.net.ClientToCentralServerLocal;
 import retrieval.client.net.ClientToCentralServerXML;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.exception.CBIRException;
-import retrieval.multicentralserver.MultiCentralServer;
+import retrieval.centralserver.MultiCentralServer;
 
 /**
  * This class implemets a client which can make request.

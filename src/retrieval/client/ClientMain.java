@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 import retrieval.config.ConfigCentralServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.exception.CBIRException;
-import retrieval.multicentralserver.MultiCentralServer;
+import retrieval.centralserver.MultiCentralServer;
 import retrieval.utils.CollectionUtils;
 
 /**

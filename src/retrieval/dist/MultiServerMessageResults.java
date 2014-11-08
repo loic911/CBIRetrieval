@@ -5,8 +5,8 @@ import java.util.Map.Entry;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
-import retrieval.multicentralserver.ListServerInformationSocket;
-import retrieval.multicentralserver.ServerInformationSocket;
+import retrieval.centralserver.ListServerInformationSocket;
+import retrieval.centralserver.ServerInformationSocket;
 import retrieval.storage.index.ResultSim;
 
 /**

@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
-import retrieval.multicentralserver.CentralServerInterface;
+import retrieval.centralserver.CentralServerInterface;
 import retrieval.client.ClientToCentralServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.exception.CBIRException;
