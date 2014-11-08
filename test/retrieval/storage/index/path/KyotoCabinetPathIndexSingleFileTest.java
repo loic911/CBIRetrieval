@@ -12,8 +12,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import retrieval.config.ConfigServer;
-import retrieval.multiserver.globaldatabase.GlobalDatabase;
-import retrieval.multiserver.globaldatabase.KyotoCabinetDatabase;
+import retrieval.server.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.utils.FileUtils;
 
 /**

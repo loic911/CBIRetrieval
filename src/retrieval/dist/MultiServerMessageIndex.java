@@ -28,10 +28,13 @@ public class MultiServerMessageIndex implements Message, Cloneable {
             Element root = document.getRootElement();
             async = root.getAttributeValue("async").equals("FALSE") ? false: true;
             storage = root.getAttributeValue("storage");
-            id = Long.parseLong(root.getAttributeValue("id"));
+            if(root.getAttributeValue("id")!=null && !root.getAttributeValue("id").equals("null")) {
+                id = Long.parseLong(root.getAttributeValue("id"));
+            } else id = null;
+            
            
             
-            List listProperties = root.getChildren("properties");
+            List listProperties = root.getChildren("property");
             Iterator itProperty = listProperties.iterator();
             properties = new HashMap<String,String>();
             
@@ -75,13 +78,17 @@ public class MultiServerMessageIndex implements Message, Cloneable {
             racine.setAttribute("id", id+"");
             racine.setAttribute("storage", getStorage());
 
-            for(Map.Entry<String,String> entry : properties.entrySet()) {
-                Element prop = new Element("property");
-                prop.setAttribute("key", entry.getKey()+"");
-                prop.setAttribute("value", entry.getValue()+"");
-                racine.addContent(prop);
+            if(properties!=null) {
+                for(Map.Entry<String,String> entry : properties.entrySet()) {
+                    Element prop = new Element("property");
+                    prop.setAttribute("key", entry.getKey()+"");
+                    prop.setAttribute("value", entry.getValue()+"");
+                    racine.addContent(prop);
+                }                
             }
+
         } catch(Exception e) {
+            e.printStackTrace();
             logger.error(e.toString());
         }
         return document;

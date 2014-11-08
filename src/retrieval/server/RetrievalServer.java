@@ -17,6 +17,7 @@ import org.json.simple.JSONValue;
 import retrieval.config.ConfigServer;
 import retrieval.dist.MultiServerMessageNBT;
 import retrieval.dist.RequestPictureVisualWord;
+import retrieval.exception.CBIRException;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.storage.Storage;
@@ -32,6 +33,7 @@ import retrieval.utils.FileUtils;
  */
 public final class RetrievalServer {
 
+    public static String EQUITABLY = "###EQUITABLY###";
     /**
      * Map with id server and the server
      */
@@ -233,7 +235,7 @@ public final class RetrievalServer {
     public synchronized void createServer(String key) throws Exception {
         //init config for each server
         if(getServerMap().containsKey(key)) {
-            throw new Exception("Server "+key + " already exist!");
+            throw new CBIRException("Server "+key + " already exist!");
         }
         ConfigServer configLocalServer = configMain.clone();
         
@@ -302,9 +304,24 @@ public final class RetrievalServer {
      * @param key Server key
      * @return Server
      */
-    public synchronized Storage getServer(String key) {
-        return serverMap.get(key);
+    public synchronized Storage getServer(String key)  {
+        return getServer(key,false);
     }
+
+    public synchronized Storage getServer(String key, boolean createIfNotExist) {
+        try {
+            Storage storage = serverMap.get(key);
+            if(createIfNotExist && storage==null) {
+               createServer(key);
+               storage = getServer(key);    
+            } 
+            return storage;
+        } catch(Exception e) {
+            logger.error("Cannot get storage: "+key + ": " +e.toString());
+            return null;
+        }
+        
+    }    
     
     /**
      * Get a map with server
@@ -631,9 +648,12 @@ public final class RetrievalServer {
      * Get all pictures from each servers
      * @return Map with key = server id and value = all pictures from server
      */
-    public Map<Long,Map<String,String>> getInfos(String storageName) {
+    public Map<Long,Map<String,String>> getInfos(String storageName) throws CBIRException {
         Map<String,List<Long>> results = new HashMap<String,List<Long>>();
         Storage storage = getServer(storageName);
+        if(storage==null) {
+            return null;
+        }
         return storage.getAllPicturesMap();
     }      
     

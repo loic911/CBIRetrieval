@@ -27,6 +27,7 @@ import retrieval.utils.NetworkUtils;
  */
 public class RetrievalServerSocketXML implements StorageNetworkInterface {
 
+    
     /**
      * Server which will carry request
      */
@@ -167,6 +168,7 @@ class NewClientThread extends Thread {
             NetworkUtils.writeXmlToSocketWithoutException(client, new MessageError("9999", "Fatal error").toXML());
         } catch (Exception e) {
             logger.error("waitForRequest:" + e);
+            e.printStackTrace();
             NetworkUtils.writeXmlToSocketWithoutException(client, new MessageError("9999", "Fatal error").toXML());
 
         }
@@ -261,7 +263,7 @@ class NewClientThread extends Thread {
             }
 
             try {
-                server.addToIndexQueue(image, pictureId, msgIndex.getProperties());
+                pictureId = server.addToIndexQueue(image, pictureId, msgIndex.getProperties());
                 serverResult.put(pictureId, new NoException());
             } catch(CBIRException e) {
                 serverResult.put(pictureId, e);
@@ -279,7 +281,7 @@ class NewClientThread extends Thread {
             logger.debug("index synchrone");
             
             Storage server;
-            if(msgIndex.getStorage().equals("###EQUITABLY###")) {
+            if(msgIndex.getStorage().equals(RetrievalServer.EQUITABLY)) {
                 server = multiServer.getNextServer();
             } else {
                 server = multiServer.getServer(msgIndex.getStorage());
@@ -288,9 +290,9 @@ class NewClientThread extends Thread {
                     server = multiServer.getServer(msgIndex.getStorage());
                 }
             }
-
-            logger.debug("ID " + msgIndex.getId() + " will be in storage " + server.getIndexPath());
-  
+            logger.debug(msgIndex);
+            logger.debug("ID " + msgIndex.getId() + " will be in storage " + msgIndex.getStorage());
+            logger.debug("Image has properties " + msgIndex.getProperties());
             if(server==null) {
                 multiServer.createServer(msgIndex.getStorage());
                 server = multiServer.getServer(msgIndex.getStorage());
@@ -300,6 +302,7 @@ class NewClientThread extends Thread {
             Map<Long, CBIRException> map = new HashMap<Long, CBIRException>();            
             try {
                 Long id = server.indexPicture(image,msgIndex.getId(),msgIndex.getProperties());
+                map.put(id, new NoException());
             } catch(CBIRException e) {
                 map.put(msgIndex.getId(), e);
             } 
@@ -323,6 +326,7 @@ class NewClientThread extends Thread {
 
      private void takeStatsRequest(Document xml) throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
          MultiServerMessageInfos msgRequest = new MultiServerMessageInfos(xml);
+         logger.info("Get infos for storage = "+msgRequest.getStorage());
          MultiServerMessageInfos msgResult = new MultiServerMessageInfos(multiServer.getInfos(msgRequest.getStorage()),msgRequest.getStorage());
          NetworkUtils.writeXmlToSocket(client, msgResult.toXML());
     }

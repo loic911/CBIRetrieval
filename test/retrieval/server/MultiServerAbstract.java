@@ -78,7 +78,7 @@ public class MultiServerAbstract extends TestUtils{
      * Test of getServer method, of class MultiServer.
      */
     @Test
-    public void testGetServer() {
+    public void testGetServer() throws Exception{
         System.out.println("getServer");
         assertEquals(true,multiServer.getServer(CONTAINER1)!=null);
         assertEquals(true,multiServer.getServer("not exist")==null);
@@ -277,7 +277,7 @@ public class MultiServerAbstract extends TestUtils{
      * Test of getInfos method, of class MultiServer.
      */
     @Test
-    public void testGetInfos() {
+    public void testGetInfos() throws Exception {
         System.out.println("getInfos");
         assertEquals(2, multiServer.getInfos(CONTAINER1).size());
         assertEquals(0, multiServer.getInfos(CONTAINER2).size());

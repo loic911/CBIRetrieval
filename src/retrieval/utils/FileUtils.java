@@ -26,6 +26,7 @@ import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.log4j.Logger;
+import retrieval.storage.exception.PictureNotFoundException;
 
 /**
  * This class store util method for IO
@@ -175,7 +176,7 @@ public class FileUtils {
     }
     
 
-    public static BufferedImage readPicture(String uri) throws Exception {
+    public static BufferedImage readPicture(String uri) throws IOException {
         
         File f = new File(uri);
         boolean isURL = false;
@@ -202,6 +203,23 @@ public class FileUtils {
         return img;
 
     }
+    
+    public static BufferedImage readPictureFromPath(File file) throws PictureNotFoundException {
+        try {
+            return ImageIO.read(file);
+        } catch(IOException e) {
+            throw new PictureNotFoundException("Cannot read: " + file.getAbsolutePath() + ": " + e.toString());
+        }
+    }
+    
+     public static BufferedImage readPictureFromUrl(URL url) throws PictureNotFoundException {
+        try {
+            return readBufferedImageFromURLWithoutAuth(url.toString());
+        } catch(IOException e) {
+            throw new PictureNotFoundException("Cannot read: " + url.toString() + ": " + e.toString());
+        }
+    }   
+    
 
     public static boolean isValidURL(String URLName) {
         try {

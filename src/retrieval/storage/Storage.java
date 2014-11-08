@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
@@ -228,6 +229,12 @@ public final class Storage {
      */
     public Long addToIndexQueue(BufferedImage image, Long id, Map<String,String> properties) throws InvalidPictureException, TooMuchIndexRequestException {
         logger.debug("addToIndexQueue="+id);
+        while(id==null) {
+            id = System.currentTimeMillis() + new Random().nextLong();
+            if(index.isPictureAlreadyIndexed(id)) {
+                id = null;
+            }
+        }
         threadIndex.addInIndexPicture(image,id,properties);
         return id;
     }  

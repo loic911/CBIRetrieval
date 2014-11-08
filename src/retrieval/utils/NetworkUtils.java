@@ -50,15 +50,15 @@ public class NetworkUtils {
        oos.writeObject(xml);
        oos.flush();
     }
+
     
-    public static void writeXmlToSocket(Socket client, Document xml, BufferedImage image)
+    public static void writeXmlToSocket(Socket client, BufferedImage image)
             throws IOException {
        client.setSoTimeout(60000);
        ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
-       oos.writeObject(xml);
-       oos.writeObject(image);
+       oos.writeObject(new ImageSerializable(image));
        oos.flush();
-    }    
+    }        
     
      public static Document readXmlFromSocket(Socket client) throws IOException, NotValidMessageXMLException {
         try {
@@ -86,8 +86,8 @@ public class NetworkUtils {
             }
             //client.setSoTimeout(60000);
             ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
-            BufferedImage image = (BufferedImage)ois.readObject();
-            return image;
+            ImageSerializable imageSer = (ImageSerializable)ois.readObject();
+            return imageSer.getImage();
         } catch (IOException e) {
             logger.error(e);
             throw new NotValidMessageXMLException(e.toString());

@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,6 +22,7 @@ import retrieval.exception.CBIRException;
 import retrieval.storage.exception.InvalidPictureException;
 import retrieval.storage.exception.TooMuchIndexRequestException;
 import retrieval.storage.index.NoValidPictureException;
+import retrieval.utils.FileUtils;
 
 /**
  * Interface for a retrieval indexer.
@@ -96,7 +98,7 @@ public abstract class RetrievalIndexer {
      * @throws CBIRException Error from server
      */    
     public Long index(File file, Long id, Map<String,String> properties) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException {
-        return index(file,id,properties);
+        return index(FileUtils.readPictureFromPath(file),id,properties);
     }      
     
   /**
@@ -148,7 +150,7 @@ public abstract class RetrievalIndexer {
      * @throws CBIRException Error from server
      */    
     public Long index(URL url, Long id, Map<String,String> properties) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException {
-        return index(url,id,properties);
+        return index(FileUtils.readPictureFromUrl(url),id,properties);
     }    
     
    /**
@@ -217,7 +219,14 @@ public abstract class RetrievalIndexer {
      * @throws CBIRException Error from server
      */   
     public abstract Map<Long, CBIRException> delete(List<Long> ids) throws IOException, NotValidMessageXMLException, CBIRException;
-    
+     public Map<Long, CBIRException> delete(Long id) throws IOException, NotValidMessageXMLException, CBIRException {
+        List<Long> list = new ArrayList<Long>();
+         if (id != null) {
+             list.add(id);
+        }        
+        return delete(list);       
+    } 
+      
     /**
      * This function ask to a server information about indexed pictures on the storage
      * @param server server
@@ -244,16 +253,5 @@ public abstract class RetrievalIndexer {
      * Clean index from server with deleted pictures data
      */
     public abstract void purge() throws Exception;
-        
-    protected BufferedImage readImageFromURL(URL url) {
-        return null;
-    }
-    
-    protected BufferedImage readImageFromFile(File file) throws InvalidPictureException {
-        try {
-            return ImageIO.read(file);
-        } catch (IOException ex) {
-            throw new InvalidPictureException();
-        }
-    }    
+          
 }

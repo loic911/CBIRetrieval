@@ -23,8 +23,8 @@ import retrieval.config.ConfigCentralServer;
 import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.multicentralserver.MultiCentralServer;
-import retrieval.multiserver.MultiServer;
-import retrieval.multiserver.globaldatabase.GlobalDatabase;
+import retrieval.server.RetrievalServer;
+import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.Storage;
 import retrieval.storage.index.ResultSim;
 /**
@@ -174,7 +174,7 @@ public class TestUtils {
         return false;
     }
     
-    public boolean waitServerCreation(MultiServer multi,String key) {
+    public boolean waitServerCreation(RetrievalServer multi,String key) throws Exception {
         long startTime = System.currentTimeMillis();
         long maxTime = 10000;
         Storage server = null;
@@ -189,23 +189,23 @@ public class TestUtils {
         return false;
     }    
     
-    public static MultiServer createMultiServer(ConfigServer cc, int port) {
+    public static RetrievalServer createMultiServer(ConfigServer cc, int port) {
            return createMultiServer(cc, port,2);
     }
 
-    public static MultiServer createMultiServer(ConfigServer cc, int port, int serverNumber, String storeName) {
+    public static RetrievalServer createMultiServer(ConfigServer cc, int port, int serverNumber, String storeName) {
            logger.info("Start MultiServer...");
             cc.setStoreName(storeName);
             cc.setIndexPath(cc.getIndexPath() + "testNetbeansMulti/" + port + "/");
             cc.setIndexCompressThreshold(0);
             cc.setMaxPercentageSimilarWord(0);
             System.out.println("StoreName="+storeName + " N="+cc.getNumberOfPatch() + " T="+cc.getNumberOfTestVector());
-            MultiServer server = new MultiServer(cc, "testNetbeans", serverNumber, true);
+            RetrievalServer server = new RetrievalServer(cc, "testNetbeans", serverNumber, true);
             server.loadWithSocket(port);
             return server;
     }
 
-    public static MultiServer createMultiServer(ConfigServer cc, int port, int serverNumber) {
+    public static RetrievalServer createMultiServer(ConfigServer cc, int port, int serverNumber) {
            return createMultiServer(cc,port,serverNumber,"MEMORY");
     }
     
@@ -221,13 +221,13 @@ public class TestUtils {
          return server;
     }      
 
-    public static MultiCentralServer createMultiCentralServer(ConfigCentralServer ccs, List<MultiServer> servers) throws Exception {
+    public static MultiCentralServer createMultiCentralServer(ConfigCentralServer ccs, List<RetrievalServer> servers) throws Exception {
              logger.info("Start SuperCentralServer...");
-                Iterator<MultiServer> it = servers.iterator();
+                Iterator<RetrievalServer> it = servers.iterator();
                 ListServerInformationSocket serverList = new ListServerInformationSocket();
                 int i=0;
                 while(it.hasNext()) {
-                    MultiServer server = it.next();
+                    RetrievalServer server = it.next();
                     logger.info("Add server...");
                     ServerInformationSocket serverInfo = new ServerInformationSocket("localhost", server.getPort());
                     serverInfo.setTimeout(2000);

@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import retrieval.exception.CBIRException;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;
 

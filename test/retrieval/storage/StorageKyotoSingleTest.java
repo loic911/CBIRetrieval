@@ -4,8 +4,8 @@ import java.io.File;
 import org.junit.*;
 import static org.junit.Assert.fail;
 import retrieval.config.ConfigServer;
-import retrieval.multiserver.globaldatabase.GlobalDatabase;
-import retrieval.multiserver.globaldatabase.KyotoCabinetDatabase;
+import retrieval.server.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.storage.exception.PictureTooHomogeneous;
 import retrieval.utils.FileUtils;
 

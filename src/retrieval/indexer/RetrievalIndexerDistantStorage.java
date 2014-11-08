@@ -82,10 +82,12 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
         try {
         Socket server = new Socket(host, port);     
         
-        MultiServerMessageIndex message = new MultiServerMessageIndex(id,properties, storage,isSynchronous());
+        MultiServerMessageIndex message = new MultiServerMessageIndex(id,properties, storage,!isSynchronous());
+       logger.debug(message);
         Document doc = message.toXML();
 
-        NetworkUtils.writeXmlToSocket(server, doc,image);
+        NetworkUtils.writeXmlToSocket(server, doc);
+        NetworkUtils.writeXmlToSocket(server, image);
         
         //read reponse
         Document responsexml = NetworkUtils.readXmlFromSocket(server);
@@ -119,6 +121,7 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
         
         return returnId; 
         } catch(Exception e) {
+            e.printStackTrace();
             throw new CBIRException(e.toString());
         }
     }    

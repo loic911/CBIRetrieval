@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
@@ -12,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.jdom.Document;
 import retrieval.dist.*;
 import retrieval.exception.CBIRException;
+import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.InvalidPictureException;
 import retrieval.storage.exception.PictureTooHomogeneous;
@@ -56,7 +58,7 @@ public class RetrievalIndexerLocalStorage extends RetrievalIndexer {
     public RetrievalIndexerLocalStorage(Storage storage, boolean synchronous) {
         super(synchronous);
         this.storage = storage;
-    } 
+    }      
     
     /**
      * Change the current storage for a new one
@@ -103,7 +105,8 @@ public class RetrievalIndexerLocalStorage extends RetrievalIndexer {
             throw new CBIRException("1111", "Picture list is empty");
         }        
         return storage.deletePictures(ids);       
-    }    
+    }  
+       
     
     /**
      * This function ask to a server information about indexed pictures on the server

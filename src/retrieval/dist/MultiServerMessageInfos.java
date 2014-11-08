@@ -27,6 +27,7 @@ public class MultiServerMessageInfos implements Message {
     public MultiServerMessageInfos(Map<Long, Map<String,String>> allPictures,String storage) {
         this.allPictures = allPictures;
         this.storage = storage;
+        
     }
 
     /**
@@ -39,7 +40,10 @@ public class MultiServerMessageInfos implements Message {
         try {
             allPictures = new HashMap<Long, Map<String,String>>();
             Element root = document.getRootElement();
-            root.setAttribute("storage", storage);
+            if(root.getAttributeValue("storage")!=null && !root.getAttributeValue("storage").equals("null")) {
+                storage = root.getAttributeValue("storage");
+            }
+            
             List listPictures = root.getChildren("picture");
             Iterator itPictures = listPictures.iterator();
 
@@ -58,6 +62,7 @@ public class MultiServerMessageInfos implements Message {
                 allPictures.put(id, prop);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new NotValidMessageXMLException(e.toString());
         }
     }
@@ -72,7 +77,12 @@ public class MultiServerMessageInfos implements Message {
         Element root = new Element("MultiServerMessage");
         root.setAttribute("type","INFO");
         Document document = new Document(root);
-        root.setAttribute("storage", getStorage());
+
+            if(storage!=null) {
+                root.setAttribute("storage", storage);
+            } else {
+                root.setAttribute("storage", "null");
+            }        
         Iterator<Entry<Long,Map<String,String>>> it = getAllPictures().entrySet().iterator();
 
         while(it.hasNext()) {

@@ -125,7 +125,8 @@ public class ClientToCentralServerXML implements ClientToCentralServer {
             logger.info("searchInCentralServer: connexion ok");
             //send request
             MessageSearch msg = new MessageSearch(k,servers);
-            NetworkUtils.writeXmlToSocket(client, msg.toXML(),img);
+            NetworkUtils.writeXmlToSocket(client, msg.toXML());
+            NetworkUtils.writeXmlToSocket(client, img);
             logger.info("searchInCentralServer: request send");
 
             //receive result
