@@ -64,9 +64,9 @@ public class MultiServerMessageResults implements Message {
                     Long id = Long.parseLong(pict.getAttributeValue("id"));
                     double similarity = Double.parseDouble(pict.getAttributeValue("sim"));
                     Map<String,String> properties = new HashMap<String,String>();
-                     List propertiesElem = root.getChildren("property");
+                     List propertiesElem = pict.getChildren("property");
                     for (int j = 0; j < propertiesElem.size(); j++) {
-                        Element prop = (Element) propertiesElem.get(i);
+                        Element prop = (Element) propertiesElem.get(j);
                         properties.put(prop.getAttributeValue("key"),prop.getAttributeValue("value"));
                     }
                     ResultSim r = new ResultSim(id,properties,similarity);

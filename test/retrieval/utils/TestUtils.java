@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import retrieval.centralserver.ListServerInformationSocket;
 import retrieval.centralserver.ServerInformationSocket;
-import retrieval.client.Client;
 import retrieval.config.ConfigCentralServer;
 import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
@@ -244,11 +243,6 @@ public class TestUtils {
 //              MultiCentralServer centralServer = new MultiCentralServer(ccs, servers);
 //                return centralServer;
         throw new Exception();
-    }
-
-    public static Client createClient(MultiCentralServer cs) throws Exception{
-        logger.info("Start Client...");
-        return new Client(cs);
     }
 
     
