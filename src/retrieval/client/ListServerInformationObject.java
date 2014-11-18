@@ -1,4 +1,4 @@
-package retrieval.centralserver;
+package retrieval.client;
 
 import java.util.Iterator;
 import java.util.List;

@@ -1,4 +1,4 @@
- package retrieval.centralserver;
+ package retrieval.client;
 
 import java.net.Socket;
 import org.apache.log4j.Logger;

@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package retrieval.centralserver;
+package retrieval.client;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import retrieval.testvector.generator.TestVectorReading;
  * We can search similar pictures on multiple multiserver
  * @author lrollus
  */
-public class MultiCentralServer implements CentralServerInterface{
+public class RetrievalClient implements RetrievalClientInterface{
 
     /**
      * Config object
@@ -45,7 +45,7 @@ public class MultiCentralServer implements CentralServerInterface{
     /**
      * Logger
      */
-    static Logger logger = Logger.getLogger(MultiCentralServer.class);
+    static Logger logger = Logger.getLogger(RetrievalClient.class);
 
 
     /**
@@ -54,7 +54,7 @@ public class MultiCentralServer implements CentralServerInterface{
      * @param serversFile Server.xml files
      * @throws Exception Error during creation
      */
-    public MultiCentralServer(ConfigCentralServer configCentralServer, String serversFile) throws CBIRException {
+    public RetrievalClient(ConfigCentralServer configCentralServer, String serversFile) throws CBIRException {
         this.configCentralServer = configCentralServer;
         readTestsVectors(configCentralServer);
         readServerList(configCentralServer,serversFile);
@@ -66,19 +66,19 @@ public class MultiCentralServer implements CentralServerInterface{
      * @param listsServerSocket MultiServer infos
      * @throws Exception Error during creation
      */
-    public MultiCentralServer(ConfigCentralServer configCentralServer,ListServerInformationSocket listsServerSocket) throws CBIRException {
+    public RetrievalClient(ConfigCentralServer configCentralServer,ListServerInformationSocket listsServerSocket) throws CBIRException {
         this.configCentralServer = configCentralServer;
         this.listsServerSocket = listsServerSocket;
         readTestsVectors(configCentralServer);
     }
 
-    public MultiCentralServer(ConfigCentralServer configCentralServer,List<RetrievalServer> servers) throws CBIRException {
+    public RetrievalClient(ConfigCentralServer configCentralServer,List<RetrievalServer> servers) throws CBIRException {
         this.configCentralServer = configCentralServer;    
         this.listServerObjects = servers;
         readTestsVectors(configCentralServer);
     } 
     
-    public MultiCentralServer(ConfigCentralServer configCentralServer,RetrievalServer server) throws CBIRException {
+    public RetrievalClient(ConfigCentralServer configCentralServer,RetrievalServer server) throws CBIRException {
         List<RetrievalServer> servers = new ArrayList<RetrievalServer>();
         servers.add(server);
         this.configCentralServer = configCentralServer;    
@@ -184,11 +184,11 @@ public class MultiCentralServer implements CentralServerInterface{
              */
             ResultsSimilarities result = null;
             if(listsServerSocket!=null) {
-                MultiCentralServerToServersXML serverNetwork = new MultiCentralServerToServersXML((ListServerInformationSocket) this.getListsServerSocket().getServers());
+                RetrievalClientToServersXML serverNetwork = new RetrievalClientToServersXML((ListServerInformationSocket) this.getListsServerSocket().getServers());
                 logger.info("search: " + k + " similar pictures on "+ serverNetwork.getNumberOfServer() + " servers");
                 result = serverNetwork.searchMultiThread(visualWords, N, k,servers);                
             } else {
-                 MultiCentralServerToServersObject serverNetwork = new MultiCentralServerToServersObject(listServerObjects);
+                 RetrievalClientToServersObject serverNetwork = new RetrievalClientToServersObject(listServerObjects);
                 logger.info("search: " + k + " similar pictures on "+ serverNetwork.getNumberOfServer() + " servers");
                 result = serverNetwork.searchMultiThread(visualWords, N, k,servers);                  
             }

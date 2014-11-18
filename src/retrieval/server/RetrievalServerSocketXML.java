@@ -251,16 +251,23 @@ class NewClientThread extends Thread {
             Long pictureId = msgIndex.getId();
             Map<String,Map<Long, CBIRException>> allServerResult = new HashMap<String,Map<Long, CBIRException>>();
             
-            logger.debug("Picture " + pictureId + " add on queue index "+msgIndex.getStorage());
-            Map<Long, CBIRException> serverResult = allServerResult.get(msgIndex.getStorage());
+            Storage server;
+            logger.debug("msgIndex.getStorage()="+msgIndex.getStorage() + "=>"+msgIndex.getStorage().equals(RetrievalServer.EQUITABLY));
+            if(msgIndex.getStorage().equals(RetrievalServer.EQUITABLY)) {
+                server = multiServer.getNextServer();
+            } else {
+                server = multiServer.getServer(msgIndex.getStorage());
+                if(server==null) {
+                    multiServer.createServer(msgIndex.getStorage());
+                    server = multiServer.getServer(msgIndex.getStorage());
+                }
+            }
+            
+            logger.debug("Picture " + pictureId + " add on queue index "+server.getStorageName());
+            Map<Long, CBIRException> serverResult = allServerResult.get(server.getStorageName());
             if(serverResult==null) {
                 serverResult = new HashMap<Long, CBIRException>();
-            }
-            Storage server = multiServer.getServer(msgIndex.getStorage());
-            if(server==null) {
-                multiServer.createServer(msgIndex.getStorage());
-                server = multiServer.getServer(msgIndex.getStorage());
-            }
+            }            
 
             try {
                 pictureId = server.addToIndexQueue(image, pictureId, msgIndex.getProperties());
@@ -279,7 +286,7 @@ class NewClientThread extends Thread {
     
     private MultiServerMessageIndexResults takeIndexSynchroneRequest(MultiServerMessageIndex msgIndex, BufferedImage image) throws Exception {
             logger.debug("index synchrone");
-            
+            System.out.println("msgIndex.getStorage()="+msgIndex.getStorage());
             Storage server;
             if(msgIndex.getStorage().equals(RetrievalServer.EQUITABLY)) {
                 server = multiServer.getNextServer();

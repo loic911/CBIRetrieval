@@ -93,7 +93,8 @@ public abstract class KyotoCabinetPathIndexTestAbstract extends TestUtils{
         map.put("test1", "123");
         map.put("test2", "456");
         
-        assertEquals("test1;@;123;@;test2;@;456",KyotoCabinetPathIndexAbstract.convertMapToString(map));
+        String result = KyotoCabinetPathIndexAbstract.convertMapToString(map);
+        assertEquals(true,"test1;@;123;@;test2;@;456".equals(result) || "test2;@;456;@;test1;@;123".equals(result));
         assertEquals("NULL",KyotoCabinetPathIndexAbstract.convertMapToString(null));
         assertEquals("",KyotoCabinetPathIndexAbstract.convertMapToString(new HashMap<String,String>()));
     }    

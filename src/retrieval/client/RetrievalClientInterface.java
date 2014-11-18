@@ -1,4 +1,4 @@
-package retrieval.centralserver;
+package retrieval.client;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -10,7 +10,7 @@ import retrieval.exception.CBIRException;
  * Centrak Server interface
  * @author lrollus
  */
-public interface CentralServerInterface {
+public interface RetrievalClientInterface {
     ResultsSimilarities search(BufferedImage img, int k) throws CBIRException;
     ResultsSimilarities search(BufferedImage img, int k,String[] servers) throws CBIRException;
     ResultsSimilarities search(BufferedImage img, int k,List<String> servers) throws CBIRException;

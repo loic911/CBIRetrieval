@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import org.junit.*;
 import static org.junit.Assert.*;
 import retrieval.utils.TestUtils;
-import retrieval.centralserver.exception.ImageNotValidException;
+import retrieval.client.exception.ImageNotValidException;
 import retrieval.config.ConfigServer;
 import retrieval.exception.CBIRException;
 import retrieval.indexer.main.RetrievalIndexMain;

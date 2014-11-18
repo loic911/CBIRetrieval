@@ -1,8 +1,6 @@
 package retrieval.centralserver;
 
-import retrieval.centralserver.MultiCentralServer;
-import retrieval.centralserver.ListServerInformationSocket;
-import retrieval.centralserver.ServerInformationSocket;
+import retrieval.client.RetrievalClient;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -33,8 +31,8 @@ public abstract class RetrievalCentralServerAbstract extends TestUtils{
     String CONTAINER2 = "myContainer2";
     ConfigServer config;
     ConfigCentralServer configCentralServer;
-    MultiCentralServer multiCentralWithServer1;
-    MultiCentralServer multiCentralWithAllServer;
+    RetrievalClient multiCentralWithServer1;
+    RetrievalClient multiCentralWithAllServer;
     
     private static Logger logger = Logger.getLogger(RetrievalCentralServerAbstract.class);
     

@@ -1,8 +1,6 @@
 package retrieval.centralserver;
 
-import retrieval.centralserver.MultiCentralServer;
-import retrieval.centralserver.ListServerInformationSocket;
-import retrieval.centralserver.ServerInformationSocket;
+import retrieval.client.RetrievalClient;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -67,12 +65,12 @@ public class RetrievalCentralServerLocalTest extends RetrievalCentralServerAbstr
              * multiserver2
              * container 1 = LOCALPICTURE5, LOCALPICTURE6 , LOCALPICTURE7
              */
-            multiCentralWithServer1 = new MultiCentralServer(configCentralServer, multiServer1);
+            multiCentralWithServer1 = new RetrievalClient(configCentralServer, multiServer1);
             
             List<RetrievalServer> servers = new ArrayList<RetrievalServer>();
             servers.add(multiServer1);
             servers.add(multiServer2);
-            multiCentralWithAllServer = new MultiCentralServer(configCentralServer, servers);
+            multiCentralWithAllServer = new RetrievalClient(configCentralServer, servers);
             
         } catch (Exception e) {
             e.printStackTrace();

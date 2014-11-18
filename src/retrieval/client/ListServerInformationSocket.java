@@ -1,4 +1,4 @@
-package retrieval.centralserver;
+package retrieval.client;
 
 import java.io.File;
 import java.net.URL;

@@ -1,4 +1,4 @@
-package retrieval.centralserver.exception;
+package retrieval.client.exception;
 
 import retrieval.exception.CBIRException;
 

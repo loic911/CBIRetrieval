@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrieval.centralserver;
+package retrieval.client;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +29,7 @@ import retrieval.storage.index.ResultSim;
  * with XML message and TCP/IP Socket
  * @author Rollus Loic
  */
-public class MultiCentralServerToServersObject  {
+public class RetrievalClientToServersObject  {
 
     /**
      * Server list
@@ -39,13 +39,13 @@ public class MultiCentralServerToServersObject  {
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(MultiCentralServerToServersObject.class);
+    private static Logger logger = Logger.getLogger(RetrievalClientToServersObject.class);
 
     /**
      * Launch communication class on server
      * @param listsServer List of server
      */
-    public MultiCentralServerToServersObject(List<RetrievalServer> listsServer) {
+    public RetrievalClientToServersObject(List<RetrievalServer> listsServer) {
         this.listsServer = listsServer;
     }
 

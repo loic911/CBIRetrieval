@@ -1,4 +1,4 @@
-package retrieval.centralserver;
+package retrieval.client;
 
 import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;

@@ -16,12 +16,12 @@ import java.util.Map;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import retrieval.centralserver.ListServerInformationSocket;
-import retrieval.centralserver.ServerInformationSocket;
+import retrieval.client.ListServerInformationSocket;
+import retrieval.client.RetrievalClient;
+import retrieval.client.ServerInformationSocket;
 import retrieval.config.ConfigCentralServer;
 import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
-import retrieval.centralserver.MultiCentralServer;
 import retrieval.server.RetrievalServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.Storage;
@@ -220,7 +220,7 @@ public class TestUtils {
          return server;
     }      
 
-    public static MultiCentralServer createMultiCentralServer(ConfigCentralServer ccs, List<RetrievalServer> servers) throws Exception {
+    public static RetrievalClient createMultiCentralServer(ConfigCentralServer ccs, List<RetrievalServer> servers) throws Exception {
              logger.info("Start SuperCentralServer...");
                 Iterator<RetrievalServer> it = servers.iterator();
                 ListServerInformationSocket serverList = new ListServerInformationSocket();
@@ -233,12 +233,12 @@ public class TestUtils {
                     serverList.add(serverInfo,i);
                     i++;
                 }
-                MultiCentralServer centralServer = new MultiCentralServer(ccs, serverList);
+                RetrievalClient centralServer = new RetrievalClient(ccs, serverList);
                 logger.info(serverList);
                 return centralServer;
     }
 
-    public static MultiCentralServer createCentralServer(ConfigCentralServer ccs, HashMap<Storage,Storage> servers) throws Exception {
+    public static RetrievalClient createCentralServer(ConfigCentralServer ccs, HashMap<Storage,Storage> servers) throws Exception {
 //             logger.info("Start SuperCentralServer...");
 //              MultiCentralServer centralServer = new MultiCentralServer(ccs, servers);
 //                return centralServer;

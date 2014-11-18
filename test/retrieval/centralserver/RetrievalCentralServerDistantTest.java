@@ -1,8 +1,6 @@
 package retrieval.centralserver;
 
-import retrieval.centralserver.MultiCentralServer;
-import retrieval.centralserver.ListServerInformationSocket;
-import retrieval.centralserver.ServerInformationSocket;
+import retrieval.client.RetrievalClient;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -13,6 +11,8 @@ import org.apache.log4j.Logger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.*;
+import retrieval.client.ListServerInformationSocket;
+import retrieval.client.ServerInformationSocket;
 import retrieval.utils.TestUtils;
 import retrieval.config.ConfigCentralServer;
 import retrieval.config.ConfigServer;
@@ -67,12 +67,12 @@ public class RetrievalCentralServerDistantTest extends RetrievalCentralServerAbs
              * multiserver2
              * container 1 = LOCALPICTURE5, LOCALPICTURE6 , LOCALPICTURE7
              */
-            multiCentralWithServer1 = new MultiCentralServer(configCentralServer, multiServer1);
+            multiCentralWithServer1 = new RetrievalClient(configCentralServer, multiServer1);
             
             List<ServerInformationSocket> servers = new ArrayList<ServerInformationSocket>();
             servers.add(new ServerInformationSocket("localhost", multiServer1.getPort()));
             servers.add(new ServerInformationSocket("localhost", multiServer2.getPort()));
-            multiCentralWithAllServer = new MultiCentralServer(configCentralServer, new ListServerInformationSocket(servers));
+            multiCentralWithAllServer = new RetrievalClient(configCentralServer, new ListServerInformationSocket(servers));
             
         } catch (Exception e) {
             e.printStackTrace();

@@ -49,6 +49,7 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
 
     public RetrievalIndexerDistantStorage(String host, int port, String storage) {
         super(false);
+        this.storage = storage;
         this.host = host;
         this.port = port;
     }
@@ -83,7 +84,7 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
         Socket server = new Socket(host, port);     
         
         MultiServerMessageIndex message = new MultiServerMessageIndex(id,properties, storage,!isSynchronous());
-       logger.debug(message);
+        logger.debug(message);
         Document doc = message.toXML();
 
         NetworkUtils.writeXmlToSocket(server, doc);

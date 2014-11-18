@@ -78,8 +78,8 @@ public class MultiServerTest extends TestUtils{
         String[] containers = RetrievalServer.readContainersFromDisk(config);
         
         assert containers.length==2;
-        assert containers[0].equals("test1");
-        assert containers[1].equals("test2");
+        assert containers[0].equals("test1") || containers[0].equals("test2");
+        assert containers[1].equals("test2") || containers[1].equals("test1");
         
     }
     

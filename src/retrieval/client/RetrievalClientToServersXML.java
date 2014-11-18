@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrieval.centralserver;
+package retrieval.client;
 
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -28,7 +28,7 @@ import retrieval.utils.NetworkUtils;
  * with XML message and TCP/IP Socket
  * @author Rollus Loic
  */
-public class MultiCentralServerToServersXML{
+public class RetrievalClientToServersXML{
 
     /**
      * Server list
@@ -37,7 +37,7 @@ public class MultiCentralServerToServersXML{
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(MultiCentralServerToServersXML.class);
+    private static Logger logger = Logger.getLogger(RetrievalClientToServersXML.class);
 
 
     public int getNumberOfServer() {
@@ -47,7 +47,7 @@ public class MultiCentralServerToServersXML{
      * Launch communication class on server
      * @param listsServer List of server
      */
-    public MultiCentralServerToServersXML(ListServerInformationSocket listsServer) {
+    public RetrievalClientToServersXML(ListServerInformationSocket listsServer) {
         this.listsServer = listsServer;
     }
 

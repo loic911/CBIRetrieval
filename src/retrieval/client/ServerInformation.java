@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package retrieval.centralserver;
+package retrieval.client;
 
 /**
  *
