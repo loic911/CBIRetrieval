@@ -1,13 +1,11 @@
 package retrieval.testvector;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
-import retrieval.utils.FileUtils;
 import retrieval.utils.ImageData;
 import retrieval.utils.PatcheInformation;
 import retrieval.utils.PictureUtils;

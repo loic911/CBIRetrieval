@@ -4,9 +4,12 @@
  */
 package retrieval.dist;
 
-import org.jdom.Document;
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import retrieval.exception.CBIRException;
 import retrieval.storage.exception.AlreadyIndexedException;
 

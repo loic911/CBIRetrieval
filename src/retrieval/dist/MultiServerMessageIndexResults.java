@@ -1,9 +1,14 @@
 package retrieval.dist;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import org.jdom.*;
-import retrieval.exception.*;
+import java.util.TreeMap;
+import org.jdom.Document;
+import org.jdom.Element;
+import retrieval.exception.CBIRException;
 
 /**
  * Message XML which contains pictur path and their state (index,in queue,...)

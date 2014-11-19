@@ -4,16 +4,15 @@
  */
 package retrieval.server;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.Assert.*;
-import org.junit.*;
-import retrieval.utils.TestUtils;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 import retrieval.config.ConfigServer;
 import retrieval.storage.Storage;
 import retrieval.utils.FileUtils;
 import retrieval.utils.NetworkUtils;
+import retrieval.utils.TestUtils;
 
 /**
  *

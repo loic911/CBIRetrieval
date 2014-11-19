@@ -3,7 +3,6 @@ package retrieval.storage.index;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import kyotocabinet.DB;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.storage.exception.CloseIndexException;

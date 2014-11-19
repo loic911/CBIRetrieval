@@ -1,8 +1,12 @@
 package retrieval.dist;
 
-import java.util.*;
-import org.jdom.*;
-import retrieval.exception.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import retrieval.exception.CBIRException;
 
 /**
  * Message for XML request to get information from a server

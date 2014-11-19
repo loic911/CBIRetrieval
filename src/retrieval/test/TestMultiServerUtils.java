@@ -5,20 +5,19 @@
 
 package retrieval.test;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import retrieval.client.ListServerInformationSocket;
 import retrieval.client.RetrievalClient;
 import retrieval.client.ServerInformationSocket;
-import retrieval.config.ConfigCentralServer;
+import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.server.RetrievalServer;
-import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.server.globaldatabase.KyotoCabinetDatabase;
-import retrieval.storage.Storage;
 /**
  *
  * @author lrollus
@@ -52,7 +51,7 @@ public class TestMultiServerUtils {
            return createMultiServer(cc,port,serverNumber,"MEMORY");
     }
 
-    public static RetrievalClient createMultiCentralServer(ConfigCentralServer ccs, List<RetrievalServer> servers) throws Exception {
+    public static RetrievalClient createMultiCentralServer(ConfigClient ccs, List<RetrievalServer> servers) throws Exception {
              logger.info("Start SuperCentralServer...");
                 Iterator<RetrievalServer> it = servers.iterator();
                 ListServerInformationSocket serverList = new ListServerInformationSocket();

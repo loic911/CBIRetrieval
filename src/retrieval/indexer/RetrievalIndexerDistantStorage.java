@@ -11,12 +11,14 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
-import retrieval.dist.*;
+import retrieval.dist.MessageError;
+import retrieval.dist.MultiServerMessageAction;
+import retrieval.dist.MultiServerMessageDelete;
+import retrieval.dist.MultiServerMessageIndex;
+import retrieval.dist.MultiServerMessageIndexResults;
+import retrieval.dist.MultiServerMessageInfos;
+import retrieval.dist.NotValidMessageXMLException;
 import retrieval.exception.CBIRException;
-import retrieval.storage.Storage;
-import retrieval.storage.exception.InvalidPictureException;
-import retrieval.storage.exception.PictureTooHomogeneous;
-import retrieval.storage.exception.TooMuchIndexRequestException;
 import retrieval.utils.NetworkUtils;
 
 /**

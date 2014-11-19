@@ -1,6 +1,6 @@
 package retrieval.testvector.generator.exception;
 
-import retrieval.exception.*;
+import retrieval.exception.CBIRException;
 
 /**
  * Argument for tests vectors creation error (ex: negative value for m)

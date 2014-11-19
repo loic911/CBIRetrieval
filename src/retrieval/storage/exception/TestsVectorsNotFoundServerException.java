@@ -1,6 +1,6 @@
 package retrieval.storage.exception;
 
-import retrieval.exception.*;
+import retrieval.exception.CBIRException;
 
 /**
  * Tests vectors cannot be found

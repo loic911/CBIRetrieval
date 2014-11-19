@@ -1,22 +1,24 @@
 package retrieval.storage.index;
 
-import retrieval.storage.index.path.SimpleHashMapPathIndexTest;
-import retrieval.storage.index.path.PicturePathIndex;
-import retrieval.storage.index.path.KyotoCabinetPathIndexSingleFile;
-import retrieval.storage.index.path.SimpleHashMapPathIndex;
-import retrieval.storage.index.patchs.SimpleHashMapPatchsIndex;
-import retrieval.storage.index.patchs.SimpleHashMapPatchsIndexTest;
-import retrieval.storage.index.patchs.PicturePatchsIndex;
-import retrieval.storage.index.patchs.KyotoCabinetPatchsIndexSingleFile;
-import retrieval.storage.exception.StartIndexException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.log4j.Logger;
+import retrieval.config.ConfigServer;
+import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.exception.AlreadyIndexedException;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
-import java.io.*;
-import java.util.*;
-import org.apache.log4j.*;
-import retrieval.config.*;
-import retrieval.server.globaldatabase.GlobalDatabase;
+import retrieval.storage.exception.StartIndexException;
+import retrieval.storage.index.patchs.KyotoCabinetPatchsIndexSingleFile;
+import retrieval.storage.index.patchs.PicturePatchsIndex;
+import retrieval.storage.index.patchs.SimpleHashMapPatchsIndex;
+import retrieval.storage.index.patchs.SimpleHashMapPatchsIndexTest;
+import retrieval.storage.index.path.KyotoCabinetPathIndexSingleFile;
+import retrieval.storage.index.path.PicturePathIndex;
+import retrieval.storage.index.path.SimpleHashMapPathIndex;
+import retrieval.storage.index.path.SimpleHashMapPathIndexTest;
 
 /**
  * Picture index (not visual word index!)

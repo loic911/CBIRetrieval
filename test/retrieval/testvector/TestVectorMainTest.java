@@ -5,11 +5,16 @@
 package retrieval.testvector;
 
 import java.io.File;
-import org.junit.*;
-import static org.junit.Assert.*;
-import retrieval.utils.TestUtils;
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import retrieval.config.ConfigClient;
 import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
+import retrieval.utils.TestUtils;
 
 /**
  *
@@ -57,9 +62,13 @@ public class TestVectorMainTest extends TestUtils{
         
         TestVectorMain.write(numberOfVector, numberOfTest, xMax, yMax, 0, 0, firstValue, lastValue, firstPosition, lastPosition, buildDirectory);
         
-        TestVectorListCentralServer tests = TestVectorReading.readClient(buildDirectory);
+        ConfigClient config =  new ConfigClient("testdata/ConfigClient.prop");
+        config.setNumberOfTV(numberOfVector);
+        
+        TestVectorListCentralServer tests = TestVectorReading.readClient(buildDirectory,config);
         assertEquals(numberOfVector,tests.size());
     }
+       
     
     @Test
     public void testMainVectorTest() throws Exception {
@@ -79,7 +88,10 @@ public class TestVectorMainTest extends TestUtils{
         String[] agrs = { numberOfVector+"",numberOfTest+"", xMax+"", yMax+"",  firstValue+"", lastValue+"", firstPosition+"", lastPosition+"", buildDirectory};
         TestVectorMain.main(agrs);
         
-        TestVectorListCentralServer tests = TestVectorReading.readClient(buildDirectory);
+        ConfigClient config =  new ConfigClient("testdata/ConfigClient.prop");
+        config.setNumberOfTV(numberOfVector);
+        
+        TestVectorListCentralServer tests = TestVectorReading.readClient(buildDirectory,config);
         assertEquals(numberOfVector,tests.size());        
     }
 }

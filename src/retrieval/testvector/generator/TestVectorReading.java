@@ -10,9 +10,8 @@ import org.apache.commons.io.comparator.NameFileComparator;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
-import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.storage.exception.TestsVectorsNotFoundServerException;
 import retrieval.testvector.TestVectorCentralServer;
 import retrieval.testvector.TestVectorListCentralServer;
@@ -35,7 +34,7 @@ public class TestVectorReading {
      * @return Test vector central server list
      * @throws TestsVectorsNotFoundServerException Cannot read tests vectors
      */
-    public static TestVectorListCentralServer readClient(String directory) throws TestsVectorsNotFoundServerException {
+    public static TestVectorListCentralServer readClient(String directory, ConfigClient config) throws TestsVectorsNotFoundServerException {
 
         logger.debug("readClient:" + directory);
         TestVectorListCentralServer lists = new TestVectorListCentralServer();
@@ -49,7 +48,7 @@ public class TestVectorReading {
         Arrays.sort(fs, NameFileComparator.NAME_COMPARATOR);
         logger.debug("readClient: read...");
 
-        for (int i = 0; i < fs.length; i++) {
+        for (int i = 0; i < fs.length && i<config.getNumberOfTV(); i++) {
 
             try {
 
@@ -96,12 +95,12 @@ public class TestVectorReading {
         logger.info("readClient: fs="+fs.length);
         Arrays.sort(fs, NameFileComparator.NAME_COMPARATOR);
         logger.info("readClient:"+Arrays.toString(fs));
-        config.setNumberOfTestVector(fs.length);
+        //config.setNumber(fs.length);
 
         
         //init here client for redis/nessDB
         
-        for (int i = 0; i < fs.length; i++) {
+        for (int i = 0; i < fs.length && i<config.getNumberOfTestVector(); i++) {
                 List<String> key = new ArrayList<String>();
                 List<String> val = new ArrayList<String>();
                 List<String> pos = new ArrayList<String>();

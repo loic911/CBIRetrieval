@@ -1,12 +1,18 @@
 package retrieval.utils;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
 import org.apache.log4j.Logger;
-import org.jdom.*;
-import org.jdom.output.*;
-import retrieval.dist.*;
+import org.jdom.Document;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+import retrieval.dist.NotValidMessageXMLException;
 
 /**
  * Util methods for network communication

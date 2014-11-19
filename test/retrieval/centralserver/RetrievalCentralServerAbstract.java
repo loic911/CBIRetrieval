@@ -1,23 +1,21 @@
 package retrieval.centralserver;
 
-import retrieval.client.RetrievalClient;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
+import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import org.junit.*;
-import retrieval.utils.TestUtils;
-import retrieval.config.ConfigCentralServer;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import retrieval.client.RetrievalClient;
+import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.index.ResultSim;
-import retrieval.utils.FileUtils;
+import retrieval.utils.TestUtils;
 
 /**
  *
@@ -30,7 +28,7 @@ public abstract class RetrievalCentralServerAbstract extends TestUtils{
     String CONTAINER1 = "myContainer1";
     String CONTAINER2 = "myContainer2";
     ConfigServer config;
-    ConfigCentralServer configCentralServer;
+    ConfigClient configCentralServer;
     RetrievalClient multiCentralWithServer1;
     RetrievalClient multiCentralWithAllServer;
     

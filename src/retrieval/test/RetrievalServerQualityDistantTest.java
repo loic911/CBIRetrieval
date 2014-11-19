@@ -15,12 +15,11 @@ import javax.imageio.ImageIO;
 import retrieval.client.ListServerInformationSocket;
 import retrieval.client.RetrievalClient;
 import retrieval.client.ServerInformationSocket;
-import retrieval.config.ConfigCentralServer;
+import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.indexer.RetrievalIndexer;
 import retrieval.indexer.RetrievalIndexerDistantStorage;
-import retrieval.indexer.RetrievalIndexerLocalStorage;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
@@ -61,7 +60,7 @@ public class RetrievalServerQualityDistantTest extends TestMultiServerUtils{
             id = 0l;
             ListServerInformationSocket sockets = new ListServerInformationSocket();
             sockets.add(new ServerInformationSocket("localhost", PORT1), 10000);
-            RetrievalClient client = new RetrievalClient(new ConfigCentralServer("config/ConfigCentralServer.prop"), sockets);
+            RetrievalClient client = new RetrievalClient(new ConfigClient("config/ConfigClient.prop"), sockets);
             for(String file : indexFiles) {
                 System.out.println("Search for "+file);
                 ResultsSimilarities result = client.search(ImageIO.read(new File(file)), 30);

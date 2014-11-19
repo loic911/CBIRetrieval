@@ -1,5 +1,5 @@
 package retrieval.storage.exception;
-import retrieval.exception.*;
+import retrieval.exception.CBIRException;
 
 /**
  * Cannot close index

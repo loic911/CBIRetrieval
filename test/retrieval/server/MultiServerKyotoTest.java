@@ -5,8 +5,11 @@
 package retrieval.server;
 
 import java.io.File;
-import static org.junit.Assert.*;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import retrieval.config.ConfigServer;
 import retrieval.utils.FileUtils;
 
@@ -29,7 +32,7 @@ public class MultiServerKyotoTest extends MultiServerAbstract{
     @Before
     public void setUp() {
         try {
-            config = new ConfigServer("config/ConfigServer.prop");
+            config = new ConfigServer("testdata/ConfigServer.prop");
             config.setStoreName("KYOTOSINGLEFILE");
             FileUtils.deleteAllSubFilesRecursively(new File(config.getIndexPath()));
             System.out.println("server");

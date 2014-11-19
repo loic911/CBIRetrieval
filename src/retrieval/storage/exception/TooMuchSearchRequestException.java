@@ -1,5 +1,5 @@
 package retrieval.storage.exception;
-import retrieval.exception.*;
+import retrieval.exception.CBIRException;
 
 /**
  * Server is full: too much search request from client

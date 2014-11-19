@@ -5,19 +5,22 @@
 package retrieval.indexer;
 
 import java.io.File;
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.log4j.Logger;
-import org.junit.*;
-import static org.junit.Assert.*;
-import retrieval.utils.TestUtils;
-import retrieval.client.exception.ImageNotValidException;
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import retrieval.config.ConfigServer;
-import retrieval.exception.CBIRException;
-import retrieval.indexer.main.RetrievalIndexMain;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.exception.PictureNotFoundException;
-import retrieval.test.TestMultiServerUtils;
+import retrieval.utils.TestUtils;
 
 /**
  *
@@ -45,7 +48,7 @@ public class RetrievalIndexerLocalTest extends TestUtils {
     @Before
     public void setUp() {
         try {
-            config = new ConfigServer("config/ConfigServer.prop");
+            config = new ConfigServer("testdata/ConfigServer.prop");
             config.setStoreName("MEMORY");
             System.out.println("server");
             multiServer = createMultiServer(config,MULTISERVERPORT1,4,"MEMORY");            

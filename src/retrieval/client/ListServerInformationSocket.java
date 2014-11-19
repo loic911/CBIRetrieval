@@ -2,12 +2,15 @@ package retrieval.client;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import retrieval.exception.CBIRException;
-import retrieval.server.RetrievalServer;
 
 /**
  * This class is a list of server information

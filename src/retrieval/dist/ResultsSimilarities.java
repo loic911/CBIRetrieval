@@ -1,8 +1,8 @@
 package retrieval.dist;
 
-import retrieval.client.ListServerInformationObject;
+import java.util.ArrayList;
+import java.util.List;
 import retrieval.client.ListServerInformationSocket;
-import java.util.*;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.index.ResultSim;
 

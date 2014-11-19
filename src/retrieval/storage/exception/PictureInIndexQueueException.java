@@ -1,6 +1,6 @@
 package retrieval.storage.exception;
 
-import retrieval.exception.*;
+import retrieval.exception.CBIRException;
 /**
  * Picture is in indexed queue
  * @author Rollus Loic

@@ -1,11 +1,8 @@
 package retrieval.indexer.main;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import retrieval.indexer.RetrievalIndexer;
 import retrieval.indexer.RetrievalIndexerDistantStorage;
-import retrieval.indexer.RetrievalIndexerLocalStorage;
 
 /**
  * This class implement a Indexer to manage picture on simple server with socket/xml

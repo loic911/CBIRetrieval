@@ -1,6 +1,6 @@
 package retrieval.testvector.generator.exception;
 
-import retrieval.exception.*;
+import retrieval.exception.CBIRException;
 
 /**
  * IO exception during the tests vectors files creation

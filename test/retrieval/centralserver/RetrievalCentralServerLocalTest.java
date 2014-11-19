@@ -1,22 +1,17 @@
 package retrieval.centralserver;
 
-import retrieval.client.RetrievalClient;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
-import static org.junit.Assert.assertEquals;
+import org.junit.After;
+import org.junit.AfterClass;
 import static org.junit.Assert.fail;
-import org.junit.*;
-import retrieval.utils.TestUtils;
-import retrieval.config.ConfigCentralServer;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import retrieval.client.RetrievalClient;
+import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
-import retrieval.dist.ResultsSimilarities;
 import retrieval.server.RetrievalServer;
-import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
 
 /**
@@ -40,8 +35,8 @@ public class RetrievalCentralServerLocalTest extends RetrievalCentralServerAbstr
     @Before
     public void setUp() {
         try {
-            config = new ConfigServer("config/ConfigServer.prop");
-            configCentralServer = new ConfigCentralServer("config/ConfigCentralServer.prop");
+            config = new ConfigServer("testdata/ConfigServer.prop");
+            configCentralServer = new ConfigClient("testdata/ConfigClient.prop");
             config.setStoreName("MEMORY");
             System.out.println("server");
             multiServer1 = createMultiServer(config,MULTISERVERPORT1,0,"MEMORY");      

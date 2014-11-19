@@ -4,18 +4,11 @@
  */
 package retrieval.storage.index.main.kyoto;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import kyotocabinet.Cursor;
 import kyotocabinet.DB;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.storage.exception.ReadIndexException;
-import retrieval.storage.index.ValueStructure;
-import retrieval.storage.index.main.HashTableIndex;
-import retrieval.utils.ConvertUtils;
 
 /**
  *

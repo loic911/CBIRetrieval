@@ -1,6 +1,7 @@
 package retrieval.storage.index.path;
+import java.util.List;
+import java.util.Map;
 import retrieval.storage.exception.CloseIndexException;
-import java.util.*;
 
 /**
  * This interface allow to implement methods for a Picture index

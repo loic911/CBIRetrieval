@@ -9,8 +9,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.server.globaldatabase.KyotoCabinetDatabase;
@@ -37,7 +35,7 @@ public class KyotoCabinetPathIndexSingleFileTest extends KyotoCabinetPathIndexTe
     @Before
     public void setUp() {
         try {
-        config = new ConfigServer("config/ConfigServer.prop");
+        config = new ConfigServer("testdata/ConfigServer.prop");
         FileUtils.deleteAllSubFilesRecursively(new File(config.getIndexPath()));
         GlobalDatabase database = new KyotoCabinetDatabase(config);
         mainIndex = new KyotoCabinetPathIndexSingleFile(database,"0"); 

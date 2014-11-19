@@ -4,16 +4,10 @@
  */
 package retrieval.storage.index.patchs;
 
-import java.io.File;
-import java.util.Map;
-import kyotocabinet.Cursor;
 import kyotocabinet.DB;
 import org.apache.log4j.Logger;
-import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
-import retrieval.utils.FileUtils;
 
 /**
  *

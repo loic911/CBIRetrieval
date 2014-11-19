@@ -4,7 +4,7 @@ package retrieval.storage.exception;
  * Bad request message
  * @author Rollus Loic
  */
-import retrieval.exception.*;
+import retrieval.exception.CBIRException;
 /**
  *
  * @author finch

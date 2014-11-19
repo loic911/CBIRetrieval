@@ -1,25 +1,14 @@
 package retrieval.indexer;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.Socket;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
-import retrieval.dist.*;
+import retrieval.dist.NotValidMessageXMLException;
 import retrieval.exception.CBIRException;
-import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;
-import retrieval.storage.exception.InvalidPictureException;
-import retrieval.storage.exception.PictureTooHomogeneous;
-import retrieval.storage.exception.TooMuchIndexRequestException;
 import retrieval.storage.index.NoValidPictureException;
-import retrieval.utils.NetworkUtils;
 
 /**
  * Retrieval indexer for a local RetrievalServer (a java object).

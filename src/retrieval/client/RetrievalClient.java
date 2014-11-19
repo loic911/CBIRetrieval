@@ -8,10 +8,9 @@ package retrieval.client;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
-import retrieval.config.ConfigCentralServer;
+import retrieval.config.ConfigClient;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.exception.CBIRException;
 import retrieval.server.RetrievalServer;
@@ -28,7 +27,7 @@ public class RetrievalClient implements RetrievalClientInterface{
     /**
      * Config object
      */
-    private ConfigCentralServer configCentralServer;
+    private ConfigClient configClient;
     
     /**
      * Tests vectors to build request pictures data
@@ -50,40 +49,40 @@ public class RetrievalClient implements RetrievalClientInterface{
 
     /**
      * Build a multicentralserver and read servers infos from serversFile
-     * @param configCentralServer Config object
+     * @param configClient Config object
      * @param serversFile Server.xml files
      * @throws Exception Error during creation
      */
-    public RetrievalClient(ConfigCentralServer configCentralServer, String serversFile) throws CBIRException {
-        this.configCentralServer = configCentralServer;
-        readTestsVectors(configCentralServer);
-        readServerList(configCentralServer,serversFile);
+    public RetrievalClient(ConfigClient configClient, String serversFile) throws CBIRException {
+        this.configClient = configClient;
+        readTestsVectors(configClient);
+        readServerList(configClient,serversFile);
     }
 
     /**
      * Build a multicentralserver and read servers infos from serversFile
-     * @param configCentralServer Config object
+     * @param configClient Config object
      * @param listsServerSocket MultiServer infos
      * @throws Exception Error during creation
      */
-    public RetrievalClient(ConfigCentralServer configCentralServer,ListServerInformationSocket listsServerSocket) throws CBIRException {
-        this.configCentralServer = configCentralServer;
+    public RetrievalClient(ConfigClient configClient,ListServerInformationSocket listsServerSocket) throws CBIRException {
+        this.configClient = configClient;
         this.listsServerSocket = listsServerSocket;
-        readTestsVectors(configCentralServer);
+        readTestsVectors(configClient);
     }
 
-    public RetrievalClient(ConfigCentralServer configCentralServer,List<RetrievalServer> servers) throws CBIRException {
-        this.configCentralServer = configCentralServer;    
+    public RetrievalClient(ConfigClient configClient,List<RetrievalServer> servers) throws CBIRException {
+        this.configClient = configClient;    
         this.listServerObjects = servers;
-        readTestsVectors(configCentralServer);
+        readTestsVectors(configClient);
     } 
     
-    public RetrievalClient(ConfigCentralServer configCentralServer,RetrievalServer server) throws CBIRException {
+    public RetrievalClient(ConfigClient configClient,RetrievalServer server) throws CBIRException {
         List<RetrievalServer> servers = new ArrayList<RetrievalServer>();
         servers.add(server);
-        this.configCentralServer = configCentralServer;    
+        this.configClient = configClient;    
         this.listServerObjects = servers;
-        readTestsVectors(configCentralServer);
+        readTestsVectors(configClient);
     }      
     
     /**
@@ -95,7 +94,7 @@ public class RetrievalClient implements RetrievalClientInterface{
      */
     public ResultsSimilarities search(BufferedImage img, int k) throws CBIRException {
         logger.debug("search (BufferedImage img, int k)");
-        return this.search(img, configCentralServer.getNumberOfPatch(), k,new String[0]);
+        return this.search(img, configClient.getNumberOfPatch(), k,new String[0]);
     }
     
     /**
@@ -108,7 +107,7 @@ public class RetrievalClient implements RetrievalClientInterface{
      */
     public ResultsSimilarities search(BufferedImage img, int k,String[] servers) throws CBIRException {
         logger.debug("search(BufferedImage img, int k,String[] servers)");
-        return this.search(img, configCentralServer.getNumberOfPatch(), k,servers);
+        return this.search(img, configClient.getNumberOfPatch(), k,servers);
     }
     
     /**
@@ -121,7 +120,7 @@ public class RetrievalClient implements RetrievalClientInterface{
      */
     public ResultsSimilarities search(BufferedImage img, int k,List<String> servers) throws CBIRException {
         logger.debug("search(BufferedImage img, int k,String[] servers)");
-        return this.search(img, configCentralServer.getNumberOfPatch(), k,(String[])servers.toArray(new String[servers.size()]));
+        return this.search(img, configClient.getNumberOfPatch(), k,(String[])servers.toArray(new String[servers.size()]));
     }    
     
     /**
@@ -137,13 +136,12 @@ public class RetrievalClient implements RetrievalClientInterface{
         logger.debug("search(BufferedImage img, int N, int k,String[] servers)");
         try {
             //extract Visual word for img
-            List<ConcurrentHashMap<String, Long>> visualWords = testVectors.generateVisualWordFromPicture(
-                    img,
+            List<ConcurrentHashMap<String, Long>> visualWords = testVectors.generateVisualWordFromPicture(img,
                     null, 
-                    configCentralServer.getNumberOfPatch(), 
-                    configCentralServer.getResizeMethod(), 
-                    configCentralServer.getSizeOfPatchResizeWidth(), 
-                    configCentralServer.getSizeOfPatchResizeHeight());
+                    configClient.getNumberOfPatch(), 
+                    configClient.getResizeMethod(), 
+                    configClient.getSizeOfPatchResizeWidth(), 
+                    configClient.getSizeOfPatchResizeHeight());
 
             return this.search(visualWords, N, k,servers);
         } catch (Exception e) {
@@ -206,20 +204,20 @@ public class RetrievalClient implements RetrievalClientInterface{
      * @param configCentralServer Configuration object of central sever
      * @throws Exception Files not found/Not valids
      */
-    private void readTestsVectors(ConfigCentralServer configCentralServer) throws CBIRException {
+    private void readTestsVectors(ConfigClient configCentralServer) throws CBIRException {
         //Lire les vecteur de test triés
-        testVectors = TestVectorReading.readClient(configCentralServer.getVectorPath());
+        testVectors = TestVectorReading.readClient(configCentralServer.getVectorPath(),configCentralServer);
         logger.info(testVectors.size() + " tests vectors read...");
     }
 
     /**
      * Read server list on parh
-     * @param configCentralServer Configuration object of central sever
+     * @param configClient Configuration object of central sever
      * @param serversFile Server file path
      * @throws Exception Files not found/Not valids
      */
-    private void readServerList(ConfigCentralServer configCentralServer, String serversFile)  throws CBIRException{
-        setListsServerSocket(new ListServerInformationSocket(serversFile, configCentralServer.getTimeout()));
+    private void readServerList(ConfigClient configClient, String serversFile)  throws CBIRException{
+        setListsServerSocket(new ListServerInformationSocket(serversFile, configClient.getTimeout()));
     }
 
     /**

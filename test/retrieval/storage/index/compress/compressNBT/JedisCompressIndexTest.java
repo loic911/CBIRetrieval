@@ -5,20 +5,8 @@
 
 package retrieval.storage.index.compress.compressNBT;
 
-import retrieval.utils.ProcessUtils;
-import retrieval.storage.exception.StartIndexException;
-import retrieval.utils.FileUtils;
-import java.io.File;
-import retrieval.config.ConfigServer;
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.BasicConfigurator;
-import java.util.HashMap;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import retrieval.config.ConfigServer;
 
 /**
  *

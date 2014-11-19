@@ -5,17 +5,15 @@
 package retrieval.server;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import retrieval.config.ConfigServer;
-import retrieval.dist.RequestPictureVisualWord;
 import retrieval.storage.Storage;
 import retrieval.utils.FileUtils;
 import retrieval.utils.TestUtils;

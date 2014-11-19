@@ -1,5 +1,5 @@
 package retrieval.storage.exception;
-import retrieval.exception.*;
+import retrieval.exception.CBIRException;
 
 /**
  * No right to do this

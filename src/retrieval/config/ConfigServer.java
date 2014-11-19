@@ -1,6 +1,6 @@
 package retrieval.config;
 
-import java.util.*;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 
 
@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 public class ConfigServer extends Config implements Cloneable {
     
     //NOT LOADED FROM FILES!
-    private int numberOfTestVector;
     private int numberOfSubserver=1;   
     private int currentRedisStore=-1;  
 
@@ -43,6 +42,8 @@ public class ConfigServer extends Config implements Cloneable {
      * Number of patch (N) for request picture
      */
     private int numberOfPatch;
+    
+    private int numberOfTV;
     /**
      * Resize method use (influence performance)
      * 1=BILL/Graphics2D, 2=PPV/Graphics2D, 3=BILL/AffineTransformOp et 4=PPV/AffineTransformOp
@@ -194,6 +195,8 @@ public class ConfigServer extends Config implements Cloneable {
         portInfo = Integer.parseInt(p.getProperty("PORTINFO", propertiesError));        
         
         numberOfPatch = Integer.parseInt(p.getProperty("NUMBEROFPATCH", propertiesError));
+        numberOfTV = Integer.parseInt(p.getProperty("NUMBEROFTV", propertiesError));
+        
         resizeMethod = Integer.parseInt(p.getProperty("RESIZEMETHOD", propertiesError));
         indexCompressThreshold = Integer.parseInt(p.getProperty("INDEXCOMPRESSTHRESHOLD", propertiesError)); 
         maxPercentageSimilarWord = Double.parseDouble(p.getProperty("MAXPERCTENTAGESIMILARWORD", propertiesError));      
@@ -347,14 +350,7 @@ public class ConfigServer extends Config implements Cloneable {
      * @return the numberOfTestVector
      */
     public int getNumberOfTestVector() {
-        return numberOfTestVector;
-    }
-
-    /**
-     * @param numberOfTestVector the numberOfTestVector to set
-     */
-    public void setNumberOfTestVector(int numberOfTestVector) {
-        this.numberOfTestVector = numberOfTestVector;
+        return numberOfTV;
     }
 
     /**

@@ -1,25 +1,14 @@
 package retrieval.storage;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import javax.imageio.ImageIO;
-import static org.junit.Assert.*;
-import org.junit.*;
-import retrieval.utils.TestUtils;
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import retrieval.config.ConfigServer;
-import retrieval.exception.CBIRException;
-import retrieval.storage.exception.NoException;
-import retrieval.storage.exception.PictureNotFoundException;
 import retrieval.storage.exception.PictureTooHomogeneous;
-import retrieval.testvector.TestVectorListCentralServer;
-import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
-import retrieval.utils.NetworkUtils;
-import static retrieval.utils.TestUtils.LOCALPICTURE1;
 import static retrieval.utils.TestUtils.LOCALPICTURE1MAP;
 
 /**
@@ -43,7 +32,7 @@ public class StorageMemoryTest extends StorageTestAbstract {
     @Before
     public void setUp() {
         try {
-            config = new ConfigServer("config/ConfigServer.prop");
+            config = new ConfigServer("testdata/ConfigServer.prop");
             config.setStoreName("MEMORY");
             System.out.println("server");
             storage = createServer("0",config);           

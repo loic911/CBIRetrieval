@@ -1,0 +1,8 @@
+message ValueInfo {
+	required int64 nbt = 1;
+	repeated EntryInfo imageSet = 2;
+}
+message EntryInfo {
+	required int32 idImage = 3;
+	required int32 occNumber = 4;
+}

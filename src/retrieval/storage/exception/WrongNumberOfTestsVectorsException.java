@@ -1,5 +1,5 @@
 package retrieval.storage.exception;
-import retrieval.exception.*;
+import retrieval.exception.CBIRException;
 
 /**
  * Number of tests vectors (T) from central server and server are different

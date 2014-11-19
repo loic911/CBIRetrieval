@@ -13,14 +13,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import retrieval.dist.NotValidMessageXMLException;
 import retrieval.exception.CBIRException;
-import retrieval.storage.exception.InvalidPictureException;
-import retrieval.storage.exception.TooMuchIndexRequestException;
 import retrieval.storage.index.NoValidPictureException;
 import retrieval.utils.FileUtils;
 

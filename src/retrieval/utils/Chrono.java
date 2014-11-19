@@ -1,6 +1,6 @@
 package retrieval.utils;
 
-import java.util.*;
+import java.util.Date;
 
 /**
  * This class implements a simple chrono

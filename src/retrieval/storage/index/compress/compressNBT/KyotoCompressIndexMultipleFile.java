@@ -6,9 +6,7 @@
 package retrieval.storage.index.compress.compressNBT;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import kyotocabinet.*;
+import kyotocabinet.DB;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 

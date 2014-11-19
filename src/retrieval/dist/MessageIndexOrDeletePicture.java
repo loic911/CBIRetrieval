@@ -1,7 +1,13 @@
 package retrieval.dist;
 
-import java.util.*;
-import org.jdom.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
 
 /**
  * Message for XML request to index/delete pictures/paths

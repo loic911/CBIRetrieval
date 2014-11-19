@@ -1,7 +1,6 @@
 package retrieval.client;
 
 import retrieval.server.RetrievalServer;
-import retrieval.storage.Storage;
 
 /**
  * Server Information class

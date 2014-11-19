@@ -1,6 +1,5 @@
 package retrieval.storage;
 
-import retrieval.storage.Storage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,17 +7,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.imageio.ImageIO;
-import static org.junit.Assert.*;
-import org.junit.*;
-import retrieval.utils.TestUtils;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.exception.CBIRException;
 import retrieval.storage.exception.NoException;
-import retrieval.storage.exception.PictureNotFoundException;
 import retrieval.testvector.TestVectorListCentralServer;
 import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
-import retrieval.utils.NetworkUtils;
+import retrieval.utils.TestUtils;
 
 /**
  *
@@ -244,7 +244,7 @@ public abstract class StorageTestAbstract extends TestUtils {
     public void testServerSearch() throws Exception {
         System.out.println("testServerSearch");        
         Long id1 = storage.indexPicture(FileUtils.readPicture(LOCALPICTURE1),5l,LOCALPICTURE1MAP);  
-        TestVectorListCentralServer buildVW = TestVectorReading.readClient(config.getVectorPath());
+        TestVectorListCentralServer buildVW = TestVectorReading.readClient(config.getVectorPath(),new ConfigClient("testdata/ConfigClient.prop"));
         List<ConcurrentHashMap<String,Long>> vw = buildVW.generateVisualWordFromPicture(ImageIO.read(new File(LOCALPICTURE1)), id1, config.getNumberOfPatch(), config.getResizeMethod(), config.getSizeOfPatchResizeWidth(), config.getSizeOfPatchResizeHeight());
         List<ConcurrentHashMap<String,Long>> result = storage.getNBT(vw);
     }

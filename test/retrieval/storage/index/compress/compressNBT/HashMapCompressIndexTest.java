@@ -5,16 +5,16 @@
 
 package retrieval.storage.index.compress.compressNBT;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import retrieval.config.ConfigServer;
-import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import retrieval.config.ConfigServer;
 import retrieval.storage.exception.StartIndexException;
 
 /**

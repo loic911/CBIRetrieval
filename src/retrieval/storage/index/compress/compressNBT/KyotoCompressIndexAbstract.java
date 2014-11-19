@@ -5,12 +5,11 @@
 
 package retrieval.storage.index.compress.compressNBT;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import kyotocabinet.*;
+import kyotocabinet.Cursor;
+import kyotocabinet.DB;
 import org.apache.log4j.Logger;
-import retrieval.config.ConfigServer;
 
 public abstract class KyotoCompressIndexAbstract extends CompressIndexNBT {
 

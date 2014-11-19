@@ -1,9 +1,14 @@
 package retrieval.storage.index.path;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.log4j.Logger;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
-import java.util.*;
-import org.apache.log4j.*;
 
 /**
  * Picture index path in memory

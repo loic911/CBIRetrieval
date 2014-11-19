@@ -5,16 +5,10 @@
 
 package retrieval.storage.index.path;
 
-import java.io.File;
-import java.util.*;
-import kyotocabinet.Cursor;
 import kyotocabinet.DB;
 import org.apache.log4j.Logger;
-import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.StartIndexException;
-import retrieval.utils.FileUtils;
 /**
  *
  * @author lrollus

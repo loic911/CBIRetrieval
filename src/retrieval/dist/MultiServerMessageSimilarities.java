@@ -1,9 +1,17 @@
 package retrieval.dist;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.*;
-import org.jdom.*;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
 import retrieval.utils.CollectionUtils;
 
 /**

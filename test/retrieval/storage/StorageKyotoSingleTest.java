@@ -1,12 +1,14 @@
 package retrieval.storage;
 
 import java.io.File;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
 import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.server.globaldatabase.KyotoCabinetDatabase;
-import retrieval.storage.exception.PictureTooHomogeneous;
 import retrieval.utils.FileUtils;
 
 /**
@@ -30,7 +32,7 @@ public class StorageKyotoSingleTest extends StorageTestAbstract {
     @Before
     public void setUp() {
         try {
-            config = new ConfigServer("config/ConfigServer.prop");
+            config = new ConfigServer("testdata/ConfigServer.prop");
             config.setStoreName("KYOTOSINGLEFILE");
             System.out.println("server");
             FileUtils.deleteAllSubFilesRecursively(new File(config.getIndexPath()));

@@ -1,7 +1,8 @@
 package retrieval.server;
 
-import org.apache.log4j.*;
-import retrieval.config.*;
+import org.apache.log4j.BasicConfigurator;
+import retrieval.config.ConfigServer;
+import retrieval.config.ConfigurationFileNotFoundException;
 
 /**
  * Main class for server

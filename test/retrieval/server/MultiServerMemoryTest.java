@@ -4,15 +4,13 @@
  */
 package retrieval.server;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import static org.junit.Assert.*;
-import org.junit.*;
-import retrieval.utils.TestUtils;
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import retrieval.config.ConfigServer;
 import retrieval.utils.FileUtils;
-import retrieval.utils.NetworkUtils;
 import static retrieval.utils.TestUtils.LOCALPICTURE1;
 
 /**
@@ -33,7 +31,7 @@ public class MultiServerMemoryTest extends MultiServerAbstract{
     @Before
     public void setUp() {
         try {
-            config = new ConfigServer("config/ConfigServer.prop");
+            config = new ConfigServer("testdata/ConfigServer.prop");
             config.setStoreName("MEMORY");
             System.out.println("server");
             multiServer = createMultiServer(config,MULTISERVERPORT1,0,"MEMORY");      

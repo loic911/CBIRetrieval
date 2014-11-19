@@ -19,7 +19,7 @@ import org.apache.log4j.PropertyConfigurator;
 import retrieval.client.ListServerInformationSocket;
 import retrieval.client.RetrievalClient;
 import retrieval.client.ServerInformationSocket;
-import retrieval.config.ConfigCentralServer;
+import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.server.RetrievalServer;
@@ -115,7 +115,9 @@ public class TestUtils {
     public static String LOCALPICTURE5 = LOCALPICTUREPATH+"crop5.jpg";
     public static String LOCALPICTURE6 = LOCALPICTUREPATH+"crop6.jpg";
     public static String LOCALPICTURE7 = LOCALPICTUREPATH+"crop7.jpg";
-    public static String LOCALPICTURE8 = LOCALPICTUREPATH+"crop8.jpg";    
+    public static String LOCALPICTURE8 = LOCALPICTUREPATH+"crop8.jpg";  
+    
+  
     
 //    public static String URLPICTURENOAUTH = "http://www.google.be/images/srpr/logo3w.png";
 //    
@@ -220,7 +222,7 @@ public class TestUtils {
          return server;
     }      
 
-    public static RetrievalClient createMultiCentralServer(ConfigCentralServer ccs, List<RetrievalServer> servers) throws Exception {
+    public static RetrievalClient createMultiCentralServer(ConfigClient ccs, List<RetrievalServer> servers) throws Exception {
              logger.info("Start SuperCentralServer...");
                 Iterator<RetrievalServer> it = servers.iterator();
                 ListServerInformationSocket serverList = new ListServerInformationSocket();
@@ -238,7 +240,7 @@ public class TestUtils {
                 return centralServer;
     }
 
-    public static RetrievalClient createCentralServer(ConfigCentralServer ccs, HashMap<Storage,Storage> servers) throws Exception {
+    public static RetrievalClient createCentralServer(ConfigClient ccs, HashMap<Storage,Storage> servers) throws Exception {
 //             logger.info("Start SuperCentralServer...");
 //              MultiCentralServer centralServer = new MultiCentralServer(ccs, servers);
 //                return centralServer;

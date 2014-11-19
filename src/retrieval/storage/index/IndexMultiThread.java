@@ -1,7 +1,6 @@
 package retrieval.storage.index;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -17,7 +16,6 @@ import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.index.compress.compressPictureHomogeneous.CompressIndexPicture;
 import retrieval.testvector.TestVectorListServer;
 import retrieval.testvector.TestVectorServer;
-import retrieval.utils.FileUtils;
 
 /**
  * This class is a class for multithreaded index
