@@ -1,4 +1,4 @@
-package retrieval.centralserver;
+package retrieval.client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,20 +8,19 @@ import org.junit.AfterClass;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import retrieval.client.ListServerInformationSocket;
 import retrieval.client.RetrievalClient;
-import retrieval.client.ServerInformationSocket;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
+import retrieval.server.RetrievalServer;
 import retrieval.utils.FileUtils;
 
 /**
  *
  * @author lrollus
  */
-public class RetrievalCentralServerDistantTest extends RetrievalCentralServerAbstract{
+public class RetrievalCentralServerLocalTest extends RetrievalCentralServerAbstract{
     
-    private static Logger logger = Logger.getLogger(RetrievalCentralServerDistantTest.class);
+    private static Logger logger = Logger.getLogger(RetrievalCentralServerLocalTest.class);
     
 
     @BeforeClass
@@ -63,10 +62,10 @@ public class RetrievalCentralServerDistantTest extends RetrievalCentralServerAbs
              */
             multiCentralWithServer1 = new RetrievalClient(configCentralServer, multiServer1);
             
-            List<ServerInformationSocket> servers = new ArrayList<ServerInformationSocket>();
-            servers.add(new ServerInformationSocket("localhost", multiServer1.getPort()));
-            servers.add(new ServerInformationSocket("localhost", multiServer2.getPort()));
-            multiCentralWithAllServer = new RetrievalClient(configCentralServer, new ListServerInformationSocket(servers));
+            List<RetrievalServer> servers = new ArrayList<RetrievalServer>();
+            servers.add(multiServer1);
+            servers.add(multiServer2);
+            multiCentralWithAllServer = new RetrievalClient(configCentralServer, servers);
             
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
-package retrieval.centralserver;
+package retrieval.client;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -67,8 +67,17 @@ public abstract class RetrievalCentralServerAbstract extends TestUtils{
         for(String key : LOCALPICTURE1MAP.keySet()) {
             assertEquals(true, properties.containsKey(key)); 
             assertEquals(LOCALPICTURE1MAP.get(key), properties.get(key)); 
-        }        
+        }
+        
+        
+        //from server 2
+        img = ImageIO.read(new File(LOCALPICTURE5));
+        result = multiCentralWithServer1.search(img, 30);
+        assertEquals(false,containsPictures(result, 5l));       
+        result = multiCentralWithAllServer.search(img, 30);
+        assertEquals(true,containsPictures(result, 5l));           
     }
+
 
     @Test
     public void testMultiCentralServerSearchFilter() throws Exception {
