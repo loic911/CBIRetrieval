@@ -35,7 +35,7 @@ public class TestUtils {
     private static Logger logger = Logger.getLogger(TestUtils.class);
     public static void enableLog() {
             BasicConfigurator.configure();
-            PropertyConfigurator.configure("log4j.props");
+            PropertyConfigurator.configure("log4j.proprties");
             logger.fatal("LOG FATAL enable");
             logger.error("LOG ERROR enable");
             logger.warn("LOG WARN enable");
@@ -119,7 +119,7 @@ public class TestUtils {
     
   
     
-//    public static String URLPICTURENOAUTH = "http://www.google.be/images/srpr/logo3w.png";
+    public static String URLPICTURENOAUTH = "http://www.google.be/images/srpr/logo3w.png";
 //    
 //    public static String BASICAUTHPICTURE1 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-1.png";
 //    public static String BASICAUTHPICTURE2 = "https://confluence.atlassian.com/images/icons/profilepics/Avatar-2.png";

@@ -33,10 +33,10 @@ public class RetrievalIndexerLocalStorage extends RetrievalIndexer {
      * The asynchronous mode will be used
      * @param storage Storage
      */
-    public RetrievalIndexerLocalStorage(Storage storage) {
-        super(false);
-        this.storage = storage;
-    }
+//    public RetrievalIndexerLocalStorage(Storage storage) {
+//        super(false);
+//        this.storage = storage;
+//    }
     
     /**
      * Build a retrieval index with a local storage

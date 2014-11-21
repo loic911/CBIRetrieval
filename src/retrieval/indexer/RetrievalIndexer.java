@@ -19,7 +19,7 @@ import retrieval.storage.index.NoValidPictureException;
 import retrieval.utils.FileUtils;
 
 /**
- * Interface for a retrieval indexer.
+ * Abstract class for a retrieval indexer.
  * A retrieval indexer can index, delete, get data on a RetrievalServer.
  * The retrieval server may be local (use retrievalServer.getMainStorage()) or distant (host and port)
  * @author Rollus Loic
@@ -41,8 +41,7 @@ public abstract class RetrievalIndexer {
     public boolean isSynchronous() {
         return synchronous;
     }
-    
-    
+       
   /**
      * This function insert a picture on a CBIR storage
      * @param file Local file to index

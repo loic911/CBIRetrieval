@@ -49,13 +49,13 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
      */
     private static Logger logger = Logger.getLogger(RetrievalIndexerDistantStorage.class);
 
-    public RetrievalIndexerDistantStorage(String host, int port, String storage) {
-        super(false);
-        this.storage = storage;
-        this.host = host;
-        this.port = port;
-    }
-    
+//    public RetrievalIndexerDistantStorage(String host, int port, String storage) {
+//        super(false);
+//        this.storage = storage;
+//        this.host = host;
+//        this.port = port;
+//    }
+//    
     public RetrievalIndexerDistantStorage(String host, int port, String storage, boolean synchronous) {
         super(synchronous);
         this.storage = storage;
