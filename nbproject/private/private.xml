@@ -14,8 +14,12 @@
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/RetrievalInfoMain.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/RetrievalIndexerDistantStorage.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/storage/index/compress/compressPictureHomogeneous/CompressIndexPictureTest.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/storage/index/Index.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/utils/CollectionUtilsTest.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/RetrievalDeleterMain.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/storage/Storage.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/indexer/RetrievalIndexerDistantTest.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/storage/index/PictureIndex.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/utils/FileUtilsTest.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/indexer/RetrievalIndexerMainTest.java</file>
         </group>

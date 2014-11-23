@@ -110,7 +110,7 @@ public class RetrievalIndexerMain {
             
         }    
         
-        logger.info("Host:"+host + " Port:"+port + " Image:"+ picture + " Async:"+synchrone + " Storage: "+storage + " Id: " + id + " properties:"+properties);
+        logger.info("INDEX Host:"+host + " Port:"+port + " Image:"+ picture + " Async:"+synchrone + " Storage: "+storage + " Id: " + id + " properties:"+properties);
         if(new File(picture).exists()) {
             index.index(new File(picture),id,properties);
         } else if(picture.startsWith("http:") || picture.startsWith("https:")) {
