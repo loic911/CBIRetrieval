@@ -1,4 +1,4 @@
-java -cp ../dist/CBIRetrievalFull.jar retrieval.indexer.main.RetrievalIndexMain $1 $2 $3 $4 $5 $6 $7 $8
+java -cp ../dist/CBIRetrievalFull.jar retrieval.indexer.main.RetrievalIndexerMain $1 $2 $3 $4 $5 $6 $7 $8
 
 
      # Param0: Server host

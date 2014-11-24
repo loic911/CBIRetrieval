@@ -21,6 +21,7 @@ import retrieval.dist.MultiServerMessageInfos;
 import retrieval.dist.MultiServerMessageNBT;
 import retrieval.dist.MultiServerMessageResults;
 import retrieval.dist.MultiServerMessageSimilarities;
+import retrieval.dist.MultiServerMessageStorages;
 import retrieval.dist.NotValidMessageXMLException;
 import retrieval.dist.RequestPictureVisualWord;
 import retrieval.exception.CBIRException;
@@ -165,6 +166,9 @@ class NewClientThread extends Thread {
             else if(requestXML.getRootElement().getAttributeValue("type").equals("INFOS")) {
                 takeStatsRequest( requestXML );
             }
+            else if(requestXML.getRootElement().getAttributeValue("type").equals("STORAGES")) {
+                takeStoragesRequest( requestXML );
+            }            
             else {
                 throw new NotValidMessageXMLException("Command "+requestXML.getRootElement().getAttributeValue("type")+ " not valid!");
             }
@@ -347,9 +351,16 @@ class NewClientThread extends Thread {
 
      private void takeStatsRequest(Document xml) throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
          MultiServerMessageInfos msgRequest = new MultiServerMessageInfos(xml);
+         //String storage = msgRequest.getStorage();
          logger.info("Get infos for storage = "+msgRequest.getStorage());
          MultiServerMessageInfos msgResult = new MultiServerMessageInfos(multiServer.getInfos(msgRequest.getStorage()),msgRequest.getStorage());
          NetworkUtils.writeXmlToSocket(client, msgResult.toXML());
     }
+     
+     private void takeStoragesRequest(Document xml) throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
+         //String storage = msgRequest.getStorage();
+         MultiServerMessageStorages msgResult = new MultiServerMessageStorages(multiServer.getServersSize());
+         NetworkUtils.writeXmlToSocket(client, msgResult.toXML());
+    }     
 }
 

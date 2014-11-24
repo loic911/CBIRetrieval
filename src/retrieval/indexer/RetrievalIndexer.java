@@ -1,9 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 package retrieval.indexer;
 
 import java.awt.image.BufferedImage;
@@ -31,7 +40,7 @@ public abstract class RetrievalIndexer {
      * SYNCHRONOUS MODE IS NOT SAFE IF YOU MAKE MULTIPLE INDEX
      * When using asynchronous mode (default), picture are added on a queue
      */
-    private Boolean synchronous;
+    private final Boolean synchronous;
     
     
     public RetrievalIndexer(boolean synchronous) {
@@ -45,8 +54,9 @@ public abstract class RetrievalIndexer {
   /**
      * This function insert a picture on a CBIR storage
      * @param file Local file to index
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
+     * @throws NoValidPictureException Image cannot be read
      * @throws NotValidMessageXMLException Bad message format
      * @throws CBIRException Error from server
      */    
@@ -58,8 +68,9 @@ public abstract class RetrievalIndexer {
      * This function insert a picture on a CBIR storage
      * @param file Local file to index
      * @param properties Properties to store for the image
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
+     * @throws NoValidPictureException Image cannot be read
      * @throws NotValidMessageXMLException Bad message format
      * @throws CBIRException Error from server
      */    
@@ -71,8 +82,9 @@ public abstract class RetrievalIndexer {
      * This function insert a picture on a CBIR storage
      * @param file Local file to index
      * @param id Resource id in server
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
+     * @throws NoValidPictureException Image cannot be read
      * @throws NotValidMessageXMLException Bad message format
      * @throws CBIRException Error from server
      */    
@@ -85,9 +97,10 @@ public abstract class RetrievalIndexer {
      * @param file Local file to index
      * @param id Resource id in server
      * @param properties Properties to store for the image
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
      * @throws CBIRException Error from server
      */    
     public Long index(File file, Long id, Map<String,String> properties) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException {
@@ -96,10 +109,11 @@ public abstract class RetrievalIndexer {
     
   /**
      * This function insert a picture on a CBIR storage
-     * @param url image url
-     * @return Absolute file Path
+     * @param url Image url
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
      * @throws CBIRException Error from server
      */    
     public Long index(URL url) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException {
@@ -108,11 +122,12 @@ public abstract class RetrievalIndexer {
     
   /**
      * This function insert a picture on a CBIR storage
-     * @param url image url
+     * @param url Image url
      * @param properties Properties to store for the image
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
      * @throws CBIRException Error from server
      */    
     public Long index(URL url, Map<String,String> properties) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException {
@@ -121,11 +136,12 @@ public abstract class RetrievalIndexer {
     
   /**
      * This function insert a picture on a CBIR storage
-     * @param url image url
+     * @param url Image url
      * @param id Resource id in server
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
      * @throws CBIRException Error from server
      */    
     public Long index(URL url, Long id) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException {
@@ -134,12 +150,13 @@ public abstract class RetrievalIndexer {
     
   /**
      * This function insert a picture on a CBIR storage
-     * @param url image url
+     * @param url Image url
      * @param id Resource id in server
      * @param properties Properties to store for the image
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
      * @throws CBIRException Error from server
      */    
     public Long index(URL url, Long id, Map<String,String> properties) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException {
@@ -149,9 +166,10 @@ public abstract class RetrievalIndexer {
    /**
      * This function insert a picture on a CBIR storage
      * @param image Image to index
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
      * @throws CBIRException Error from server
      */    
     public Long index(BufferedImage image) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException{
@@ -162,9 +180,10 @@ public abstract class RetrievalIndexer {
      * This function insert a picture on a CBIR storage
      * @param image Image to index
      * @param properties Properties to store for the image
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
      * @throws CBIRException Error from server
      */    
     public Long index(BufferedImage image, Map<String,String> properties) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException{
@@ -173,11 +192,12 @@ public abstract class RetrievalIndexer {
     
   /**
      * This function insert a picture on a CBIR storage
-     * @param fimage Image to index
+     * @param image Image to index
      * @param id Resource id in server
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
      * @throws CBIRException Error from server
      */    
     public Long index(BufferedImage image, Long id) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException{
@@ -189,41 +209,60 @@ public abstract class RetrievalIndexer {
      * @param image Image to index
      * @param id Resource id in server
      * @param properties Properties to store for the image
-     * @return Absolute file Path
+     * @return Image id
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
      * @throws CBIRException Error from server
      */    
     public Long index(BufferedImage image, Long id, Map<String,String> properties) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException {
         return indexToStorage(image,id,properties);
     }     
     
+    /**
+     * This function insert a picture on a CBIR storage
+     * @param image Image to index
+     * @param id Resource id in server
+     * @param properties Properties to store for the image
+     * @return Image id
+     * @throws IOException Cannot make a correct connection with server
+     * @throws NotValidMessageXMLException Bad message format
+     * @throws NoValidPictureException Image cannot be read
+     * @throws CBIRException Error from server
+     */
     protected abstract Long indexToStorage(BufferedImage image, Long id, Map<String,String> properties) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException;
     
      /**
-     * This function delete a list of image on a storage. 
+     * This function delete a list of images on a storage. 
      * Images are just removed from results, but they are still in index. 
-     * You need to run purge (VERY HEAVY OP!) when server will ne be used (during night,...) to clean all index data. 
-     * @param server Server where to delete pictures
-     * @param lists List of files to delete
+     * You need to run purge (VERY HEAVY OP!) when server will not be used (during night,...) to clean all index data. 
+     * @param ids List of image id to delete
      * @return Map with all deleted files
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
      * @throws CBIRException Error from server
      */   
     public abstract Map<Long, CBIRException> delete(List<Long> ids) throws IOException, NotValidMessageXMLException, CBIRException;
-     public Map<Long, CBIRException> delete(Long id) throws IOException, NotValidMessageXMLException, CBIRException {
+    
+     /**
+     * This function delete a single image on a storage. 
+     * Image are just removed from results, but they are still in index. 
+     * You need to run purge (VERY HEAVY OP!) when server will not be used (during night,...) to clean all index data. 
+     * @param id Image id
+     * @return Map with all deleted files
+     * @throws IOException Cannot make a correct connection with server
+     * @throws NotValidMessageXMLException Bad message format
+     * @throws CBIRException Error from server
+     */     
+    public Map<Long, CBIRException> delete(Long id) throws IOException, NotValidMessageXMLException, CBIRException {
         List<Long> list = new ArrayList<Long>();
-         if (id != null) {
-             list.add(id);
-        }        
+        list.add(id);       
         return delete(list);       
     } 
       
     /**
      * This function ask to a server information about indexed pictures on the storage
-     * @param server server
-     * @param filesPaths
+     * @param ids List of image id to delete
      * @return A map with picture list and their exception (NoException if picture is well indexed)
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
@@ -241,9 +280,19 @@ public abstract class RetrievalIndexer {
      */
     public abstract Map<Long, Map<String,String>> listPictures() throws IOException, NotValidMessageXMLException, CBIRException;
     
+    /**
+     * This function get all storages from a server
+     * Only available for distant server.
+     * @return Map with each storage and its size
+     * @throws IOException Cannot make a correct connection with server
+     * @throws NotValidMessageXMLException Bad message format
+     * @throws CBIRException Error from server
+     */
+    public abstract Map<String,Long> listStorages() throws IOException, NotValidMessageXMLException, CBIRException;
     
     /**
      * Clean index from server with deleted pictures data
+     * @throws Exception Error during purge
      */
     public abstract void purge() throws Exception;
           

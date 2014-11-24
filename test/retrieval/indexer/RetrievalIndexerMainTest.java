@@ -15,6 +15,7 @@ import org.junit.Test;
 import retrieval.config.ConfigServer;
 import retrieval.indexer.main.RetrievalDeleterMain;
 import retrieval.indexer.main.RetrievalIndexerMain;
+import retrieval.indexer.main.RetrievalPurgerMain;
 import retrieval.server.RetrievalServer;
 import retrieval.utils.TestUtils;
 import static retrieval.utils.TestUtils.LOCALPICTURE1;
@@ -126,13 +127,21 @@ public class RetrievalIndexerMainTest extends TestUtils {
         RetrievalDeleterMain.main(args2);       
         assertEquals(0, multiServer.getServer(container).getNumberOfItem()); 
     }    
-//        
-//    @Test
-//    public void testMultiIndexerMainPurge() throws Exception {
-//        String container = "test";
-//        String[] args = {MULTISERVERURL,MULTISERVERPORT1+"",container};
-//        RetrievalPurgeMain.main(args);        
-//    }    
+        
+    @Test
+    public void testMultiIndexerMainPurge() throws Exception {
+        String container = "test";
+        multiServer.createServer(container);
+        String[] args = {MULTISERVERURL,MULTISERVERPORT1+"",URLPICTURENOAUTH,"sync",container,"123"};
+        RetrievalIndexerMain.main(args);
+         assertEquals(1, multiServer.getServer(container).getNumberOfItem());                
+        String[] args2 = {MULTISERVERURL,MULTISERVERPORT1+"","123,456"};
+        RetrievalDeleterMain.main(args2);       
+        assertEquals(1, multiServer.getServer(container).getNumberOfPicturesToPurge());   
+        String[] args3 = {MULTISERVERURL,MULTISERVERPORT1+""};
+        RetrievalPurgerMain.main(args3); 
+        waitEquals(0, multiServer.getServer(container).getNumberOfPicturesToPurge());
+    }    
 //    
 //        
 //    @Test

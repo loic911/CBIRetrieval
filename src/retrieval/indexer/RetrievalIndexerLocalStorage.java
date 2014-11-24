@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.indexer;
 
 import java.awt.image.BufferedImage;
@@ -26,17 +41,7 @@ public class RetrievalIndexerLocalStorage extends RetrievalIndexer {
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(RetrievalIndexerLocalStorage.class);
-    
-    /**
-     * Build a retrieval index with a local storage
-     * The asynchronous mode will be used
-     * @param storage Storage
-     */
-//    public RetrievalIndexerLocalStorage(Storage storage) {
-//        super(false);
-//        this.storage = storage;
-//    }
+    private static final Logger logger = Logger.getLogger(RetrievalIndexerLocalStorage.class);
     
     /**
      * Build a retrieval index with a local storage
@@ -64,12 +69,13 @@ public class RetrievalIndexerLocalStorage extends RetrievalIndexer {
      * @param properties Properties to store for the image
      * @return Absolute file Path
      * @throws IOException Cannot make a correct connection with server
+     * @throws NoValidPictureException Picture is not a valid image
      * @throws NotValidMessageXMLException Bad message format
      * @throws CBIRException Error from server
      */  
     protected Long indexToStorage(BufferedImage image, Long id, Map<String,String> properties) throws IOException, NoValidPictureException, NotValidMessageXMLException, CBIRException {
         logger.info("index: Connexion to server in local object:"+storage);
-        Long responseId = -1l;
+        Long responseId;
         if(!isSynchronous()) {
             responseId = storage.addToIndexQueue(image,id,properties);
         } else {
@@ -81,22 +87,17 @@ public class RetrievalIndexerLocalStorage extends RetrievalIndexer {
    /**
      * This function delete a list of image on a storage
      * Images are just removed from results, but they are still in index. 
-     * You need to run purge (VERY HEAVY OP!) when server will ne be used (during night,...) to clean all index data. 
+     * You need to run purge (VERY HEAVY OP!) when server will not be used (during night,...) to clean all index data. 
      * @param ids List of files to delete
      * @return Map with all deleted files
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
      * @throws CBIRException Error from server
      */
-    public Map<Long, CBIRException> delete(List<Long> ids) throws IOException, NotValidMessageXMLException, CBIRException {
-        if (ids == null || ids.isEmpty()) {
-            logger.error("indexDeletePictures: Picture list is empty");
-            throw new CBIRException("1111", "Picture list is empty");
-        }        
+    public Map<Long, CBIRException> delete(List<Long> ids) throws IOException, NotValidMessageXMLException, CBIRException {     
         return storage.deletePictures(ids);       
     }  
-       
-    
+          
     /**
      * This function ask to a server information about indexed pictures on the server
      * @param ids Picture ids
@@ -105,8 +106,7 @@ public class RetrievalIndexerLocalStorage extends RetrievalIndexer {
      * @throws NotValidMessageXMLException Bad message format
      * @throws CBIRException Error from server
      */
-    public Map<Long, CBIRException> checkPictures(
-            Map<Long, CBIRException> ids)
+    public Map<Long, CBIRException> checkPictures(Map<Long, CBIRException> ids) 
             throws IOException, NotValidMessageXMLException, CBIRException {
         logger.info("checkPictures: Connexion to " + storage);      
         Map<Long, CBIRException> map = storage.getInfo(ids);
@@ -124,11 +124,24 @@ public class RetrievalIndexerLocalStorage extends RetrievalIndexer {
     
     /**
      * Clean index from server with deleted pictures data
-     * @param server Server that will be clean
+     * @throws Exception Error during the purge
      */
     public void purge() throws Exception{
         logger.info("purge: Connexion to server in local object");
         storage.purgeIndex();       
+    }
+
+    @Override
+    /**
+     * This function get all storages from a server
+     * Only available for distant server.
+     * @return Map with each storage and its size
+     * @throws IOException Cannot make a correct connection with server
+     * @throws NotValidMessageXMLException Bad message format
+     * @throws CBIRException Error from server
+     */     
+    public Map<String, Long> listStorages() throws IOException, NotValidMessageXMLException, CBIRException {
+        throw new UnsupportedOperationException("Not supported. Use RetrievalServer.getServerList()"); //To change body of generated methods, choose Tools | Templates.
     }
    
 }

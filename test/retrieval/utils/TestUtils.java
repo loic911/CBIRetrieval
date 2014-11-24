@@ -35,7 +35,7 @@ public class TestUtils {
     private static Logger logger = Logger.getLogger(TestUtils.class);
     public static void enableLog() {
             BasicConfigurator.configure();
-            PropertyConfigurator.configure("log4j.proprties");
+            PropertyConfigurator.configure("log4j.properties");
             logger.fatal("LOG FATAL enable");
             logger.error("LOG ERROR enable");
             logger.warn("LOG WARN enable");
@@ -174,6 +174,21 @@ public class TestUtils {
         }
         return false;
     }
+    
+    public boolean waitEquals(int expected, int size) {
+        long startTime = System.currentTimeMillis();
+        long maxTime = 10000;
+        while((System.currentTimeMillis()-startTime)<maxTime) {
+            if(expected==size) {
+                return true;
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+            }
+        }
+        return false;
+    }    
     
     public boolean waitServerCreation(RetrievalServer multi,String key) throws Exception {
         long startTime = System.currentTimeMillis();

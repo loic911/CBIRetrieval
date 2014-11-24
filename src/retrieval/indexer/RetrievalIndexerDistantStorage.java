@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.indexer;
 
 import java.awt.image.BufferedImage;
@@ -17,6 +32,7 @@ import retrieval.dist.MultiServerMessageDelete;
 import retrieval.dist.MultiServerMessageIndex;
 import retrieval.dist.MultiServerMessageIndexResults;
 import retrieval.dist.MultiServerMessageInfos;
+import retrieval.dist.MultiServerMessageStorages;
 import retrieval.dist.NotValidMessageXMLException;
 import retrieval.exception.CBIRException;
 import retrieval.utils.NetworkUtils;
@@ -32,12 +48,12 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
     /**
      * RetrievalServer host
      */
-    private String host;
+    private final String host;
     
     /**
      * RetrievalServer port
      */    
-    private int port;
+    private final int port;
     
     /**
      * RetrievalServer storage
@@ -47,15 +63,15 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(RetrievalIndexerDistantStorage.class);
-
-//    public RetrievalIndexerDistantStorage(String host, int port, String storage) {
-//        super(false);
-//        this.storage = storage;
-//        this.host = host;
-//        this.port = port;
-//    }
-//    
+    private final static Logger logger = Logger.getLogger(RetrievalIndexerDistantStorage.class);
+ 
+    /**
+     * Build an indexer for a distant server
+     * @param host RetrievalServer host
+     * @param port RetrievalServer port
+     * @param storage Storage from server
+     * @param synchronous Async/Sync mode (only for index)
+     */
     public RetrievalIndexerDistantStorage(String host, int port, String storage, boolean synchronous) {
         super(synchronous);
         this.storage = storage;
@@ -63,13 +79,6 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
         this.port = port;
     }    
     
-    public void purge() throws Exception {
-        Socket server = new Socket(host, port);
-        MultiServerMessageAction message = new MultiServerMessageAction(MultiServerMessageAction.PURGE);
-        NetworkUtils.writeXmlToSocket(server, message.toXML());
-    }
-    
-
   /**
      * This function insert a picture on a CBIR storage
      * @param image Image to index
@@ -124,11 +133,20 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
         
         return returnId; 
         } catch(Exception e) {
-            e.printStackTrace();
             throw new CBIRException(e.toString());
         }
     }    
     
+     /**
+     * This function delete a list of images on a storage. 
+     * Images are just removed from results, but they are still in index. 
+     * You need to run purge (VERY HEAVY OP!) when server will not be used (during night,...) to clean all index data. 
+     * @param ids List of image id to delete
+     * @return Map with all deleted files
+     * @throws IOException Cannot make a correct connection with server
+     * @throws NotValidMessageXMLException Bad message format
+     * @throws CBIRException Error from server
+     */      
     public Map<Long, CBIRException> delete(List<Long> ids) throws IOException, NotValidMessageXMLException, CBIRException {
         try {
         Socket server = new Socket(host, port);
@@ -155,12 +173,17 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
         }
     }
 
-      
-      
+    /**
+     * This function get all indexed pictures info from a a storage
+     * @return Map of indexed pictures (path and value are metadata)
+     * @throws IOException Cannot make a correct connection with server
+     * @throws NotValidMessageXMLException Bad message format
+     * @throws CBIRException Error from server
+     */      
       public Map<Long, Map<String,String>> listPictures() throws IOException, NotValidMessageXMLException, CBIRException{
         try {
             Socket server = new Socket(host, port);
-            MultiServerMessageAction message = new MultiServerMessageAction(MultiServerMessageAction.INFOS);
+            MultiServerMessageAction message = new MultiServerMessageAction(MultiServerMessageAction.INFOS,storage);
             Document doc = message.toXML();
             NetworkUtils.writeXmlToSocket(server, doc);
 
@@ -182,9 +205,9 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
     }
       
       
-          /**
-     * This function ask to a server information about indexed pictures on the server
-     * @param ids Picture ids
+    /**
+     * This function ask to a server information about indexed pictures on the storage
+     * @param ids List of image id to delete
      * @return A map with picture list and their exception (NoException if picture is well indexed)
      * @throws IOException Cannot make a correct connection with server
      * @throws NotValidMessageXMLException Bad message format
@@ -196,4 +219,46 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
         logger.info("checkPictures: Connexion to " + storage);      
         return null;
     }  
+
+    /**
+     * This function get all storages from a server
+     * Only available for distant server.
+     * @return Map with each storage and its size
+     * @throws IOException Cannot make a correct connection with server
+     * @throws NotValidMessageXMLException Bad message format
+     * @throws CBIRException Error from server
+     */    
+    public Map<String, Long> listStorages() throws IOException, NotValidMessageXMLException, CBIRException {
+         try {
+            Socket server = new Socket(host, port);
+            MultiServerMessageAction message = new MultiServerMessageAction(MultiServerMessageAction.STORAGES,storage);
+            Document doc = message.toXML();
+            NetworkUtils.writeXmlToSocket(server, doc);
+
+            //read reponse
+            Document responsexml = NetworkUtils.readXmlFromSocket(server);
+            //check if error message, if true, throw exception
+            if (MessageError.isErrorMessage(responsexml)) {
+                throw MessageError.getException(responsexml);
+            }
+
+            //create result message and return pictures lists
+            MultiServerMessageStorages msgIndex = new MultiServerMessageStorages(responsexml);
+            server.close();
+            return msgIndex.getAllStorages();               
+        } catch(Exception e) {
+            throw new CBIRException(e.toString());
+        }       
+    }
+    
+    /**
+     * Clean index from server with deleted pictures data
+     * @throws Exception Error during purge
+     */    
+    public void purge() throws Exception {
+        Socket server = new Socket(host, port);
+        MultiServerMessageAction message = new MultiServerMessageAction(MultiServerMessageAction.PURGE);
+        NetworkUtils.writeXmlToSocket(server, message.toXML());
+    }
+        
 }

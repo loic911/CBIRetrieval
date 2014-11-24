@@ -128,7 +128,9 @@ public abstract class Index {
     public synchronized void purge(ConfigServer config) {
         logger.info("purge " + picturesToPurge.size() +" resources");
         testVectors.delete(picturesToPurge.getPicturesToPurge());
+        logger.info("clear purge index");
         picturesToPurge.clear();
+        logger.info("picture to purge = " + getPurgeSize());
     }
 
     /**

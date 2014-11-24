@@ -828,6 +828,7 @@ class PurgeThread extends Thread {
     @Override
     public void run() {
         try {
+            logger.info("Purge server "+server.getStorageName());
             server.purgeIndex();
         } catch (Exception ex) {
             logger.error("Cannot close connection:"+ex);

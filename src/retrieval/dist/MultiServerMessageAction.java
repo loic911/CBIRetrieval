@@ -22,16 +22,25 @@ public class MultiServerMessageAction implements Message, Cloneable {
      * Info command
      */
     public static final int INFOS = 2;
+    
+    public static final int STORAGES = 3;
 
     public int action;
+    public String storage;
 
     public MultiServerMessageAction(int action) {
         this.action = action;
-    }
+    }  
+    
+    public MultiServerMessageAction(int action, String storage) {
+        this.action = action;
+        this.storage = storage;
+    }      
 
     public MultiServerMessageAction(Document document) throws NotValidMessageXMLException {
         try {
             Element root = document.getRootElement();
+            storage = root.getAttributeValue("storage");
 
             if(root.getAttributeValue("type").equals("PURGE")) {
                 action = PURGE;
@@ -39,7 +48,9 @@ public class MultiServerMessageAction implements Message, Cloneable {
                 action = SIZE;
             } else if(root.getAttributeValue("type").equals("INFOS")) {
                 action = INFOS;
-            } else {
+            } else if(root.getAttributeValue("type").equals("STORAGES")) {
+                action = STORAGES;
+            }else {
                 throw new NotValidMessageXMLException(root.getAttributeValue("type") + " is not a valid command!");
             }
         } catch (Exception e) {
@@ -57,6 +68,9 @@ public class MultiServerMessageAction implements Message, Cloneable {
         if(action==INFOS) {
             return "INFOS";
         }
+        if(action==STORAGES) {
+            return "STORAGES";
+        }        
         return "ERROR";
     }
 
@@ -73,6 +87,9 @@ public class MultiServerMessageAction implements Message, Cloneable {
     public Document toXML() {
         Element racine = new Element("MultiServerMessage");
         racine.setAttribute("type",getActionStr());
+        if(storage!=null) {
+            racine.setAttribute("storage",storage);
+        }
         return new Document(racine);
     }
 }
