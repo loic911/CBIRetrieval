@@ -93,22 +93,6 @@ public class ServerInformationSocket extends ServerInformation implements Clonea
     }
 
     /**
-     * Set Server address
-     * @param address Server address
-     */
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    /**
-     * Get Address and port of server
-     * @return Address of server concat with its port
-     */
-    public String getAddressAndPort() {
-        return address + ":" + port;
-    }
-
-    /**
      * Get port of server
      * @return the server port
      */

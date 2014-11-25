@@ -4,22 +4,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/indexer/RetrievalIndexerLocalTest.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/RetrievalIndexerLocalStorage.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClientInterface.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/test/TestMultiServerUtils.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/utils/TestUtils.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClient.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/RetrievalIndexer.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/package.html</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/RetrievalImagesMain.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/RetrievalIndexerMain.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageIndex.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalCentralServerDistantTest.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/RetrievalIndexerDistantStorage.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/RetrievalStoragesMain.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/package.html</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/Chrono.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/RetrievalDeleterMain.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClientToServersXML.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/indexer/RetrievalIndexerDistantTest.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageNBT.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClientToServersObject.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/ListServerInformationSocket.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/RetrievalPurgerMain.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalCentralServerAbstract.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/ServerInformation.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/ServerInformationSocket.java</file>
         </group>
     </open-files>

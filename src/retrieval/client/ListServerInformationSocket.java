@@ -110,48 +110,48 @@ public class ListServerInformationSocket implements Cloneable {
      * @param keys Server keys to filter (if empty or null, return all server)
      * @return Server list filter by keys
      */  
-    public synchronized Object getServers(Integer[] keys) {
-        if(keys==null) {
-            return getServers();
-        }
-        if(keys.length==0) {
-            return getServers();
-        }
-        ListServerInformationSocket listServers = new ListServerInformationSocket();
-        TreeMap<Integer,ServerInformationSocket> ser = new TreeMap<Integer,ServerInformationSocket>();
-
-        for(int i=0;i<keys.length;i++) {
-            ServerInformationSocket server = serversMap.get(keys[i]);
-            if(server!=null) {
-                ser.put(keys[i],(ServerInformationSocket)server.clone());
-            }
-        }
-        listServers.serversMap = ser;
-        return listServers;
-    }
+//    public synchronized Object getServers(Integer[] keys) {
+//        if(keys==null) {
+//            return getServers();
+//        }
+//        if(keys.length==0) {
+//            return getServers();
+//        }
+//        ListServerInformationSocket listServers = new ListServerInformationSocket();
+//        TreeMap<Integer,ServerInformationSocket> ser = new TreeMap<Integer,ServerInformationSocket>();
+//
+//        for(int i=0;i<keys.length;i++) {
+//            ServerInformationSocket server = serversMap.get(keys[i]);
+//            if(server!=null) {
+//                ser.put(keys[i],(ServerInformationSocket)server.clone());
+//            }
+//        }
+//        listServers.serversMap = ser;
+//        return listServers;
+//    }
     
-    public synchronized Object getServers(String[] keys) {
-        if(keys==null) {
-            return getServers();
-        }
-        if(keys.length==0) {
-            return getServers();
-        }
-        Integer[] keysInt = new Integer[keys.length];
-        for(int i=0;i<keys.length;i++) {
-            keysInt[i]=Integer.parseInt(keys[i]);
-        }
-        return getServers(keysInt);
-    }
+//    public synchronized Object getServers(String[] keys) {
+//        if(keys==null) {
+//            return getServers();
+//        }
+//        if(keys.length==0) {
+//            return getServers();
+//        }
+//        Integer[] keysInt = new Integer[keys.length];
+//        for(int i=0;i<keys.length;i++) {
+//            keysInt[i]=Integer.parseInt(keys[i]);
+//        }
+//        return getServers(keysInt);
+//    }
     
     /**
      * Return Server list with only servers that has keys contains in argument
      * @param keys Server keys to filter (if empty or null, return all server)
      * @return Server list filter by keys
      */  
-    public synchronized Object getServers(List<Integer> keys) {
-        return getServers((Integer[])keys.toArray(new Integer[keys.size()]));
-    }
+//    public synchronized Object getServers(List<Integer> keys) {
+//        return getServers((Integer[])keys.toArray(new Integer[keys.size()]));
+//    }
   
 
     /**
@@ -164,7 +164,7 @@ public class ListServerInformationSocket implements Cloneable {
          for (Map.Entry<Integer, ServerInformationSocket> entry : serversMap.entrySet()) {
             Integer key = entry.getKey();
             ServerInformationSocket value = entry.getValue();
-            server = server + key + "=" + value + " timeout=" + value.getTimeout() +"\n";
+            server = server + key + "=" + value +"\n";
         }
         server = server + "*************************************\n";
         return server;
@@ -213,21 +213,5 @@ public class ListServerInformationSocket implements Cloneable {
      */
     public int size() {
         return serversMap.size();
-    }
-
-    /**
-     * Get the timeout for each server
-     * @return Timeout for each server
-     */
-    public int getTimeout() {
-        return timeout;
-    }
-
-    /**
-     * Update the timeout value for server communication
-     * @param timeout New timeout value
-     */
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
     }
 }

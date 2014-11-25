@@ -108,11 +108,4 @@ public abstract class ServerInformation  implements Cloneable{
     @Override
     public abstract Object clone();
 
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
-    public int getTimeout() {
-        return timeout;
-    }
 }

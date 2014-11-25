@@ -1,19 +1,31 @@
 package retrieval.client;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import retrieval.client.ListServerInformationSocket;
 import retrieval.client.RetrievalClient;
 import retrieval.client.ServerInformationSocket;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
+import retrieval.dist.ResultsSimilarities;
+import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
+import static retrieval.utils.TestUtils.LOCALPICTURE1;
+import static retrieval.utils.TestUtils.LOCALPICTURE1MAP;
+import static retrieval.utils.TestUtils.LOCALPICTURE5;
+import static retrieval.utils.TestUtils.containsPictures;
 
 /**
  *
@@ -79,6 +91,26 @@ public class RetrievalCentralServerDistantTest extends RetrievalCentralServerAbs
     public void tearDown() {
         try{multiServer1.stop();}catch(Exception e) {}
         try{multiServer2.stop();}catch(Exception e) {}        
+    }
+    
+    
+    @Test
+    public void testMultiCentralServerSearchBasicFromServerFile() throws Exception {
+        
+            multiCentralWithAllServer = new RetrievalClient(configCentralServer, "testdata/servers.xml");       
+        
+        System.out.println("testMultiCentralServerSearchBasic");
+        BufferedImage img = ImageIO.read(new File(LOCALPICTURE1));
+        ResultsSimilarities result = multiCentralWithServer1.search(img, 30);
+        assertEquals(true,containsPictures(result, 1l));
+        
+        result = multiCentralWithAllServer.search(img, 30);
+        assertEquals(true,containsPictures(result, 1l));
+
+        //from server 2
+        img = ImageIO.read(new File(LOCALPICTURE5));      
+        result = multiCentralWithAllServer.search(img, 30);
+        assertEquals(true,containsPictures(result, 5l));           
     }
 
 }

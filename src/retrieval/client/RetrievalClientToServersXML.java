@@ -124,14 +124,14 @@ public class RetrievalClientToServersXML{
      * @param msgSimilar Message with similarities result from server
      * @param results Result object with similar picture and server info
      */
-    protected void fillSizeOfServer(ListServerInformationSocket listsServer, MultiServerMessageResults[] msgSimilar, ResultsSimilarities results) {
-        for (int i = 0; i < msgSimilar.length; i++) {
-            if (msgSimilar[i] != null) {
-                long sizeOfIndex = msgSimilar[i].getNumberOfPicturesInIndex();
-                results.add((int)sizeOfIndex);
-            }
-        }
-    }
+//    protected void fillSizeOfServer(ListServerInformationSocket listsServer, MultiServerMessageResults[] msgSimilar, ResultsSimilarities results) {
+//        for (int i = 0; i < msgSimilar.length; i++) {
+//            if (msgSimilar[i] != null) {
+//                long sizeOfIndex = msgSimilar[i].getNumberOfPicturesInIndex();
+//                results.add((int)sizeOfIndex);
+//            }
+//        }
+//    }
 
     protected void fillSizeOfServer(MultiServerMessageResults[] msgSimilar, ResultsSimilarities results) {
         for (int i = 0; i < msgSimilar.length; i++) {

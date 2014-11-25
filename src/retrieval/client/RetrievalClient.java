@@ -182,7 +182,9 @@ public class RetrievalClient implements RetrievalClientInterface{
              */
             ResultsSimilarities result = null;
             if(listsServerSocket!=null) {
-                RetrievalClientToServersXML serverNetwork = new RetrievalClientToServersXML((ListServerInformationSocket) this.getListsServerSocket().getServers());
+                ListServerInformationSocket serversSocket = (ListServerInformationSocket) this.getListsServerSocket().getServers();
+                logger.info("Search on "+serversSocket);
+                RetrievalClientToServersXML serverNetwork = new RetrievalClientToServersXML(serversSocket);
                 logger.info("search: " + k + " similar pictures on "+ serverNetwork.getNumberOfServer() + " servers");
                 result = serverNetwork.searchMultiThread(visualWords, N, k,servers);                
             } else {

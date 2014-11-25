@@ -2,6 +2,8 @@ package retrieval.client;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
@@ -85,6 +87,10 @@ public abstract class RetrievalCentralServerAbstract extends TestUtils{
         BufferedImage img = ImageIO.read(new File(LOCALPICTURE3));
         ResultsSimilarities result = multiCentralWithServer1.search(img, 30, new String[]{"1"});
         assertEquals(false,containsPictures(result, 2l));
+        List<String> containers = new ArrayList<String>();
+        containers.add("1");
+        result = multiCentralWithServer1.search(img, 30, containers);
+        assertEquals(false,containsPictures(result, 2l));        
         
         result = multiCentralWithAllServer.search(img, 30, new String[]{"1"});
         assertEquals(false,containsPictures(result, 2l));

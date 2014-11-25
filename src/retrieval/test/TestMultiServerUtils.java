@@ -60,7 +60,7 @@ public class TestMultiServerUtils {
                     RetrievalServer server = it.next();
                     logger.info("Add server...");
                     ServerInformationSocket serverInfo = new ServerInformationSocket("localhost", server.getPort());
-                    serverInfo.setTimeout(2000);
+                    serverInfo.setSocketTimeOut(2000);
                     serverList.add(serverInfo,i);
                     i++;
                 }
