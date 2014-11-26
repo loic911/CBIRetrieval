@@ -130,12 +130,12 @@ public class RetrievalIndexerDistantTest extends TestUtils {
     
     @Test
     public void testMultiIndexerIndexAllSync() throws Exception {
-        System.out.println("testMultiIndexerIndexSync");
+        System.out.println("testMultiIndexerIndexAllSync");
         String picture = LOCALPICTURE1;
         String container = "myContainer";
         retrievalServer.createServer(container);
         
-        RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,false);
+        RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,true);
         Long id;
         
         id = index.index(new File(picture));
@@ -166,6 +166,46 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
               
     }      
+    
+   @Test
+    public void testMultiIndexerIndexAllASync() throws Exception {
+        System.out.println("testMultiIndexerIndexAllSync");
+        String picture = LOCALPICTURE1;
+        String container = "myContainer";
+        retrievalServer.createServer(container);
+        
+        RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,false);
+        Long id;
+        
+        id = index.index(new File(picture));
+        
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+
+        id = index.index(new File(picture),LOCALPICTURE1MAP);
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        
+        id = index.index(new File(picture),new Date().getTime(),LOCALPICTURE1MAP);
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        
+        id = index.index(new URL(URLPICTURENOAUTH));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        
+        id = index.index(new URL(URLPICTURENOAUTH),LOCALPICTURE1MAP);
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        
+        id = index.index(new URL(URLPICTURENOAUTH),new Date().getTime());
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        
+         id = index.index(ImageIO.read(new File(picture)));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        
+         id = index.index(ImageIO.read(new File(picture)),LOCALPICTURE1MAP);
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        
+        id = index.index(ImageIO.read(new File(picture)),new Date().getTime());
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+              
+    }             
 
     @Test
     public void testMultiIndexerIndexAsync() throws Exception {

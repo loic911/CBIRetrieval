@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package retrieval.client;
 
@@ -22,8 +33,8 @@ import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
 import retrieval.storage.index.ResultSim;
 
 /**
- * Central server side of Communication class between Central Server and servers
- * with XML message and TCP/IP Socket
+ * Client side communication class between Client and Servers
+ * with server java object
  * @author Rollus Loic
  */
 public class RetrievalClientToServersObject  {
@@ -31,12 +42,17 @@ public class RetrievalClientToServersObject  {
     /**
      * Server list
      */
-    private List<RetrievalServer> listsServer;
+    private final List<RetrievalServer> listsServer;
+    
+    /**
+     * Storage map (key = storage name)
+     */
     private Map<String,Storage> storages;
+    
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(RetrievalClientToServersObject.class);
+    private static final Logger logger = Logger.getLogger(RetrievalClientToServersObject.class);
 
     /**
      * Launch communication class on server
@@ -45,9 +61,7 @@ public class RetrievalClientToServersObject  {
     public RetrievalClientToServersObject(List<RetrievalServer> listsServer) {
         this.listsServer = listsServer;
     }
-
-    
-    
+   
     /**
      * Thanks to all Result messages in msgSimilar[], this function will compute the best k similar pictures from all servers
      * @param msgSimilar Result messages
@@ -58,15 +72,25 @@ public class RetrievalClientToServersObject  {
         return new ResultsSimilarities(sortSimilarities(msgSimilar, k),listsServer);
     }
     
-    public ResultsSimilarities searchMultiThread(List<ConcurrentHashMap<String, Long>> visualWords, int N, int k, String[] servers) throws InterruptedException {
-
+    /**
+     * Search similarities on storages thanks to the generated visualwords
+     * @param visualWords Visual words
+     * @param N Number of patches
+     * @param k Max similar pictures
+     * @param storages limit the search on these storages (null or empty = all storages)
+     * @return Similarities
+     * @throws InterruptedException 
+     */
+    public ResultsSimilarities searchMultiThread(List<ConcurrentHashMap<String, Long>> visualWords, int N, int k, String[] storages) throws InterruptedException {
         this.storages = new HashMap<String,Storage>();
+        
+        //Only get storages from storages param
         for(RetrievalServer server : listsServer) {
             for(Storage storage : server.getServerList()) {
-                if(servers==null || servers.length==0) {
+                if(storages==null || storages.length==0) {
                     this.storages.put(server.getIndexPath()+"#"+storage.getStorageName(),storage);
                 } else {
-                    for(String serverName : servers) {
+                    for(String serverName : storages) {
                         if(storage.getStorageName().equals(serverName)) {
                             this.storages.put(server.getIndexPath()+"#"+storage.getStorageName(),storage);
                         }
@@ -90,18 +114,15 @@ public class RetrievalClientToServersObject  {
         logger.debug("sortAndTrimBestResults");
         ResultsSimilarities results = sortAndTrimBestResults(msgSimilar, k);
         //fill the size of each server index (number of picture
-        logger.debug("fillSizeOfServer");
-//        fillSizeOfServer(msgSimilar, results);
         logger.debug("results");
         return results;
     }    
     
     /**
-     * TODO: move tu super class!!!!
-     * Sort similarities for all server reponse
-     * @param msg3s All servers reponses
-     * @param k Max similar picture for each server (optimisation parameter)
-     * @return All servers reponses sorted
+     * Sort similarities for all server response
+     * @param msg3s All servers responses
+     * @param k Max similar picture for each server (optimization parameter)
+     * @return All servers responses sorted
      */
     protected List<ResultSim> sortSimilarities(MessageResults[] msg3s, int k) {
         //results will have the max size of number of similar picture (k) * number of server
@@ -115,27 +136,6 @@ public class RetrievalClientToServersObject  {
         return results;
     } 
     
-//    /**
-//     * Fill the size of each server and compute total size
-//     * @param listsServer Server list
-//     * @param msgSimilar Message with similarities result from server
-//     * @param results Result object with similar picture and server info
-//     */
-//    protected void fillSizeOfServer(MessageResults[] msgSimilar, ResultsSimilarities results) {
-//
-//        int i = 0;
-//        TreeSet<String> keys = new TreeSet<String>(listsServer.getMap().keySet());
-//        for (String key : keys) {
-//           ServerInformationObject value = listsServer.getMap().get(key);
-//            if (msgSimilar[i] != null) {
-//                int sizeOfIndex = msgSimilar[i].getNumberOfPicturesInIndex();
-//                results.add(sizeOfIndex);
-//                value.setSizeOfIndex(sizeOfIndex);
-//            }
-//           i++;
-//        }
-//    }
-
     /**
      * Get all NBT info on each server
      * @param visualWords Visualword to check NBT
@@ -148,7 +148,7 @@ public class RetrievalClientToServersObject  {
         logger.debug("getNBTFromServers");
         MessageNBT msgVW = new MessageNBT(visualWords);
         MessageSimilarities msgSimilar = new MessageSimilarities(visualWords, N, k);
-       // Map<String,Storage> servers = (Map<String,Storage>)listsServer.getServers();
+
         AskNBTObjectThread[] threadsNBT = new AskNBTObjectThread[storages.size()];
 
         int i = 0;
@@ -183,15 +183,12 @@ public class RetrievalClientToServersObject  {
         ClientAskSimilaritiesObjectThread[] threadsSimilar = new ClientAskSimilaritiesObjectThread[storages.size()];
         MessageResults[] msg3s = new MessageResults[storages.size()];
 
-        //Map<String,ServerInformationObject> servers = listsServer.getMap();
         int i = 0;
         TreeSet<String> keys = new TreeSet<String>(storages.keySet());
         for (String key : keys) {
            Storage value = storages.get(key);
-            //if (value.getState() == ServerInformationSocket.NOERROR) {
                 threadsSimilar[i] = new ClientAskSimilaritiesObjectThread(msgWithNBT, msg3s, i,value);
                 threadsSimilar[i].start();
-            //}
            i++;
         }
 
@@ -243,11 +240,9 @@ class AskNBTObjectThread extends Thread {
             MessageNBT response = new MessageNBT(storage.getNBT(toSend.getVisualWordsByTestVector()));
             msgResult.addNBT(response.toXML());
         } catch (WrongNumberOfTestsVectorsException ex) {
-            logger.error("run nbt: undef1:" + ex.toString() + " server="+storage.getStorageName());
-            //storage.changeState(ServerInformationSocket.UNDEF, ex.getMessage());
+            logger.error("run nbt: undef1:" + ex.toString() + " storage="+storage.getStorageName());
         } catch (Exception ex) {
-            logger.error("run nbt: undef2:" + ex.toString() + " server="+storage.getStorageName());
-            //server.changeState(ServerInformationSocket.UNDEF, ex.getMessage());
+            logger.error("run nbt: undef2:" + ex.toString() + " storage="+storage.getStorageName());
         }
     }
 }
@@ -286,7 +281,6 @@ class ClientAskSimilaritiesObjectThread extends Thread {
             msgToReceive[indexOfThread] = new MessageResults(results, sizeOfIndex);
         } catch (Exception e) {
             logger.error("run sim: undef " + e);
-           // server.changeState(ServerInformationSocket.UNDEF, e.getMessage());
         }
     }
 }

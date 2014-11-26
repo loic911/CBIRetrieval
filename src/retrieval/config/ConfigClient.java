@@ -31,14 +31,6 @@ public class ConfigClient extends Config {
      */
     private String vectorPath;
     /**
-     * Max similar picture for a request
-     */
-    private int kMax;
-    /**
-     * Max number of client connected
-     */
-    private int searchMax;
-    /**
      * Timeout for server communication
      */
     private int timeout;
@@ -56,8 +48,6 @@ public class ConfigClient extends Config {
             sizeOfPatchResizeHeight = Integer.parseInt(p.getProperty("SIZEOFPATCHRESIZEHEIGHT", propertiesError));
             resizeMethod = Integer.parseInt(p.getProperty("RESIZEMETHOD", propertiesError));
             vectorPath = p.getProperty("VECTORPATH", propertiesError);
-            kMax = Integer.parseInt(p.getProperty("KMAX", propertiesError));
-            searchMax = Integer.parseInt(p.getProperty("SEARCHMAX", propertiesError));
             timeout = Integer.parseInt(p.getProperty("TIMEOUT", propertiesError));            
         } catch(Exception e) {
             throw new CBIRException(e.toString());
@@ -133,34 +123,6 @@ public class ConfigClient extends Config {
      */
     public void setVectorPath(String vectorPath) {
         this.vectorPath = vectorPath;
-    }
-
-    /**
-     * @return the kMax
-     */
-    public int getkMax() {
-        return kMax;
-    }
-
-    /**
-     * @param kMax the kMax to set
-     */
-    public void setkMax(int kMax) {
-        this.kMax = kMax;
-    }
-
-    /**
-     * @return the searchMax
-     */
-    public int getSearchMax() {
-        return searchMax;
-    }
-
-    /**
-     * @param searchMax the searchMax to set
-     */
-    public void setSearchMax(int searchMax) {
-        this.searchMax = searchMax;
     }
 
     /**

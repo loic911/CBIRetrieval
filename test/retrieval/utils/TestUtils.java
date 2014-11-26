@@ -160,6 +160,21 @@ public class TestUtils {
 
     static public int TIMEWAIT = 2000;
     
+    public boolean waitForPictureIndexed(Storage storage, Long id) {
+        long startTime = System.currentTimeMillis();
+        long maxTime = 10000;
+        while((System.currentTimeMillis()-startTime)<maxTime) {
+            if(storage.isPictureInIndex(id)) {
+                return true;
+            }
+            try {
+                Thread.sleep(25);
+            } catch (InterruptedException ex) {
+            }
+        }
+        return false;                
+    }
+    
     public boolean waitToSizeEquals(Storage server, int size) {
         long startTime = System.currentTimeMillis();
         long maxTime = 10000;
@@ -168,7 +183,7 @@ public class TestUtils {
                 return true;
             }
             try {
-                Thread.sleep(100);
+                Thread.sleep(25);
             } catch (InterruptedException ex) {
             }
         }
@@ -183,7 +198,7 @@ public class TestUtils {
                 return true;
             }
             try {
-                Thread.sleep(100);
+                Thread.sleep(25);
             } catch (InterruptedException ex) {
             }
         }
@@ -198,7 +213,7 @@ public class TestUtils {
             server = multi.getServer(key);
             if(server!=null) return true;
             try {
-                Thread.sleep(100);
+                Thread.sleep(25);
             } catch (InterruptedException ex) {
             }
         }

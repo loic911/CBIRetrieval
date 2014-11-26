@@ -54,8 +54,10 @@ public class MultiServerMessageIndex implements Message, Cloneable {
     public String toString() {
         String s = "MESSAGE SUPER SERVER INDEX\n";
         s = s + "PICTURE " + id +"\n";
-        for(Map.Entry<String,String> entry : properties.entrySet()) {
-            s = s + "PROP " + entry.getKey() + "=" + entry.getValue() + "\n";
+        if(properties!=null) {
+            for(Map.Entry<String,String> entry : properties.entrySet()) {
+               s = s + "PROP " + entry.getKey() + "=" + entry.getValue() + "\n";
+           }           
         }
         return s;
     }

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.client;
 
 import java.io.File;
@@ -19,7 +34,7 @@ import retrieval.exception.CBIRException;
 public class ListServerInformationSocket implements Cloneable {
 
     /**
-     * Timout for each server
+     * Timeout for each server
      */
     private int timeout;
     
@@ -37,6 +52,7 @@ public class ListServerInformationSocket implements Cloneable {
     
     /**
      * Constructor of a server socket list
+     * @param servers A list of info socket
      */
     public ListServerInformationSocket(List<ServerInformationSocket> servers) {
         this.serversMap = new TreeMap<Integer,ServerInformationSocket>();
@@ -50,7 +66,7 @@ public class ListServerInformationSocket implements Cloneable {
      * Constructor of a server socket list
      * @param path Path of xml file
      * @param timeout Timeout for this server
-     * @throws Exception Not valid XML file
+     * @throws CBIRException Not valid XML file
      */
     public ListServerInformationSocket(String path, int timeout) throws CBIRException {
         this.timeout = timeout;

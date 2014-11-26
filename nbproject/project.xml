@@ -14,6 +14,7 @@
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>metadata</word>
             <word>url</word>
+            <word>visualwords</word>
         </spellchecker-wordlist>
     </configuration>
 </project>

@@ -6,18 +6,27 @@
         <group>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClientInterface.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/test/TestMultiServerUtils.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/indexer/RetrievalIndexerLocalTest.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/utils/TestUtils.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClient.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageIndex.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/package.html</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/RetrievalIndexer.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/RetrievalIndexerMain.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalCentralServerDistantTest.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/RetrievalIndexerDistantStorage.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/config/ConfigClient.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalClientMainTest.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClientToServersXML.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/indexer/RetrievalIndexerDistantTest.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClientToServersObject.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/indexer/RetrievalIndexerMainTest.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/ListServerInformationSocket.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalCentralServerAbstract.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/ServerInformation.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/ServerInformationSocket.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/main/RetrievalPurgerMain.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/main/RetrievalClientMain.java</file>
         </group>
     </open-files>
 </project-private>
