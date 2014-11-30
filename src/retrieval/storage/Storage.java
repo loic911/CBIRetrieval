@@ -172,7 +172,6 @@ public final class Storage {
      * @throws InternalServerException Error during the server start
      */
     public void start() throws InternalServerException {
-        logger.info("start: config.PORTSEARCH="+config.getPortSearch()+ " config.PORTINDEXPICTURE="+config.getPortIndexPicture() + " config.PORTINFO="+config.getPortInfo());
         logger.info("start: launch index thread");
         this.threadIndex.start();
         logger.info("start: launch index thread OK");

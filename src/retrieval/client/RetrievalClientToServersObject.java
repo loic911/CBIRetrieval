@@ -15,6 +15,8 @@
  */
 package retrieval.client;
 
+import retrieval.client.message.MessageResults;
+import retrieval.client.message.MessageNBT;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,9 +25,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
-import retrieval.dist.MessageNBT;
-import retrieval.dist.MessageResults;
-import retrieval.dist.MessageSimilarities;
+import retrieval.client.message.MessageSimilarities;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;

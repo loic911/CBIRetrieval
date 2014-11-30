@@ -1,4 +1,4 @@
-package retrieval.storage.index.path;
+package retrieval.storage.index.properties;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,7 +17,7 @@ import retrieval.storage.exception.ReadIndexException;
  *     /home/user/otherPict.jpg - 17 | 17 - /home/user/mypict.jpg
  * @author Rollus Loic
  */
-public class SimpleHashMapPathIndex implements PicturePathIndex {
+public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
 
     /**
      * Map: id picture - path
@@ -27,14 +27,14 @@ public class SimpleHashMapPathIndex implements PicturePathIndex {
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(SimpleHashMapPathIndex.class);
+    private static Logger logger = Logger.getLogger(SimpleHashMapPropertiesIndex.class);
 
     /**
      * Constructor for a path map
      * @param read Not used
      * @throws ReadIndexException Error during the index read
      */
-    public SimpleHashMapPathIndex(
+    public SimpleHashMapPropertiesIndex(
             boolean read)
             throws ReadIndexException {
         logger.info("SimpleHashMapPatchsIndex: start");

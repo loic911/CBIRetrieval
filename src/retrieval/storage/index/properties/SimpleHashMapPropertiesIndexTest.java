@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package retrieval.storage.index.path;
+package retrieval.storage.index.properties;
 
 import java.util.HashMap;
 import retrieval.storage.exception.ReadIndexException;
@@ -12,8 +12,8 @@ import retrieval.storage.exception.ReadIndexException;
  *
  * @author lrollus
  */
-public class SimpleHashMapPathIndexTest extends  SimpleHashMapPathIndex {
-    public SimpleHashMapPathIndexTest(boolean read) throws ReadIndexException {
+public class SimpleHashMapPropertiesIndexTest extends  SimpleHashMapPropertiesIndex {
+    public SimpleHashMapPropertiesIndexTest(boolean read) throws ReadIndexException {
           super(read);
           HashMap<String,String> map1 = new HashMap<String,String>();
           map1.put("file","1.jpg");

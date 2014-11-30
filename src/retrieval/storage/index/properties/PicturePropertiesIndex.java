@@ -1,4 +1,4 @@
-package retrieval.storage.index.path;
+package retrieval.storage.index.properties;
 import java.util.List;
 import java.util.Map;
 import retrieval.storage.exception.CloseIndexException;
@@ -9,7 +9,7 @@ import retrieval.storage.exception.CloseIndexException;
  * id ===> properties
  * @author Loic Rollus
  **/
-public interface PicturePathIndex {
+public interface PicturePropertiesIndex {
 
     /**
      * Add a new picture path, generate a new id and get the id

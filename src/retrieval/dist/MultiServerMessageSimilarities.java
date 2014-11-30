@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.dist;
 
 import java.util.ArrayList;
@@ -170,37 +185,6 @@ public class MultiServerMessageSimilarities implements Message,Cloneable {
     }
 
 
-    @Override
-    public String toString() {
-        String s = "";
-        s = s + "Search on server " + getContainers() + "\n";
-        s+="N="+ N + "\n";
-        s+="k="+ k + "\n";
-        Iterator<Entry<String,List<ConcurrentHashMap<String, RequestPictureVisualWord>>>> it = tvLists.entrySet().iterator();
-
-        while(it.hasNext()) {
-            Entry<String,List<ConcurrentHashMap<String, RequestPictureVisualWord>>> entry = it.next();
-            String server = entry.getKey();
-            List<ConcurrentHashMap<String, RequestPictureVisualWord>> tvList = entry.getValue();
-            s+="SERVER  "+server+"\n";
-            for (int i = 0; i < tvList.size(); i++) {
-                s+="TEST VECTOR "+i+"\n";
-                ConcurrentHashMap<String, RequestPictureVisualWord> tv = tvList.get(i);
-                for (Map.Entry<String, RequestPictureVisualWord> entry2 : tv.entrySet()) {
-                    RequestPictureVisualWord tvm2 = entry2.getValue();
-                    Element vw = new Element("vw");
-                    vw.setAttribute(new Attribute("b", entry2.getKey()));
-                    vw.setAttribute(new Attribute("nbiq", tvm2.nbiq + ""));
-                    vw.setAttribute(new Attribute("nbt", tvm2.nbtSum + ""));
-                    s+="b=" + entry2.getKey() + "| nbiq="+ tvm2.nbiq + "| nbt=" + tvm2.nbtSum +"\n";
-                }
-
-            }
-        }
-        return s;
-    }
-
-
     /**
      * Get the number of patch for Iq
      * @return N
@@ -305,53 +289,11 @@ public class MultiServerMessageSimilarities implements Message,Cloneable {
         }
     }
 
-    /**
-     * Add a new message NBT (from server s) to produce this message.
-     * This will add NBT of s for every visual word of each tests vector
-     * Synchronized because central server talk to each server
-     * on a specific thread
-     * @param messageNBT Message NBT
-     */
-    public synchronized void addNBT(Map<String,List<ConcurrentHashMap<String,Long>>> lists) {
-
-        Iterator<Entry<String,List<ConcurrentHashMap<String,Long>>>> it1 = lists.entrySet().iterator();
-
-        while (it1.hasNext()) {
-            Entry<String,List<ConcurrentHashMap<String,Long>>> entry1 = it1.next();
-            String server = entry1.getKey();
-            List<ConcurrentHashMap<String,Long>> tvList = entry1.getValue();
-
-            Iterator<ConcurrentHashMap<String,Long>> it2 = tvList.iterator();
-            while(it2.hasNext()) {
-                ConcurrentHashMap<String,Long> testElem = it2.next();
-                Enumeration<String> it3 = testElem.keys();
-                int i = 0;
-                while (it3.hasMoreElements()) {
-                    String b = it3.nextElement();
-                    long nbit = testElem.get(b);
-
-                    RequestPictureVisualWord item = tvLists.get(server).get(i).get(b);
-                    //add the NBT of server s to the total NBT
-                    item.addNbtSum((int)nbit);
-                    tvLists.get(server).get(i).put(b, item);
-                }
-                i++;
-
-            }
-        }
-    }
 
     /**
      * @return the containers
      */
     public List<String> getContainers() {
         return containers;
-    }
-
-    /**
-     * @param containers the containers to set
-     */
-    public void setContainers(List<String> containers) {
-        this.containers = containers;
     }
 }

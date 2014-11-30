@@ -19,6 +19,8 @@ import retrieval.dist.NotValidMessageXMLException;
  * @author Rollus Loic
  */
 public class NetworkUtils {
+    public static String NORESPONSE = "NORESPONSE";
+    
     private static Logger logger = Logger.getLogger(NetworkUtils.class);
     /**
      * Write a xml message to a client/server without exception throw

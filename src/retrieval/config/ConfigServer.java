@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.config;
 
 import java.util.Properties;
@@ -8,31 +23,9 @@ import org.apache.log4j.Logger;
  * Configuration file for a server
  * @author Rollus Loic
  */
-public class ConfigServer extends Config implements Cloneable {
-    
-    //NOT LOADED FROM FILES!
-    private int numberOfSubserver=1;   
-    private int currentRedisStore=-1;  
+public class ConfigServer extends Config implements Cloneable {   
 
-    /**************************************************************************
-     *****
-     *****                 Information about Network    
-     ***** 
-     *************************************************************************/
-    /**
-     * Port for search (with central server)
-     */
-    private int portSearch;
-    /**
-     * Port for picture indexer (with light indexer)
-     */
-    private int portIndexPicture;
-    /**
-     * Port for information (with heavy indexer)
-     */
-    private int portInfo;
 
-    
     /**************************************************************************
      *****
      *****                 Information about quality / speedup  
@@ -190,10 +183,6 @@ public class ConfigServer extends Config implements Cloneable {
         p = read(configFileServer);
         logger.info("Config init");
         
-        portSearch = Integer.parseInt(p.getProperty("PORTSEARCH",propertiesError));
-        portIndexPicture = Integer.parseInt(p.getProperty("PORTINDEXPICTURE", propertiesError));
-        portInfo = Integer.parseInt(p.getProperty("PORTINFO", propertiesError));        
-        
         numberOfPatch = Integer.parseInt(p.getProperty("NUMBEROFPATCH", propertiesError));
         numberOfTV = Integer.parseInt(p.getProperty("NUMBEROFTV", propertiesError));
         
@@ -237,51 +226,6 @@ public class ConfigServer extends Config implements Cloneable {
                 return newC;
         }
 
-
-    /**
-     * Get the next redis store id available 
-     * @return Next Redis store id available
-     */
-    public synchronized int getNextRedisStoreId() {
-        setCurrentRedisStore(getCurrentRedisStore() + 1);
-        return getCurrentRedisStore();
-    }
-    
-    /**
-     * Set the first redis store id available
-     * @param i Redis store id
-     */
-    public synchronized void setRedisStoreId(int i) {
-        setCurrentRedisStore(i);
-    }
-
-    /**
-     * Compute Kyoto cache size of one index (size / t)
-     * @return MB value (format XXXMB)
-     */
-    public String getKyotoCacheSizeForMainIndex() {
-        int s = 1; //int s = NUMBEROFSUBSERVER;
-        int t = getNumberOfTestVector();
-        String sizeMain = getKyotoCacheMainIndex();
-        logger.info("NUMBEROFSUBSERVER="+s + " NUMBEROFTESTVECTOR=" + t + " KYOTOCACHEMAININDEX="+sizeMain);
-        Long size = convertLongSize(sizeMain);
-        Long sizeForIndex =  (size/s)/t;
-        return sizeForIndex + "MB";
-    }
-
-    /**
-     * Compute Kyoto cache size of one database share accross all index
-     * @return MB value (format XXXMB)
-     */    
-    public String getKyotoCacheSizeForMainIndexWith1T() {
-        int s = 1; //int s = NUMBEROFSUBSERVER;
-        int t = 1;
-        String sizeMain = getKyotoCacheMainIndex();
-        logger.info("NUMBEROFSUBSERVER="+s + " NUMBEROFTESTVECTOR=" + t + " KYOTOCACHEMAININDEX="+sizeMain);
-        Long size = convertLongSize(sizeMain);
-        Long sizeForIndex =  (size/s)/t;
-        return sizeForIndex + "MB";
-    }
     
     /**
      * Compute Kyoto cache size of one database share accross all index
@@ -308,20 +252,6 @@ public class ConfigServer extends Config implements Cloneable {
         logger.info("NUMBEROFSUBSERVER="+s + "KYOTOCACHEMETADATA="+sizeMeta);
         Long size = convertLongSize(sizeMeta);
         Long sizeForIndex =  (size/s)/4; //3 because 1 path, 1 reverse path and 1 patchs (4 for optim)
-        return sizeForIndex + "MB";
-    }
- 
-    /**
-     * Compute Kyoto cache size of one compress index
-     * @return MB value (format XXXMB)
-     */    
-    public String getKyotoCacheSizeForCompress() {
-        int s = 1; //NUMBEROFSUBSERVER;
-        int t = getNumberOfTestVector();
-        String sizeMeta = getKyotoCacheCompress();
-        logger.info("NUMBEROFSUBSERVER="+s + "KYOTOCACHEMETADATA="+sizeMeta);
-        Long size = convertLongSize(sizeMeta);
-        Long sizeForIndex =  (size/s)/t; 
         return sizeForIndex + "MB";
     }
     
@@ -351,76 +281,6 @@ public class ConfigServer extends Config implements Cloneable {
      */
     public int getNumberOfTestVector() {
         return numberOfTV;
-    }
-
-    /**
-     * @return the numberOfSubserver
-     */
-    public int getNumberOfSubserver() {
-        return numberOfSubserver;
-    }
-
-    /**
-     * @param numberOfSubserver the numberOfSubserver to set
-     */
-    public void setNumberOfSubserver(int numberOfSubserver) {
-        this.numberOfSubserver = numberOfSubserver;
-    }
-
-    /**
-     * @return the currentRedisStore
-     */
-    public int getCurrentRedisStore() {
-        return currentRedisStore;
-    }
-
-    /**
-     * @param currentRedisStore the currentRedisStore to set
-     */
-    public void setCurrentRedisStore(int currentRedisStore) {
-        this.currentRedisStore = currentRedisStore;
-    }
-
-    /**
-     * @return the portSearch
-     */
-    public int getPortSearch() {
-        return portSearch;
-    }
-
-    /**
-     * @param portSearch the portSearch to set
-     */
-    public void setPortSearch(int portSearch) {
-        this.portSearch = portSearch;
-    }
-
-    /**
-     * @return the portIndexPicture
-     */
-    public int getPortIndexPicture() {
-        return portIndexPicture;
-    }
-
-    /**
-     * @param portIndexPicture the portIndexPicture to set
-     */
-    public void setPortIndexPicture(int portIndexPicture) {
-        this.portIndexPicture = portIndexPicture;
-    }
-
-    /**
-     * @return the portInfo
-     */
-    public int getPortInfo() {
-        return portInfo;
-    }
-
-    /**
-     * @param portInfo the portInfo to set
-     */
-    public void setPortInfo(int portInfo) {
-        this.portInfo = portInfo;
     }
 
     /**
@@ -568,16 +428,6 @@ public class ConfigServer extends Config implements Cloneable {
      */
     public String getStoreName() {
         return storeName;
-    }
-    
-    public boolean isGolbalDatabase() {
-        boolean isGlobal = false;
-        if(getStoreName().equals("KYOTOSINGLEFILE")) {
-            isGlobal = true;
-        } else if(getStoreName().equals("REDISSINGLEFILE")) {
-            isGlobal = true;
-        }
-        return isGlobal;
     }
 
     /**
@@ -741,31 +591,4 @@ public class ConfigServer extends Config implements Cloneable {
         this.kyotoCacheCompress = kyotoCacheCompress;
     }
 
-    /**
-     * @return the redisHost
-     */
-    public String getRedisHost() {
-        return redisHost;
-    }
-
-    /**
-     * @param redisHost the redisHost to set
-     */
-    public void setRedisHost(String redisHost) {
-        this.redisHost = redisHost;
-    }
-
-    /**
-     * @return the redisPort
-     */
-    public String getRedisPort() {
-        return redisPort;
-    }
-
-    /**
-     * @param redisPort the redisPort to set
-     */
-    public void setRedisPort(String redisPort) {
-        this.redisPort = redisPort;
-    }
 }

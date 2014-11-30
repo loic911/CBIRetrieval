@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.server;
 
 import java.awt.image.BufferedImage;
@@ -31,29 +46,34 @@ import retrieval.storage.exception.InternalServerException;
 import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
 /**
- * A retrieval super server can carry n local object servers.
+ * A retrieval server manage n local storage.
  * @author lrollus
  */
 public final class RetrievalServer {
 
+    /**
+     * Keyword to store a picture in "random" storage.
+     * If you index multiple images, they will be store in different storage
+     */
     public static String EQUITABLY = "###EQUITABLY###";
-    /**
-     * Map with id server and the server
-     */
-    private Map<String, Storage> serverMap;
     
     /**
-     * List with all server
+     * Map with storage name and the storage object
      */
-    private List<Storage> serverList;
+    private Map<String, Storage> storageMap;
     
     /**
-     * Config object of the last created server
+     * List with all storage
+     */
+    private List<Storage> storageList;
+    
+    /**
+     * Config object of the last created storage
      */
     private ConfigServer configServer;
     
     /**
-     * Config object to init multiserver
+     * Config object to init server
      */
     private ConfigServer configMain;
     
@@ -69,20 +89,18 @@ public final class RetrievalServer {
     private int port = -1;
     
     /**
-     * Indice of server that will carry next index request
+     * Index of server that will carry next index request
      */
-    private int currentServerIndice;
+    private int currentStorageIndex;
     
     GlobalDatabase globalDatabase = null;
     
-    
     private static Logger logger = Logger.getLogger(RetrievalServer.class);
 
-
     /**
-     * Create MultiServer
+     * Create Server
      * @param configMain Config server object
-     * @param environment Name of environment (you can use smth like 'test','prod',...)
+     * @param environment Name of environment (you can use something like 'test','prod',...)
      * @param totalServer Number of server to create
      * @param deleteIndex Delete index path or not
      */
@@ -90,16 +108,20 @@ public final class RetrievalServer {
         this(configMain, environment, deleteIndex, RetrievalServer.createNewContainers(totalServer));
     }
     
+     /**
+     * Create Server
+     * @param configMain Config server object
+     * @param environment Name of environment (you can use something like 'test','prod',...)
+     * @param deleteIndex Delete index path or not
+     */   
     public RetrievalServer(ConfigServer configMain, String environment,boolean deleteIndex) {
         this(configMain, environment,deleteIndex,null);
     } 
-    
- 
+     
     /**
      * Create MultiServer
      * @param configMain Config server object
-     * @param environment Name of environment (you can use smth like 'test','prod',...)
-     * @param totalServer Number of server to create
+     * @param environment Name of environment (you can use something like 'test','prod',...)
      * @param deleteIndex Delete index path or not
      * @param serverKeys Servers name (size must be equals to totalServer)
      */   
@@ -119,15 +141,10 @@ public final class RetrievalServer {
             String[] containers;
             if(serverKeys!=null) {
                containers = serverKeys; 
-            } else if(configServer.getStoreName().equals("MEMORY")) {
-               containers = new String[0];
-            } else if(configServer.isGolbalDatabase()) {
-               containers = createGlobalDatabaseContainers(configServer);
             } else {
-               containers = createLocalDatabaseContainers(configServer);
-            }
+                containers = createGlobalDatabaseContainers(configServer);
+            } 
             logger.info("serverKeys:"+containers);
-            configServer.setNumberOfSubserver(containers.length); 
             logger.info("Create container:"+Arrays.toString(containers));
 
             if (deleteIndex) {
@@ -140,8 +157,8 @@ public final class RetrievalServer {
                globalDatabase = new KyotoCabinetDatabase(configServer); 
             }             
             
-            serverMap = new HashMap<String, Storage>();
-            serverList = new ArrayList<Storage>();
+            storageMap = new HashMap<String, Storage>();
+            storageList = new ArrayList<Storage>();
 
             for (int i = 0; i < containers.length; i++) {
                 logger.info("create server:"+containers[i]);
@@ -149,7 +166,7 @@ public final class RetrievalServer {
 
             }
             logger.info("MultiServer started...");
-            currentServerIndice = 0;           
+            currentStorageIndex = 0;           
         } catch(Exception e) {
             logger.fatal(e.toString());
         }
@@ -164,6 +181,10 @@ public final class RetrievalServer {
     }
     
     public String[] createGlobalDatabaseContainers(ConfigServer config) throws Exception {
+        if(configServer.getStoreName().equals("MEMORY")) {
+            //memory, no data to read
+            return new String[0];
+        }
         return readContainersFromDisk(config);
     }
     
@@ -219,12 +240,7 @@ public final class RetrievalServer {
             logger.info("File not found, return empty array:"+new String[0]);
             return new String[0];
         } 
-    }
-
-    public String[] createLocalDatabaseContainers(ConfigServer config) {
-        File basePath = new File(config.getIndexPath());
-        return FileUtils.listDirectories(basePath);
-    }    
+    }   
     
     public String getIndexPath() {
         return configServer.getIndexPath();
@@ -249,19 +265,16 @@ public final class RetrievalServer {
             logger.info("Global database is set");
         } else {
             logger.info("Global database is not set, init a database for each server");
-            int redisDatabase = i * ((configServer.getNumberOfTestVector() * 2) + (3));
-            configLocalServer.setRedisStoreId(redisDatabase - 1);
-            configServer.setNumberOfSubserver(configServer.getNumberOfSubserver() + 1);
             configLocalServer.setIndexPath(configServer.getIndexPath() + key + "/");           
         }
 
         logger.info("Create server " + key + " path:" + configLocalServer.getIndexPath());
         Storage server = new Storage(key,configLocalServer,globalDatabase);
-        serverMap.put(key, server);
+        storageMap.put(key, server);
         getServerList().add(server);
         logger.info("Server list:"+getServerList());
         if(!configMain.getStoreName().equals("MEMORY")) 
-            writeContainersOnDisk(configServer,serverMap);
+            writeContainersOnDisk(configServer,storageMap);
         //server.startWithoutInitSocket();       
         server.start();
         Thread.sleep(100);
@@ -277,14 +290,14 @@ public final class RetrievalServer {
      */
     public void deleteServer(String key) throws Exception {
         //init config for each server
-        Storage server = serverMap.get(key);
+        Storage server = storageMap.get(key);
         logger.info("Stop server " + key + "...");
         if (server == null) {
             throw new Exception("Server don't exist with key=" + key);
         }
         server.stop();
         server.deleteIndex();
-        serverMap.remove(key);
+        storageMap.remove(key);
         getServerList().remove(server);
     }
 
@@ -293,13 +306,13 @@ public final class RetrievalServer {
      * @return Current server
      */
     public synchronized Storage getNextServer() {
-        if (currentServerIndice == getServerList().size() - 1) {
-            currentServerIndice = 0;
+        if (currentStorageIndex == getServerList().size() - 1) {
+            currentStorageIndex = 0;
         }
         else {
-            currentServerIndice++;
+            currentStorageIndex++;
         }
-        return getServerList().get(currentServerIndice);
+        return getServerList().get(currentStorageIndex);
     }
 
     /**
@@ -313,7 +326,7 @@ public final class RetrievalServer {
 
     public synchronized Storage getServer(String key, boolean createIfNotExist) {
         try {
-            Storage storage = serverMap.get(key);
+            Storage storage = storageMap.get(key);
             if(createIfNotExist && storage==null) {
                createServer(key);
                storage = getServer(key);    
@@ -331,14 +344,14 @@ public final class RetrievalServer {
      * @return Map with entry id-server
      */
     public Map<String, Storage> getServerMap() {
-        return serverMap;
+        return storageMap;
     }  
     
     /**
      * @return the serverList
      */
     public List<Storage> getServerList() {
-        return serverList;
+        return storageList;
     }  
 
     /**
@@ -351,8 +364,8 @@ public final class RetrievalServer {
         Map<String, Storage> servers = new TreeMap<String, Storage>();
         while (itr.hasNext()) {
             String key = itr.next();
-            if(serverMap.get(key)!=null) {
-                servers.put(key, serverMap.get(key));
+            if(storageMap.get(key)!=null) {
+                servers.put(key, storageMap.get(key));
             }
         }
         return servers;
@@ -363,7 +376,7 @@ public final class RetrievalServer {
      * @return Servers id
      */
     public synchronized List<String> getServersId() {
-        Iterator<String> itr = serverMap.keySet().iterator();
+        Iterator<String> itr = storageMap.keySet().iterator();
         List<String> serversId = new ArrayList<String>();
         while (itr.hasNext()) {
             String key = itr.next();
@@ -438,61 +451,12 @@ public final class RetrievalServer {
     public Map<String, Long> getServersSize() {
         Map<String, Long> serversSizeMap = new TreeMap();
 
-        for (Map.Entry<String, Storage> entry : serverMap.entrySet()) {
+        for (Map.Entry<String, Storage> entry : storageMap.entrySet()) {
             serversSizeMap.put(entry.getKey(), entry.getValue().getNumberOfItem());
         }
         return serversSizeMap;
     } 
-    
-    /**
-     * Index picture asynchrone (on queue) on next server
-     * @param picture Picture path
-     * @param authorization Authorization to acess pictures
-     * @throws Exception Error during indexing
-     */
-     public void indexPictureAsynchrone(BufferedImage picture,Long id,Map<String,String> properties) throws Exception {
-        Storage server = getNextServer();
-        indexPictureAsynchrone(picture,id,properties);
-    }
-     
-      /**
-      * Index picture asynchrone (on queue) on server idServer if idServer exist
-      * @param picture Picture path
-      * @param idServer Server id
-      * @return False if server not exist, otherwise true
-      * @throws Exception Error during indexing
-      */
-     public void indexPictureAsynchrone(BufferedImage picture,Long id,Map<String,String> properties, Storage storage) throws Exception {
-         storage.addToIndexQueue(picture,id,properties);
-    } 
-     
-     public void indexPictureAsynchrone(BufferedImage picture,Long id,Map<String,String> properties, String storageName) throws Exception {
-         Storage storage = getServer(storageName);
-         if(storage==null) {
-             createServer(storageName);
-             storage = getServer(storageName);
-         }
-         storage.addToIndexQueue(picture,id,properties);
-    }      
-         
-    /**
-     * Index picture synchrone on next server
-     * @param picture Picture path
-     * @param authorization Authorization to acess pictures
-     * @throws Exception Error during indexing
-     */
-    public void indexPictureSynchrone(BufferedImage picture,Long id,Map<String,String> properties, Storage storage) throws Exception {
-        storage.indexPicture(picture,id,properties);
-    }    
-    
-    public void indexPictureSynchrone(BufferedImage picture,Long id,Map<String,String> properties, String storageName) throws Exception {
-         Storage storage = getServer(storageName);
-         if(storage==null) {
-             createServer(storageName);
-             storage = getServer(storageName);
-         }
-         storage.indexPicture(picture,id,properties);
-    } 
+
 
     /**
      * Index picture synchrone on next server
@@ -552,7 +516,7 @@ public final class RetrievalServer {
      */
     public boolean isIndexQueueEmpty() {
         for (int i = 0; i < getServerList().size(); i++) {
-            if (!serverList.get(i).isIndexQueueEmpty()) {
+            if (!storageList.get(i).isIndexQueueEmpty()) {
                 return false;
             }
         }
@@ -584,7 +548,7 @@ public final class RetrievalServer {
 
         Map<String,Storage> serversInstance;
         if(!servers.isEmpty()) serversInstance = getServers(servers);
-        else serversInstance = serverMap;
+        else serversInstance = storageMap;
         logger.debug("Search on " + serversInstance);
         logger.debug("Servers available " + getServerMap());
         Iterator<Entry<String, Storage>> it = serversInstance.entrySet().iterator();
@@ -625,7 +589,7 @@ public final class RetrievalServer {
             serversInstance = getServers(servers);
         }
         else {
-            serversInstance = serverMap;
+            serversInstance = storageMap;
         }
         Iterator<Entry<String, Storage>> it = serversInstance.entrySet().iterator();
 
@@ -654,9 +618,6 @@ public final class RetrievalServer {
     public Map<Long,Map<String,String>> getInfos(String storageName) throws CBIRException {
         Map<String,List<Long>> results = new HashMap<String,List<Long>>();
         Storage storage = getServer(storageName);
-        if(storage==null) {
-            return null;
-        }
         return storage.getAllPicturesMap();
     }      
     
@@ -770,28 +731,6 @@ class WaitRequestThread extends Thread {
         }
     }
 }
-//
-//class IndexerThread extends Thread {
-//
-//    private List<String> lists;
-//    private Storage server;
-//    
-//    private static Logger logger = Logger.getLogger(IndexerThread.class);
-//
-//    public IndexerThread(Storage server, List<String> lists) {
-//        this.server = server;
-//        this.lists = lists;
-//    }
-//
-//    @Override
-//    public void run() {
-//        try {
-//            server.indexPictureFiles(lists,authorization);
-//        } catch (InternalServerException ex) {
-//            logger.error("Cannot close connection:"+ex);
-//        }
-//    }
-//}
 
 class DeleteThread extends Thread {
 

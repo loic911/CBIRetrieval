@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.dist;
 
 import java.util.ArrayList;
@@ -42,18 +57,6 @@ public class MultiServerMessageDelete implements Message, Cloneable {
         }
     }
 
-    @Override
-    public String toString() {
-        String s = "MESSAGE SUPER SERVER DELETE\n";
-        for(int i=0;i<getIds().size();i++) {
-            s = s + "PICTURE " + getIds().get(i) + "\n";
-        }
-        for(int i=0;i<getStorages().size();i++) {
-            s = s + "STORAGE " + getStorages().get(i) + "\n";
-        }        
-        return s;
-    }
-
     /**
      * Method to build XML document from this message
      * @return XML document
@@ -87,14 +90,7 @@ public class MultiServerMessageDelete implements Message, Cloneable {
      */
     public List<Long> getIds() {
         return ids;
-    }
-
-    /**
-     * @param ids the ids to set
-     */
-    public void setIds(List<Long> ids) {
-        this.ids = ids;
-    }    
+    }  
 
     /**
      * @return the storages
@@ -103,11 +99,4 @@ public class MultiServerMessageDelete implements Message, Cloneable {
         return storages;
     }
 
-    /**
-     * @param storages the storages to set
-     */
-    public void setStorages(List<String> storages) {
-        this.storages = storages;
-    }
-   
 }

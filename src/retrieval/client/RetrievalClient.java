@@ -224,17 +224,17 @@ public class RetrievalClient implements RetrievalClientInterface{
 
     /**
      * Read tests vectors on a path
-     * @param configCentralServer Configuration object of central sever
+     * @param configClient Configuration object of client
      * @throws Exception Files not found/Not valid
      */
-    private void readTestsVectors(ConfigClient configCentralServer) throws CBIRException {
-        testVectors = TestVectorReading.readClient(configCentralServer.getVectorPath(),configCentralServer);
+    private void readTestsVectors(ConfigClient configClient) throws CBIRException {
+        testVectors = TestVectorReading.readClient(configClient.getVectorPath(),configClient);
         logger.info(testVectors.size() + " tests vectors read...");
     }
 
     /**
      * Read server list from path serversFile
-     * @param configClient Configuration object of central sever
+     * @param configClient Configuration object of client
      * @param serversFile Server file path
      * @throws Exception Files not found/Not valid
      */

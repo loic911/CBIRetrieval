@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package retrieval.storage.index.path;
+package retrieval.storage.index.properties;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,7 +19,7 @@ import retrieval.storage.exception.CloseIndexException;
  *
  * @author lrollus
  */
-public abstract class KyotoCabinetPathIndexAbstract implements PicturePathIndex{
+public abstract class KyotoCabinetPropertiesIndexAbstract implements PicturePropertiesIndex{
 
     /**
      * BDB database object for map and mapreverse
@@ -35,7 +35,7 @@ public abstract class KyotoCabinetPathIndexAbstract implements PicturePathIndex{
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(KyotoCabinetPathIndexAbstract.class);
+    private static Logger logger = Logger.getLogger(KyotoCabinetPropertiesIndexAbstract.class);
     
     
     public int getCountValue() {

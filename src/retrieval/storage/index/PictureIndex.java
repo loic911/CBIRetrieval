@@ -15,10 +15,10 @@ import retrieval.storage.index.patchs.KyotoCabinetPatchsIndexSingleFile;
 import retrieval.storage.index.patchs.PicturePatchsIndex;
 import retrieval.storage.index.patchs.SimpleHashMapPatchsIndex;
 import retrieval.storage.index.patchs.SimpleHashMapPatchsIndexTest;
-import retrieval.storage.index.path.KyotoCabinetPathIndexSingleFile;
-import retrieval.storage.index.path.PicturePathIndex;
-import retrieval.storage.index.path.SimpleHashMapPathIndex;
-import retrieval.storage.index.path.SimpleHashMapPathIndexTest;
+import retrieval.storage.index.properties.KyotoCabinetPropertiesIndexSingleFile;
+import retrieval.storage.index.properties.PicturePropertiesIndex;
+import retrieval.storage.index.properties.SimpleHashMapPropertiesIndex;
+import retrieval.storage.index.properties.SimpleHashMapPropertiesIndexTest;
 
 /**
  * Picture index (not visual word index!)
@@ -33,7 +33,7 @@ public final class PictureIndex implements Serializable {
      * rem: path are not use for id because string
      * are too heavy in visual word index
      */
-    private PicturePathIndex picturePathIndex;
+    private PicturePropertiesIndex picturePathIndex;
     /**
      * Index which map image id and number of patchs produce by image during
      * the indexage
@@ -69,13 +69,13 @@ public final class PictureIndex implements Serializable {
      */
     private PictureIndex(String idServer,ConfigServer configStore, GlobalDatabase globalDatabase) throws StartIndexException, ReadIndexException {
         if (configStore.getStoreName().equals("MEMORY") || configStore.getStoreName().equals("NESSDB")) {
-            picturePathIndex = new SimpleHashMapPathIndex(false);
+            picturePathIndex = new SimpleHashMapPropertiesIndex(false);
             picturePatchsIndex =  new SimpleHashMapPatchsIndex(false);
         } else if (configStore.getStoreName().equals("KYOTOSINGLEFILE")){
-            picturePathIndex = new KyotoCabinetPathIndexSingleFile(globalDatabase,idServer);
+            picturePathIndex = new KyotoCabinetPropertiesIndexSingleFile(globalDatabase,idServer);
             picturePatchsIndex = new KyotoCabinetPatchsIndexSingleFile(globalDatabase,idServer);
        }else if (configStore.getStoreName().equals("MEMORYTEST") || configStore.getStoreName().equals("KYOTOTEST")){
-            picturePathIndex = new SimpleHashMapPathIndexTest(false);
+            picturePathIndex = new SimpleHashMapPropertiesIndexTest(false);
             picturePatchsIndex =  new SimpleHashMapPatchsIndexTest(false);
         }else
             throw new StartIndexException(configStore.getStoreName() + " is not implemented for metadata index");

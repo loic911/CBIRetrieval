@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.dist;
 
 import java.util.ArrayList;
@@ -80,27 +95,6 @@ public class MultiServerMessageResults implements Message {
                  serverlists.put(idServer, lists);
             }
 
-            List listServers = root.getChildren("serverinfo");
-
-            if (listServers.size() > 0) {
-                servers = new ListServerInformationSocket();
-                for (int i = 0; i < listServers.size(); i++) {
-                    Element serv = (Element) listServers.get(i);
-                    String urlServer = serv.getAttributeValue("url");
-                    int portServer =
-                            Integer.parseInt(serv.getAttributeValue("port"));
-                    int state =
-                            Integer.parseInt(serv.getAttributeValue("state"));
-                    String msg = serv.getAttributeValue("msg");
-                    int size = Integer.parseInt(serv.getAttributeValue("size"));
-                    ServerInformationSocket server = new ServerInformationSocket(urlServer, portServer);
-                    server.changeState(state, msg);
-                    server.setSizeOfIndex(size);
-                    servers.add(server, i);
-                }
-            } else {
-                listServers = null;
-            }
         } catch (Exception e) {
             throw new NotValidMessageXMLException(e.toString());
         }
@@ -119,50 +113,6 @@ public class MultiServerMessageResults implements Message {
             numberOfPicturesInIndex=numberOfPicturesInIndex+serverSize;
         }
         this.servers = null;
-    }
-
-    /**
-     * Constructor for a result message
-     * @param serverlists List of results
-     * @param servers List of server information
-     * @param numberOfPictures Size of index
-     */
-    public MultiServerMessageResults(
-            Map<String,List<ResultSim>> lists,
-            ListServerInformationSocket servers,
-            int numberOfPictures) {
-        this.serverlists = lists;
-        this.servers = servers;
-        this.numberOfPicturesInIndex = numberOfPictures;
-    }
-
-    /**
-     * Method to build XML document from this message
-     * @return XML document
-     */
-    @Override
-    public String toString() {
-        String s = "MESSAGE SUPER SERVER RESULTS\n";
-
-        Iterator<Entry<String,List<ResultSim>>> it = serverlists.entrySet().iterator();
-
-        while(it.hasNext()) {
-            Entry<String,List<ResultSim>> entry = it.next();
-            String idServer = entry.getKey();
-            List<ResultSim> result = entry.getValue();
-            s = s + "SERVER " + idServer +"\n";
-            s+="NumberOfPicture="+ this.serverSizelists.get(idServer) + "\n";
-            for (int i = 0; i < result.size(); i++) {
-                s+=result.get(i).toString()+"\n";
-            }
-        }
-
-        if (servers != null) {
-            for (int i = 0; i < servers.size(); i++) {
-                s+=servers.get(i).toString()+"\n";
-            }
-        }
-        return s;
     }
 
     public Document toXML() throws Exception {
@@ -197,24 +147,6 @@ public class MultiServerMessageResults implements Message {
                 serverRoot.addContent(pict);
             }
             root.addContent(serverRoot);
-        }
-
-        if (servers != null) {
-            for (int i = 0; i < servers.size(); i++) {
-
-                Element pict = new Element("server");
-                pict.setAttribute(
-                        new Attribute("url", servers.get(i).getAddress()));
-                pict.setAttribute(
-                        new Attribute("port", servers.get(i).getPort() + ""));
-                pict.setAttribute(
-                        new Attribute("state", servers.get(i).getState() + ""));
-                pict.setAttribute(
-                        new Attribute("msg", servers.get(i).getMessage() + ""));
-                pict.setAttribute(
-                        new Attribute("size", servers.get(i).getSizeOfIndex() + ""));
-                root.addContent(pict);
-            }
         }
 
 

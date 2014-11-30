@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package retrieval.storage.index.path;
+package retrieval.storage.index.properties;
 
 import kyotocabinet.DB;
 import org.apache.log4j.Logger;
@@ -13,12 +13,12 @@ import retrieval.storage.exception.StartIndexException;
  *
  * @author lrollus
  */
-public class KyotoCabinetPathIndexSingleFile extends KyotoCabinetPathIndexAbstract{
+public class KyotoCabinetPropertiesIndexSingleFile extends KyotoCabinetPropertiesIndexAbstract{
 
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(KyotoCabinetPathIndexSingleFile.class);
+    private static Logger logger = Logger.getLogger(KyotoCabinetPropertiesIndexSingleFile.class);
 
     /**
      * Constructor for a BDB path index
@@ -27,7 +27,7 @@ public class KyotoCabinetPathIndexSingleFile extends KyotoCabinetPathIndexAbstra
      * @param read If true, read index (if already exist) else create new index
      * @throws StartIndexException Error during the start of index
      */
-    public KyotoCabinetPathIndexSingleFile(GlobalDatabase global,String idServer) throws StartIndexException {
+    public KyotoCabinetPropertiesIndexSingleFile(GlobalDatabase global,String idServer) throws StartIndexException {
 
         try {
             logger.info("KyotoCabinetPathIndexSingleFile: start");

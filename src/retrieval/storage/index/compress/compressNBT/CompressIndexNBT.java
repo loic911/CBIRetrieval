@@ -21,11 +21,7 @@ public abstract class CompressIndexNBT {
     public static CompressIndexNBT getCompressIndexFactory(ConfigServer config, String idServer, String idTV,Object globalDatabase) throws StartIndexException {
         if(config.getStoreName().equals("MEMORY")) {
             return new HashMapCompressIndex(config);
-        } else if(config.getStoreName().equals("KYOTOMULTIPLEFILE")) {
-            return new KyotoCompressIndexMultipleFile(config,idServer,idTV);
-        } else if(config.getStoreName().equals("REDIS")) {
-            return new JedisCompressIndex(config);
-        } else if(config.getStoreName().equals("KYOTOSINGLEFILE")) {
+        }  else if(config.getStoreName().equals("KYOTOSINGLEFILE")) {
             return new KyotoCompressIndexSingleFile((GlobalDatabase)globalDatabase,config,idServer,idTV);
         }
         throw new StartIndexException(config.getStoreName() + " is not implemented for compress index");

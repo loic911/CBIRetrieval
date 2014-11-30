@@ -1,4 +1,19 @@
-package retrieval.dist;
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package retrieval.client.message;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
+import retrieval.dist.Message;
 
 /**
  * Message for XML request NBT message
@@ -33,61 +49,6 @@ public class MessageNBT implements Message, Cloneable {
         this.tvList = tvList;
     }
 
-    /**
-     * Constructor for a NBT message
-     * @param document XML document
-     * @throws NotValidMessageXMLException Bad xml document
-     */
-    public MessageNBT(Document document) throws NotValidMessageXMLException {
-        try {
-            Element root = document.getRootElement();
-            List listTV = root.getChildren("tv");
-            Iterator it = listTV.iterator();
-            tvList = new ArrayList<ConcurrentHashMap<String, Long>>(listTV.size());
-
-            while (it.hasNext()) {
-                Element tvxml = (Element) it.next();
-                List listVW = tvxml.getChildren();
-                Iterator it2 = listVW.iterator();
-                ConcurrentHashMap<String, Long> tv =
-                        new ConcurrentHashMap<String, Long>();
-                while (it2.hasNext()) {
-                    Element assoc = (Element) it2.next();
-                    String vw = assoc.getAttributeValue("b");
-                    Long nbit = Long.parseLong(assoc.getAttributeValue("nbit"));
-                    tv.put(vw, nbit);
-                }
-                tvList.add(tv);
-            }
-        } catch (Exception e) {
-            throw new NotValidMessageXMLException(e.toString());
-        }
-    }
-
-    @Override
-    public String toString() {
-        String s = "MESSAGE NBT\n";
-        for (int i = 0; i < tvList.size(); i++) {
-            s = s + "TEST VECTOR " + i;
-            s = s + tvList.get(i);
-        }
-        return s;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-
-        List<ConcurrentHashMap<String, Long>> tvListNewObject = new ArrayList<ConcurrentHashMap<String, Long>>(tvList.size());
-        for (int j = 0; j < tvList.size(); j++) {
-            ConcurrentHashMap<String, Long> tvm = new ConcurrentHashMap<String, Long>(tvList.get(j).size());
-            for (Map.Entry<String, Long> entry : tvList.get(j).entrySet()) {
-                tvm.put(entry.getKey(), entry.getValue());
-            }
-            tvListNewObject.add(tvm);
-        }
-        MessageNBT clone = new MessageNBT(tvListNewObject);
-        return clone;
-    }
 
     public MessageNBT copyWithoutValue() throws CloneNotSupportedException {
 
@@ -101,16 +62,6 @@ public class MessageNBT implements Message, Cloneable {
         }
         MessageNBT clone = new MessageNBT(tvListNewObject);
         return clone;
-    }
-
-    /**
-     * Add a entry [visualword;nbt] for test vector t
-     * @param t Test vector index
-     * @param vw Visual word
-     * @param nbt NBT
-     */
-    public void add(int t, String vw, long nbt) {
-        tvList.get(t).put(vw, nbt);
     }
 
     /**
@@ -136,15 +87,6 @@ public class MessageNBT implements Message, Cloneable {
             }
         }
         return document;
-    }
-
-    /**
-     * Set the list with each tests vectors visual words
-     * ex: Item 2 is a map with each vw and nbt for test vector 2
-     * @param visualWords Vector with each tests vector Visual words
-     */
-    public void setVisualWordsByTestVector(List<ConcurrentHashMap<String, Long>> visualWords) {
-        tvList = visualWords;
     }
 
     /**

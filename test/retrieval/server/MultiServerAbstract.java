@@ -177,25 +177,6 @@ public class MultiServerAbstract extends TestUtils{
         multiServer.indexPictureSynchrone(FileUtils.readPicture(LOCALPICTURE2),3l,null);  
     }
 
-    /**
-     * Test of indexPictureAsynchrone method, of class MultiServer.
-     */
-    @Test
-    public void testIndexPictureAsynchroneServer() throws Exception {
-        System.out.println("indexPictureAsynchroneServer");
-        multiServer.indexPictureAsynchrone(FileUtils.readPicture(LOCALPICTURE3),3l,null,CONTAINER1);    
-    }
-
-    /**
-     * Test of indexPictureSynchrone method, of class MultiServer.
-     */
-    @Test
-    public void testIndexPictureSynchroneServer() throws Exception {
-        System.out.println("indexPictureSynchroneServer");
-        multiServer.indexPictureSynchrone(FileUtils.readPicture(LOCALPICTURE3),3l,null,CONTAINER1);
-        assertEquals(3, multiServer.getServer(CONTAINER1).getNumberOfItem());  
-        assertEquals(3, multiServer.getSize().intValue());  
-    }
 
     /**
      * Test of indexDirectory method, of class MultiServer.
@@ -281,4 +262,5 @@ public class MultiServerAbstract extends TestUtils{
         assertEquals(2, multiServer.getInfos(CONTAINER1).size());
         assertEquals(0, multiServer.getInfos(CONTAINER2).size());
     }
+    
 }

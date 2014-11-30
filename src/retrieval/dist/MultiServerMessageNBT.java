@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.dist;
 
 import java.util.ArrayList;
@@ -40,10 +55,6 @@ public class MultiServerMessageNBT implements Message, Cloneable {
         this.containers=Arrays.asList(containers);
     }
 
-    public MultiServerMessageNBT(Map<String,List<ConcurrentHashMap<String, Long>>> tvLists,List<String> containers) {
-        this.tvLists = tvLists;
-        this.containers=containers;
-    }
 
     /**
      * Constructor for a NBT message
@@ -85,89 +96,6 @@ public class MultiServerMessageNBT implements Message, Cloneable {
         } catch (Exception e) {
             throw new NotValidMessageXMLException(e.toString());
         }
-    }
-
-    @Override
-    public String toString() {
-        String s = "MESSAGE SUPER SERVER NBT\n";
-
-        Iterator<Entry<String,List<ConcurrentHashMap<String, Long>>>> it = tvLists.entrySet().iterator();
-        s = s + "Search on server " + getContainers() + "\n";
-        while(it.hasNext()) {
-            Entry<String,List<ConcurrentHashMap<String, Long>>> entry = it.next();
-            String idServer = entry.getKey();
-            s = s + "SERVER " + idServer +"\n";
-            List<ConcurrentHashMap<String, Long>> tvList = entry.getValue();
-
-            for (int i = 0; i < tvList.size(); i++) {
-                s = s + "TEST VECTOR " + i;
-                s = s + tvList.get(i);
-            }
-        }
-        return s;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        Map<String,List<ConcurrentHashMap<String, Long>>> map = new TreeMap<String,List<ConcurrentHashMap<String, Long>>>();
-
-        Iterator<Entry<String,List<ConcurrentHashMap<String, Long>>>> it = tvLists.entrySet().iterator();
-
-        while(it.hasNext()) {
-            Entry<String,List<ConcurrentHashMap<String, Long>>> entry = it.next();
-            String idServer = entry.getKey();
-            List<ConcurrentHashMap<String, Long>> tvList = entry.getValue();
-            List<ConcurrentHashMap<String, Long>> tvListNewObject = new ArrayList<ConcurrentHashMap<String, Long>>(tvList.size());
-
-            for (int j = 0; j < tvList.size(); j++) {
-                ConcurrentHashMap<String, Long> tvm = new ConcurrentHashMap<String, Long>(tvList.get(j).size());
-                for (Map.Entry<String, Long> entrySub : tvList.get(j).entrySet()) {
-                    tvm.put(entrySub.getKey(), entrySub.getValue());
-                }
-                tvListNewObject.add(tvm);
-            }
-
-            map.put(idServer, tvListNewObject);
-        }
-        MultiServerMessageNBT clone = new MultiServerMessageNBT(map,CollectionUtils.cloneStringList(getContainers()));
-        return clone;
-    }
-
-    public MultiServerMessageNBT copyWithoutValue() throws CloneNotSupportedException {
-        Map<String,List<ConcurrentHashMap<String, Long>>> map = new TreeMap<String,List<ConcurrentHashMap<String, Long>>>();
-
-        Iterator<Entry<String,List<ConcurrentHashMap<String, Long>>>> it = tvLists.entrySet().iterator();
-
-        while(it.hasNext()) {
-            Entry<String,List<ConcurrentHashMap<String, Long>>> entry = it.next();
-            String idServer = entry.getKey();
-            List<ConcurrentHashMap<String, Long>> tvList = entry.getValue();
-            List<ConcurrentHashMap<String, Long>> tvListNewObject = new ArrayList<ConcurrentHashMap<String, Long>>(tvList.size());
-
-            for (int j = 0; j < tvList.size(); j++) {
-                ConcurrentHashMap<String, Long> tvm = new ConcurrentHashMap<String, Long>(tvList.get(j).size());
-                for (Map.Entry<String, Long> entrySub : tvList.get(j).entrySet()) {
-                    tvm.put(entrySub.getKey(), 0L);
-                }
-                tvListNewObject.add(tvm);
-            }
-
-            map.put(idServer, tvListNewObject);
-
-        }
-        MultiServerMessageNBT clone = new MultiServerMessageNBT(map,CollectionUtils.cloneStringList(getContainers()));
-        return clone;
-    }
-
-    /**
-     * Add a entry [visualword;nbt] for test vector t
-     * @param t Test vector index
-     * @param vw Visual word
-     * @param nbt NBT
-     */
-    public void add(String server,int t, String vw, long nbt) {
-        List<ConcurrentHashMap<String, Long>> tvList = tvLists.get(server);
-        tvList.get(t).put(vw, nbt);
     }
 
     /**
@@ -264,12 +192,5 @@ public class MultiServerMessageNBT implements Message, Cloneable {
      */
     public List<String> getContainers() {
         return containers;
-    }
-
-    /**
-     * @param containers the containers to set
-     */
-    public void setContainers(List<String> containers) {
-        this.containers = containers;
     }
 }

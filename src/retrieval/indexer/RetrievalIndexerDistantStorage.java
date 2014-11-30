@@ -163,11 +163,7 @@ public class RetrievalIndexerDistantStorage extends RetrievalIndexer {
             throw MessageError.getException(responsexml);
         }
 
-        //create result message and return pictures lists
-        MultiServerMessageIndexResults msgIndex = new MultiServerMessageIndexResults(responsexml);
-        TreeMap<Long, CBIRException> map = msgIndex.getAllPicturesFlat();
-        server.close();
-        return map; 
+        return null; 
         } catch(Exception e) {
             throw new CBIRException(e.toString());
         }

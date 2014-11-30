@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.config;
 
 import java.io.BufferedOutputStream;
@@ -29,34 +44,5 @@ public abstract class Config {
         prop.load(in);
         in.close();
         return prop;
-    }
-
-    /**
-     * Write configuration file
-     * @param p Properties
-     * @param file Configuration file
-     * @throws FileNotFoundException Configuration File not found
-     * @throws IOException Error during read of configuration file
-     */
-    public static void write(Properties p, String file) throws FileNotFoundException, IOException {
-        FileOutputStream in = new FileOutputStream(file);
-        p.store(in, "icbr");
-        in.close();
-    }
-
-    /**
-     * Write configuration file on outputstream
-     * @param properties Properties objetc
-     * @param outputStream Stream to write it
-     * @throws IOException Exception during the write
-     */
-    protected static void store(Properties properties, OutputStream outputStream) throws IOException {
-        try {
-            properties.store(new BufferedOutputStream(outputStream), null);
-        } finally {
-            if (outputStream != null) {
-                outputStream.close();
-            }
-        }
     }
 }

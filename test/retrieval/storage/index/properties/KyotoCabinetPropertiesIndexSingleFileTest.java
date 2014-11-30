@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrieval.storage.index.path;
+package retrieval.storage.index.properties;
 
+import retrieval.storage.index.properties.KyotoCabinetPropertiesIndexSingleFile;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,9 +19,9 @@ import retrieval.utils.FileUtils;
  *
  * @author lrollus
  */
-public class KyotoCabinetPathIndexSingleFileTest extends KyotoCabinetPathIndexTestAbstract{
+public class KyotoCabinetPropertiesIndexSingleFileTest extends KyotoCabinetPropertiesIndexTestAbstract{
     
-    public KyotoCabinetPathIndexSingleFileTest() {
+    public KyotoCabinetPropertiesIndexSingleFileTest() {
     }
     
     @BeforeClass
@@ -38,7 +39,7 @@ public class KyotoCabinetPathIndexSingleFileTest extends KyotoCabinetPathIndexTe
         config = new ConfigServer("testdata/ConfigServer.prop");
         FileUtils.deleteAllSubFilesRecursively(new File(config.getIndexPath()));
         GlobalDatabase database = new KyotoCabinetDatabase(config);
-        mainIndex = new KyotoCabinetPathIndexSingleFile(database,"0"); 
+        mainIndex = new KyotoCabinetPropertiesIndexSingleFile(database,"0"); 
         } catch(Exception e) {
             e.printStackTrace();
         }        

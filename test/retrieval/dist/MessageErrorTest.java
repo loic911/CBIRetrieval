@@ -53,6 +53,15 @@ public class MessageErrorTest {
     }
     
     @Test
+    public void testMessageErrorBuildFromExceptionWithNullMsg() throws Exception {
+        System.out.println("testMessageErrorBuildFromException");
+        CBIRException exception = new AlreadyIndexedException(null);
+        MessageError messageError = new MessageError(exception);       
+        MessageError check = new MessageError(messageError.toXML());
+        assertEquals(MessageError.getException(check.toXML()).getCode(),exception.getCode());
+    }    
+    
+    @Test
     public void testMessageErrorBuildFromParams() throws Exception {
         System.out.println("testMessageErrorBuildFromParams");
         MessageError messageError = new MessageError("404","Not found");

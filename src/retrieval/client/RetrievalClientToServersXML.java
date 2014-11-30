@@ -28,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import retrieval.dist.MessageError;
-import retrieval.dist.MessageResults;
 import retrieval.dist.MultiServerMessageNBT;
 import retrieval.dist.MultiServerMessageResults;
 import retrieval.dist.MultiServerMessageSimilarities;
@@ -201,21 +200,6 @@ public class RetrievalClientToServersXML{
             }
         }
         return msg3s;
-    }
-
-    /**
-     * Fill the size of each server and compute total size
-     * @param msgSimilar Message with similarities result from server
-     * @param results Result object with similar picture and server info
-     */
-    protected void fillSizeOfServer(MessageResults[] msgSimilar, ResultsSimilarities results) {
-        for (int i = 0; i < msgSimilar.length; i++) {
-            if (msgSimilar[i] != null) {
-                int sizeOfIndex = msgSimilar[i].getNumberOfPicturesInIndex();
-                results.add(sizeOfIndex);
-                listsServer.get(i).setSizeOfIndex(sizeOfIndex);
-            }
-        }
     }
     
      /**

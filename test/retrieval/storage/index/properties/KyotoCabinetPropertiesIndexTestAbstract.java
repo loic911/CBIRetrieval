@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrieval.storage.index.path;
+package retrieval.storage.index.properties;
 
+import retrieval.storage.index.properties.KyotoCabinetPropertiesIndexAbstract;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.After;
@@ -19,9 +20,9 @@ import retrieval.utils.TestUtils;
  *
  * @author lrollus
  */
-public abstract class KyotoCabinetPathIndexTestAbstract extends TestUtils{
+public abstract class KyotoCabinetPropertiesIndexTestAbstract extends TestUtils{
     
-    KyotoCabinetPathIndexAbstract mainIndex;
+    KyotoCabinetPropertiesIndexAbstract mainIndex;
     ConfigServer config;    
     
     
@@ -91,10 +92,10 @@ public abstract class KyotoCabinetPathIndexTestAbstract extends TestUtils{
         map.put("test1", "123");
         map.put("test2", "456");
         
-        String result = KyotoCabinetPathIndexAbstract.convertMapToString(map);
+        String result = KyotoCabinetPropertiesIndexAbstract.convertMapToString(map);
         assertEquals(true,"test1;@;123;@;test2;@;456".equals(result) || "test2;@;456;@;test1;@;123".equals(result));
-        assertEquals("NULL",KyotoCabinetPathIndexAbstract.convertMapToString(null));
-        assertEquals("",KyotoCabinetPathIndexAbstract.convertMapToString(new HashMap<String,String>()));
+        assertEquals("NULL",KyotoCabinetPropertiesIndexAbstract.convertMapToString(null));
+        assertEquals("",KyotoCabinetPropertiesIndexAbstract.convertMapToString(new HashMap<String,String>()));
     }    
 
     
@@ -103,7 +104,7 @@ public abstract class KyotoCabinetPathIndexTestAbstract extends TestUtils{
         System.out.println("testConvertMapToString");
 
         String test = "test1;@;123;@;test2;@;456";
-        Map<String,String> map = KyotoCabinetPathIndexAbstract.convertStringToMap(test);
+        Map<String,String> map = KyotoCabinetPropertiesIndexAbstract.convertStringToMap(test);
         
         assertEquals(2,map.size());
         assertEquals("123",map.get("test1"));

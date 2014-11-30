@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.server;
 
 import java.awt.image.BufferedImage;
@@ -12,8 +27,8 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
+import org.jdom.Element;
 import retrieval.dist.MessageError;
-import retrieval.dist.MessageIndexResults;
 import retrieval.dist.MultiServerMessageDelete;
 import retrieval.dist.MultiServerMessageIndex;
 import retrieval.dist.MultiServerMessageIndexResults;
@@ -222,33 +237,6 @@ class NewClientThread extends Thread {
             client.close();
     }
 
-    private Map<String,List<String>> allocateOnEachServer(List<String> picturesPat) {
-        int currentServerIndice = 0;
-        logger.debug("allocateOnEachServer.picturesPat="+picturesPat);
-        List<String> servers = multiServer.getServersId();
-        logger.debug("allocateOnEachServer.servers="+servers);
-        Map<String,List<String>> serversAllocation = new HashMap<String,List<String>>();
-        
-        for(String image : picturesPat) {
-                String idServer = servers.get(currentServerIndice);
-                List<String> picturesServers = serversAllocation.get(idServer);
-                if(picturesServers==null) {
-                    picturesServers = new ArrayList<String>();
-                }
-                picturesServers.add(image);
-                serversAllocation.put(idServer, picturesServers);
-            
-                 if (currentServerIndice == servers.size() - 1) {
-                currentServerIndice = 0;
-            }
-                else {
-                currentServerIndice++;
-            }             
-        }
-        logger.debug("allocateOnEachServer.serversAllocation="+serversAllocation);
-        return serversAllocation;
-    }
-
 
     private void takeIndexRequest(Document xml, BufferedImage image) throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
         logger.debug("takeIndexRequest");
@@ -318,11 +306,7 @@ class NewClientThread extends Thread {
             logger.debug(msgIndex);
             logger.debug("ID " + msgIndex.getId() + " will be in storage " + msgIndex.getStorage());
             logger.debug("Image has properties " + msgIndex.getProperties());
-            if(server==null) {
-                multiServer.createServer(msgIndex.getStorage());
-                server = multiServer.getServer(msgIndex.getStorage());
-            }
-            
+
             Map<String,Map<Long, CBIRException>> mapResult = new TreeMap<String,Map<Long, CBIRException>>();
             Map<Long, CBIRException> map = new HashMap<Long, CBIRException>();            
             try {
@@ -342,7 +326,9 @@ class NewClientThread extends Thread {
         MultiServerMessageDelete msgIndex = new MultiServerMessageDelete(xml);
         List<Long> ids = msgIndex.getIds();
         multiServer.delete(ids);
-        NetworkUtils.writeXmlToSocket(client, new MessageIndexResults("").toXML());
+        Document doc = new Document();
+        doc.setRootElement(new Element(NetworkUtils.NORESPONSE));
+        NetworkUtils.writeXmlToSocket(client, doc);
     }
     private void takePurgeRequest() throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
         logger.debug("takePurgeRequest");
