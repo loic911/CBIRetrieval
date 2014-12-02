@@ -21,16 +21,16 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import retrieval.TestUtils;
+import static retrieval.TestUtils.BADPICTURE1;
+import static retrieval.TestUtils.LOCALPICTURE1;
+import static retrieval.TestUtils.LOCALPICTURE1MAP;
+import static retrieval.TestUtils.LOCALPICTURE2;
+import static retrieval.TestUtils.URLPICTURENOAUTH;
 import retrieval.config.ConfigServer;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.PictureNotFoundException;
-import retrieval.utils.TestUtils;
-import static retrieval.utils.TestUtils.BADPICTURE1;
-import static retrieval.utils.TestUtils.LOCALPICTURE1;
-import static retrieval.utils.TestUtils.LOCALPICTURE1MAP;
-import static retrieval.utils.TestUtils.LOCALPICTURE2;
-import static retrieval.utils.TestUtils.URLPICTURENOAUTH;
 
 /**
  *
@@ -79,14 +79,14 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexSync");
         String picture = LOCALPICTURE1;
         String container = "myContainer";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,true);
         Long id = index.index(new File(picture));
         System.out.println("id="+id);
-        System.out.println("id="+retrievalServer.getServer(container).getAllPictures());
+        System.out.println("id="+retrievalServer.getStorage(container).getAllPictures());
         assertEquals(new Long(1l),retrievalServer.getSize());
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         
     }
     
@@ -95,14 +95,14 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexSyncWithId");
         String picture = LOCALPICTURE1;
         String container = "myContainer";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,true);
         Long id = index.index(new File(picture),5l);
         
         assertEquals(new Long(5),id);
 
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         assertEquals(new Long(1l),retrievalServer.getSize());
     }   
     
@@ -111,15 +111,15 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexSyncWithIdAnProperties");
         String picture = LOCALPICTURE1;
         String container = "myContainer";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,true);
         Long id = index.index(new File(picture),5l,LOCALPICTURE1MAP);
 
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         assertEquals(new Long(1l),retrievalServer.getSize());
         
-        Map<String,String> map = retrievalServer.getServer(container).getProperties(id);
+        Map<String,String> map = retrievalServer.getStorage(container).getProperties(id);
         assertEquals(2,map.size());
         for(Map.Entry<String,String> entry : LOCALPICTURE1MAP.entrySet()) {
             assertEquals(true,map.containsKey(entry.getKey()));
@@ -133,37 +133,37 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexAllSync");
         String picture = LOCALPICTURE1;
         String container = "myContainer";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,true);
         Long id;
         
         id = index.index(new File(picture));
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
 
         id = index.index(new File(picture),LOCALPICTURE1MAP);
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         
         id = index.index(new File(picture),new Date().getTime(),LOCALPICTURE1MAP);
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         
         id = index.index(new URL(URLPICTURENOAUTH));
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         
         id = index.index(new URL(URLPICTURENOAUTH),LOCALPICTURE1MAP);
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         
         id = index.index(new URL(URLPICTURENOAUTH),new Date().getTime());
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         
          id = index.index(ImageIO.read(new File(picture)));
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         
          id = index.index(ImageIO.read(new File(picture)),LOCALPICTURE1MAP);
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         
         id = index.index(ImageIO.read(new File(picture)),new Date().getTime());
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
               
     }      
     
@@ -172,38 +172,38 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexAllSync");
         String picture = LOCALPICTURE1;
         String container = "myContainer";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,false);
         Long id;
         
         id = index.index(new File(picture));
         
-        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getStorage(container),id));
 
         id = index.index(new File(picture),LOCALPICTURE1MAP);
-        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getStorage(container),id));
         
         id = index.index(new File(picture),new Date().getTime(),LOCALPICTURE1MAP);
-        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getStorage(container),id));
         
         id = index.index(new URL(URLPICTURENOAUTH));
-        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getStorage(container),id));
         
         id = index.index(new URL(URLPICTURENOAUTH),LOCALPICTURE1MAP);
-        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getStorage(container),id));
         
         id = index.index(new URL(URLPICTURENOAUTH),new Date().getTime());
-        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getStorage(container),id));
         
          id = index.index(ImageIO.read(new File(picture)));
-        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getStorage(container),id));
         
          id = index.index(ImageIO.read(new File(picture)),LOCALPICTURE1MAP);
-        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getStorage(container),id));
         
         id = index.index(ImageIO.read(new File(picture)),new Date().getTime());
-        assertEquals(true,waitForPictureIndexed(retrievalServer.getServer(container),id));
+        assertEquals(true,waitForPictureIndexed(retrievalServer.getStorage(container),id));
               
     }             
 
@@ -212,14 +212,14 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexAsync");
         String picture = LOCALPICTURE1;
         String container = "myContainer";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,false);
         Long id = index.index(new File(picture));
 
-        waitToSizeEquals(retrievalServer.getServer(container),1); 
+        waitToSizeEquals(retrievalServer.getStorage(container),1); 
 
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         assertEquals(new Long(1l),retrievalServer.getSize());
     }
     
@@ -228,16 +228,16 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexAsyncWithId");
         String picture = LOCALPICTURE1;
         String container = "myContainer";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,false);
         Long id = index.index(new File(picture),5l);
         
         assertEquals(new Long(5),id);
 
-        waitToSizeEquals(retrievalServer.getServer(container),1); 
+        waitToSizeEquals(retrievalServer.getStorage(container),1); 
 
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         assertEquals(new Long(1l),retrievalServer.getSize());
     }   
     
@@ -246,17 +246,17 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexAsyncNoAuth");
         String picture = LOCALPICTURE1;
         String container = "myContainer";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,false);
         Long id = index.index(new File(picture),5l,LOCALPICTURE1MAP);
 
-        waitToSizeEquals(retrievalServer.getServer(container),1); 
+        waitToSizeEquals(retrievalServer.getStorage(container),1); 
 
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         assertEquals(new Long(1l),retrievalServer.getSize());
         
-        Map<String,String> map = retrievalServer.getServer(container).getProperties(id);
+        Map<String,String> map = retrievalServer.getStorage(container).getProperties(id);
         assertEquals(2,map.size());
         for(Map.Entry<String,String> entry : LOCALPICTURE1MAP.entrySet()) {
             assertEquals(true,map.containsKey(entry.getKey()));
@@ -272,11 +272,11 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexSyncWithContainerNotExist");
         String picture = LOCALPICTURE1;
         String container = "containerNotExist";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,true);
         Long id = index.index(new File(picture));
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         assertEquals(new Long(1l),retrievalServer.getSize());
     }   
     
@@ -286,14 +286,14 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         System.out.println("testMultiIndexerIndexAsyncWithContainerNotExist");
         String picture = LOCALPICTURE1;
         String container = "containerNotExist";
-        retrievalServer.createServer(container);
+        retrievalServer.createStorage(container);
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container,false);
         Long id = index.index(new File(picture));
 
-        waitToSizeEquals(retrievalServer.getServer(container),1); 
+        waitToSizeEquals(retrievalServer.getStorage(container),1); 
 
-        assertEquals(true,retrievalServer.getServer(container).isPictureInIndex(id));
+        assertEquals(true,retrievalServer.getStorage(container).isPictureInIndex(id));
         assertEquals(new Long(1l),retrievalServer.getSize());
     }    
     
@@ -305,7 +305,7 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         String container1 = "myContainer"; 
         Map<String,String> pictures = new HashMap<String,String>();
         pictures.put(picture1, container1);
-        retrievalServer.createServer(container1);  
+        retrievalServer.createStorage(container1);  
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container1,false);
         Long id = index.index(new File(picture1),123l);
@@ -319,7 +319,7 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         String container1 = "myContainer"; 
         Map<String,String> pictures = new HashMap<String,String>();
         pictures.put(picture1, container1);
-        retrievalServer.createServer(container1);  
+        retrievalServer.createStorage(container1);  
         
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container1,false);
         Long id = index.index(new File(picture1),123l);
@@ -331,7 +331,7 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         String container1 = "myContainer";
         String picture1 = LOCALPICTURE1;
         String picture2 = LOCALPICTURE2; 
-        retrievalServer.createServer(container1);     
+        retrievalServer.createStorage(container1);     
         RetrievalIndexer index = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container1,true);
         Long id1 = index.index(new File(LOCALPICTURE1));
         Long id2 = index.index(new File(LOCALPICTURE2));        
@@ -343,7 +343,7 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         
         index.delete(ids);
         assertEquals(1l,(long)retrievalServer.getSize());  
-        assertEquals(false,retrievalServer.getServer(container1).isPictureInIndex(id1)); 
+        assertEquals(false,retrievalServer.getStorage(container1).isPictureInIndex(id1)); 
         index.delete(id3);
         assertEquals(0l,(long)retrievalServer.getSize()); 
     }
@@ -358,8 +358,8 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         Map<String,String> pictures = new HashMap<String,String>();
         pictures.put(picture1, container1);
         pictures.put(picture2, container2);
-        retrievalServer.createServer(container1);    
-        retrievalServer.createServer(container2);
+        retrievalServer.createStorage(container1);    
+        retrievalServer.createStorage(container2);
         RetrievalIndexer index1 = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container1,true);
         Long id1 = index1.index(new File(LOCALPICTURE1));       
         RetrievalIndexer index2 = new RetrievalIndexerDistantStorage(MULTISERVERURL,MULTISERVERPORT1,container2,true);
@@ -367,14 +367,14 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         
         index1.delete(id1);
         
-        assertEquals(1,retrievalServer.getServer(container1).getNumberOfPicturesToPurge());
-        assertEquals(0,retrievalServer.getServer(container2).getNumberOfPicturesToPurge());
+        assertEquals(1,retrievalServer.getStorage(container1).getNumberOfPicturesToPurge());
+        assertEquals(0,retrievalServer.getStorage(container2).getNumberOfPicturesToPurge());
         
         index1.purge();
         index2.purge(); 
         
-        waitEquals(0, retrievalServer.getServer(container1).getNumberOfPicturesToPurge());
-        waitEquals(0, retrievalServer.getServer(container2).getNumberOfPicturesToPurge());      
+        waitEquals(0, retrievalServer.getStorage(container1).getNumberOfPicturesToPurge());
+        waitEquals(0, retrievalServer.getStorage(container2).getNumberOfPicturesToPurge());      
     }
     
     @Test
@@ -457,7 +457,7 @@ public class RetrievalIndexerDistantTest extends TestUtils {
             index.index(new File(entry.getKey()));
         }        
         
-        for(Storage server : retrievalServer.getServerList()) {
+        for(Storage server : retrievalServer.getStorageList()) {
             waitToSizeEquals(server, 1);
         }
     }    

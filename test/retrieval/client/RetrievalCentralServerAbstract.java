@@ -11,13 +11,12 @@ import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import retrieval.client.RetrievalClient;
+import retrieval.TestUtils;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.index.ResultSim;
-import retrieval.utils.TestUtils;
 
 /**
  *

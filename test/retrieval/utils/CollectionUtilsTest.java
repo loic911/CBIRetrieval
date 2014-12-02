@@ -64,7 +64,17 @@ public class CollectionUtilsTest {
         String expResult = "a,bc";
         String result = CollectionUtils.join(words, character);
         assertEquals(expResult, result);
-    }    
+    }
+    
+    @Test
+    public void testJoinArrayEmpty() {
+        System.out.println("join");
+        String[] words = new String[]{};
+        String character = ",";
+        String expResult = "";
+        String result = CollectionUtils.join(words, character);
+        assertEquals(expResult, result);
+    }      
 
     /**
      * Test of split method, of class CollectionUtils.

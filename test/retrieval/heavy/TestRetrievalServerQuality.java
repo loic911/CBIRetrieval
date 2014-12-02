@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrieval.test;
+package retrieval.heavy;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import retrieval.utils.FileUtils;
  *
  * @author lrollus
  */
-public class RetrievalServerQualityTest extends TestMultiServerUtils{
+public class TestRetrievalServerQuality extends TestMultiServerUtils{
     
     public static void main(String[] args) {
         
@@ -46,7 +46,7 @@ public class RetrievalServerQualityTest extends TestMultiServerUtils{
             for(String file : indexFiles) {
                 try {
                 System.out.println("Index for "+id + " => " + file);
-                RetrievalIndexer index = new RetrievalIndexerLocalStorage(server.getNextServer(),false); 
+                RetrievalIndexer index = new RetrievalIndexerLocalStorage(server.getNextStorage(),false); 
                 Map<String,String> properties = new HashMap<String,String>();
                 properties.put("path", file);
                 properties.put("date", new Date().toLocaleString());
@@ -58,7 +58,7 @@ public class RetrievalServerQualityTest extends TestMultiServerUtils{
                 }
             }
             
-            System.out.println("Total size: " + server.getServersSize());
+            System.out.println("Total size: " + server.getStoragesSize());
             
             while(server.getIndexQueueSize()>0) {
                 System.out.println("Queue size ="+server.getIndexQueueSize()+"...");

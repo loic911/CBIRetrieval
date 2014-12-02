@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -14,18 +13,14 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import retrieval.client.ListServerInformationSocket;
-import retrieval.client.RetrievalClient;
-import retrieval.client.ServerInformationSocket;
+import static retrieval.TestUtils.LOCALPICTURE1;
+import static retrieval.TestUtils.LOCALPICTURE1MAP;
+import static retrieval.TestUtils.LOCALPICTURE5;
+import static retrieval.TestUtils.containsPictures;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
-import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
-import static retrieval.utils.TestUtils.LOCALPICTURE1;
-import static retrieval.utils.TestUtils.LOCALPICTURE1MAP;
-import static retrieval.utils.TestUtils.LOCALPICTURE5;
-import static retrieval.utils.TestUtils.containsPictures;
 
 /**
  *
@@ -54,17 +49,17 @@ public class RetrievalCentralServerDistantTest extends RetrievalCentralServerAbs
             System.out.println("server");
             multiServer1 = createMultiServer(config,MULTISERVERPORT1,0,"MEMORY");      
             multiServer2 = createMultiServer(config,MULTISERVERPORT2,0,"MEMORY");
-            multiServer1.createServer(CONTAINER1);
-            multiServer1.createServer(CONTAINER2);
-            multiServer2.createServer(CONTAINER1);
+            multiServer1.createStorage(CONTAINER1);
+            multiServer1.createStorage(CONTAINER2);
+            multiServer2.createStorage(CONTAINER1);
             
-            multiServer1.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
-            multiServer1.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE2),2l,null);
-            multiServer1.getServer(CONTAINER2).indexPicture(FileUtils.readPicture(LOCALPICTURE3),3l,null);
-            multiServer1.getServer(CONTAINER2).indexPicture(FileUtils.readPicture(LOCALPICTURE4),4l,null);
-            multiServer2.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE5),5l,null);
-            multiServer2.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE6),6l,null);
-            multiServer2.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE7),7l,null);
+            multiServer1.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
+            multiServer1.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE2),2l,null);
+            multiServer1.getStorage(CONTAINER2).indexPicture(FileUtils.readPicture(LOCALPICTURE3),3l,null);
+            multiServer1.getStorage(CONTAINER2).indexPicture(FileUtils.readPicture(LOCALPICTURE4),4l,null);
+            multiServer2.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE5),5l,null);
+            multiServer2.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE6),6l,null);
+            multiServer2.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE7),7l,null);
             /*
              * multiServer1
              * container 1 = LOCALPICTURE1, LOCALPICTURE2

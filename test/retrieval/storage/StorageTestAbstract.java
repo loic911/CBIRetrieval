@@ -11,14 +11,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+import retrieval.TestUtils;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.exception.CBIRException;
+import retrieval.storage.exception.AlreadyIndexedException;
 import retrieval.storage.exception.NoException;
-import retrieval.testvector.TestVectorListCentralServer;
+import retrieval.testvector.TestVectorListClient;
 import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
-import retrieval.utils.TestUtils;
 
 /**
  *
@@ -79,21 +80,30 @@ public abstract class StorageTestAbstract extends TestUtils {
         Map<String,String> properties = storage.getProperties(id);
         assertEquals(0,properties.size()); 
         assertEquals(new Long(5l), id); 
-    }    
+    }   
+    
+     /**
+     * Test of indexPicture method, of class Server.
+     */
+    @Test
+    public void testServerIndexPictureWithAlreadyExist() throws Exception {
+        System.out.println("testServerIndexPicture");
+        assertEquals(0, storage.getNumberOfItem());  
+        Long id = storage.indexPicture(FileUtils.readPicture(LOCALPICTURE1),5l,null);
+        assertEquals(1, storage.getNumberOfItem()); 
+        Map<String,String> properties = storage.getProperties(id);
+        assertEquals(0,properties.size()); 
+        assertEquals(new Long(5l), id); 
+    }      
     
     /**
      * Test of addToIndexQueue method, of class Server.
      */
-    @Test
-    public void testServerAddToIndexQueue() throws Exception {
+    @Test(expected = AlreadyIndexedException.class)  
+    public void testServerIndexAlreadyExist() throws Exception {
         System.out.println("testServerAddToIndexQueue");
-        storage.addToIndexQueue(FileUtils.readPicture(LOCALPICTURE1), 10l, LOCALPICTURE1MAP);
-        storage.addToIndexQueue(FileUtils.readPicture(LOCALPICTURE2), null,null);
-        storage.addToIndexQueue(FileUtils.readPicture(LOCALPICTURE3), 30l,null);
-        storage.addToIndexQueue(FileUtils.readPicture(LOCALPICTURE4), null,LOCALPICTURE1MAP);
-        //may fail if all pictures are indexed before going in this code (http access so hopefully)
-        assertEquals(true,storage.getIndexQueueSize()>0);
-        assertEquals(false,storage.isIndexQueueEmpty());
+        storage.indexPicture(FileUtils.readPicture(LOCALPICTURE1), 10l, null);
+        storage.indexPicture(FileUtils.readPicture(LOCALPICTURE2), 10l,null);
     }        
     
     @Test
@@ -244,7 +254,7 @@ public abstract class StorageTestAbstract extends TestUtils {
     public void testServerSearch() throws Exception {
         System.out.println("testServerSearch");        
         Long id1 = storage.indexPicture(FileUtils.readPicture(LOCALPICTURE1),5l,LOCALPICTURE1MAP);  
-        TestVectorListCentralServer buildVW = TestVectorReading.readClient(config.getVectorPath(),new ConfigClient("testdata/ConfigClient.prop"));
+        TestVectorListClient buildVW = TestVectorReading.readClient(config.getVectorPath(),new ConfigClient("testdata/ConfigClient.prop"));
         List<ConcurrentHashMap<String,Long>> vw = buildVW.generateVisualWordFromPicture(ImageIO.read(new File(LOCALPICTURE1)), id1, config.getNumberOfPatch(), config.getResizeMethod(), config.getSizeOfPatchResizeWidth(), config.getSizeOfPatchResizeHeight());
         List<ConcurrentHashMap<String,Long>> result = storage.getNBT(vw);
     }

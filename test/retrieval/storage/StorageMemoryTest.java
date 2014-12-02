@@ -6,10 +6,11 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static retrieval.TestUtils.LOCALPICTURE1MAP;
 import retrieval.config.ConfigServer;
+import retrieval.server.globaldatabase.MemoryDatabase;
 import retrieval.storage.exception.PictureTooHomogeneous;
 import retrieval.utils.FileUtils;
-import static retrieval.utils.TestUtils.LOCALPICTURE1MAP;
 
 /**
  *
@@ -35,8 +36,9 @@ public class StorageMemoryTest extends StorageTestAbstract {
             config = new ConfigServer("testdata/ConfigServer.prop");
             config.setStoreName("MEMORY");
             System.out.println("server");
-            storage = createServer("0",config);           
+            storage = createServer("0",config,new MemoryDatabase(config));           
         } catch (Exception e) {
+            e.printStackTrace();
             fail();
         }        
     }
@@ -52,7 +54,7 @@ public class StorageMemoryTest extends StorageTestAbstract {
        System.out.println("testServerIndexPictureTooHomogenous");
         config.setMaxPercentageSimilarWord(0.50d);
        storage.stop();
-       storage = createServer("1",config);
+       storage = createServer("1",config,new MemoryDatabase(config));
        storage.indexPicture(FileUtils.readPicture(PICTURETOOHOMOGENOUS),5l,LOCALPICTURE1MAP);
     }    
     

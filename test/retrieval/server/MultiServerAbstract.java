@@ -7,12 +7,16 @@ package retrieval.server;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
+import retrieval.TestUtils;
+import static retrieval.TestUtils.LOCALPICTURE1;
+import static retrieval.TestUtils.LOCALPICTURE1MAP;
+import static retrieval.TestUtils.LOCALPICTURE2;
 import retrieval.config.ConfigServer;
 import retrieval.storage.Storage;
 import retrieval.utils.FileUtils;
 import retrieval.utils.NetworkUtils;
-import retrieval.utils.TestUtils;
 
 /**
  *
@@ -32,17 +36,17 @@ public class MultiServerAbstract extends TestUtils{
     public void testCreateServer() throws Exception {
         System.out.println("createServer");
         String container = "TEST";
-        multiServer.createServer(container);
-        assertEquals(3,multiServer.getServerList().size());
-        Storage server = multiServer.getServer(container);
-        assertEquals(server,multiServer.getServerMap().get(container));
+        multiServer.createStorage(container);
+        assertEquals(3,multiServer.getStorageList().size());
+        Storage server = multiServer.getStorage(container);
+        assertEquals(server,multiServer.getStorageMap().get(container));
     }
     
     @Test(expected=Exception.class)
     public void testCreateServerAlreadyExist() throws Exception {
         System.out.println("testCreateServerAlreadyExist");
         String container = CONTAINER1;
-        multiServer.createServer(container);
+        multiServer.createStorage(container);
     }    
 
     /**
@@ -51,17 +55,17 @@ public class MultiServerAbstract extends TestUtils{
     @Test
     public void testDeleteServer() throws Exception {
         System.out.println("deleteServer");
-        multiServer.deleteServer(CONTAINER1);
-        assertEquals(1,multiServer.getServerList().size());
-        assertEquals(null,multiServer.getServer(CONTAINER1));
-        assertEquals(null,multiServer.getServerMap().get(CONTAINER1));   
+        multiServer.deleteStorage(CONTAINER1);
+        assertEquals(1,multiServer.getStorageList().size());
+        assertEquals(null,multiServer.getStorage(CONTAINER1));
+        assertEquals(null,multiServer.getStorageMap().get(CONTAINER1));   
         assertEquals(0,multiServer.getSize().intValue());
     }
     
     @Test(expected=Exception.class)
     public void testDeleteServerAlreadyExist() throws Exception {
         System.out.println("deleteServer");
-        multiServer.deleteServer("not exist!");
+        multiServer.deleteStorage("not exist!");
     }    
 
     /**
@@ -70,7 +74,7 @@ public class MultiServerAbstract extends TestUtils{
     @Test
     public void testGetNextServer() {
         System.out.println("getNextServer");
-        assertEquals(true,multiServer.getNextServer()!=multiServer.getNextServer());
+        assertEquals(true,multiServer.getNextStorage()!=multiServer.getNextStorage());
     }
 
     /**
@@ -79,8 +83,8 @@ public class MultiServerAbstract extends TestUtils{
     @Test
     public void testGetServer() throws Exception{
         System.out.println("getServer");
-        assertEquals(true,multiServer.getServer(CONTAINER1)!=null);
-        assertEquals(true,multiServer.getServer("not exist")==null);
+        assertEquals(true,multiServer.getStorage(CONTAINER1)!=null);
+        assertEquals(true,multiServer.getStorage("not exist")==null);
     }
 
     /**
@@ -89,8 +93,8 @@ public class MultiServerAbstract extends TestUtils{
     @Test
     public void testGetServerMap() {
         System.out.println("getServerMap");
-        assertEquals(true,multiServer.getServerMap().get(CONTAINER1)!=null);
-        assertEquals(true,multiServer.getServerMap().get("not exist")==null);
+        assertEquals(true,multiServer.getStorageMap().get(CONTAINER1)!=null);
+        assertEquals(true,multiServer.getStorageMap().get("not exist")==null);
     }
 
     /**
@@ -98,7 +102,7 @@ public class MultiServerAbstract extends TestUtils{
      */
     @Test
     public void testGetServerList() {
-        assertEquals(2,multiServer.getServerList().size());
+        assertEquals(2,multiServer.getStorageList().size());
     }
 
     /**
@@ -108,14 +112,14 @@ public class MultiServerAbstract extends TestUtils{
     public void testGetServers() {
         System.out.println("getServers");
         List<String> keys = new ArrayList<String>();
-        assertEquals(0,multiServer.getServers(keys).size());
+        assertEquals(0,multiServer.getStorageMapByName(keys).size());
         keys.add(CONTAINER1);
-        assertEquals(1,multiServer.getServers(keys).size()); 
+        assertEquals(1,multiServer.getStorageMapByName(keys).size()); 
         keys.add(CONTAINER2);
-        assertEquals(2,multiServer.getServers(keys).size());  
+        assertEquals(2,multiServer.getStorageMapByName(keys).size());  
         keys.clear();
         keys.add("not exist!");
-        assertEquals(0,multiServer.getServers(keys).size());  
+        assertEquals(0,multiServer.getStorageMapByName(keys).size());  
     }
 
     /**
@@ -124,7 +128,7 @@ public class MultiServerAbstract extends TestUtils{
     @Test
     public void testGetServersId() {
         System.out.println("getServersId");
-        List<String> result = multiServer.getServersId();
+        List<String> result = multiServer.getStoragesName();
         assertEquals(2, result.size());
         for(String id : result) {
             assertEquals(true, (id.equals(CONTAINER1) || id.equals(CONTAINER2)));
@@ -154,8 +158,8 @@ public class MultiServerAbstract extends TestUtils{
      */
     @Test
     public void testGetServersSize() {
-        assertEquals(2, multiServer.getServersSize().get(CONTAINER1).intValue());
-        assertEquals(0, multiServer.getServersSize().get(CONTAINER2).intValue());
+        assertEquals(2, multiServer.getStoragesSize().get(CONTAINER1).intValue());
+        assertEquals(0, multiServer.getStoragesSize().get(CONTAINER2).intValue());
     }
 
     /**
@@ -221,9 +225,9 @@ public class MultiServerAbstract extends TestUtils{
         toDelete.add(1l);
         toDelete.add(2l);
         multiServer.delete(toDelete);
-        assertEquals(toDelete.size(),multiServer.getServer(CONTAINER1).getNumberOfPicturesToPurge());
+        assertEquals(toDelete.size(),multiServer.getStorage(CONTAINER1).getNumberOfPicturesToPurge());
         multiServer.purge();
-        assertEquals(0,multiServer.getServer(CONTAINER1).getNumberOfPicturesToPurge());
+        assertEquals(0,multiServer.getStorage(CONTAINER1).getNumberOfPicturesToPurge());
     }
 
     /**
@@ -263,4 +267,55 @@ public class MultiServerAbstract extends TestUtils{
         assertEquals(0, multiServer.getInfos(CONTAINER2).size());
     }
     
+    
+    @Test
+    public void testReadAlreadyExistImageDataGlobal() throws Exception {
+        System.out.println("testReadAlreadyExistData");
+        
+        System.out.println("StoreName="+config.getStoreName());
+        RetrievalServer server = new RetrievalServer(config, "testNetbeans", 0, true);
+        server.createStorage("serverName");
+        Long id1 = server.getStorage("serverName").indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
+        Long id2 = server.getStorage("serverName").indexPicture(FileUtils.readPicture(LOCALPICTURE2),null,null);
+        server.stop();
+        server = null;
+        System.out.println("### READ OLD SERVER DATA");
+        RetrievalServer server2 = new RetrievalServer(config, "testNetbeans",false);
+        assert server2.getStorageList().size()==1;
+        assert server2.getStorageMap().keySet().iterator().next().equals("serverName");        
+        assert server2.getStorageList().get(0).isPictureInIndex(id1);       
+        assert server2.getStorageList().get(0).isPictureInIndex(id2);
+        assertNotNull(server2.getStorageList().get(0).getProperties(id1));
+        assertEquals(LOCALPICTURE1MAP.size(),server2.getStorageList().get(0).getProperties(id1).size());
+        assertNotNull(server2.getStorageList().get(0).getProperties(id2));
+        assertEquals(0,server2.getStorageList().get(0).getProperties(id2).size());
+    }   
+    
+     @Test
+    public void testReadAlreadyExistDeleteStorageDataGlobal() throws Exception {
+        System.out.println("testReadAlreadyExistData");
+        
+        System.out.println("StoreName="+config.getStoreName());
+        RetrievalServer server = new RetrievalServer(config, "testNetbeans", 0, true);
+        server.createStorage("serverName");
+        server.createStorage("will_be_deleted");
+        Long id1 = server.getStorage("serverName").indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
+        Long id2 = server.getStorage("serverName").indexPicture(FileUtils.readPicture(LOCALPICTURE2),null,null);
+        Long id3 = server.getStorage("will_be_deleted").indexPicture(FileUtils.readPicture(LOCALPICTURE2),null,null);
+        
+        server.deleteStorage("will_be_deleted");
+        
+        server.stop();
+        server = null;
+        System.out.println("### READ OLD SERVER DATA");
+        RetrievalServer server2 = new RetrievalServer(config, "testNetbeans",false);
+        assert server2.getStorageList().size()==1;
+        assert server2.getStorageMap().keySet().iterator().next().equals("serverName");        
+        assert server2.getStorageList().get(0).isPictureInIndex(id1);       
+        assert server2.getStorageList().get(0).isPictureInIndex(id2);
+        assertNotNull(server2.getStorageList().get(0).getProperties(id1));
+        assertEquals(LOCALPICTURE1MAP.size(),server2.getStorageList().get(0).getProperties(id1).size());
+        assertNotNull(server2.getStorageList().get(0).getProperties(id2));
+        assertEquals(0,server2.getStorageList().get(0).getProperties(id2).size());
+    }    
 }

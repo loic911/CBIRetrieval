@@ -4,39 +4,47 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageResults.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/package.html</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/RetrievalIndexer.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/ResultsSimilarities.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageIndexResults.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageDelete.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/dist/MessageErrorTest.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/message/MessageResults.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/RequestPictureVisualWord.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/exception/CBIRException.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageInfos.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClientToServersObject.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageNBT.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/Message.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/NotValidMessageXMLException.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/RetrievalIndexerLocalStorage.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageIndex.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageSimilarities.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/indexer/RetrievalIndexerLocalTest.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/PatcheInformation.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/TestVectorGeneration.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/ConvertUtils.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/ImageSerializable.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/storage/index/properties/PicturePropertiesIndex.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/config/ConfigClientTest.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/PictureUtils.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalCentralServerLocalMemoryTest.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/SizeUtils.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/FileUtils.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/generator/exception/TestsVectorsWritingException.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/RedisInstance.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalCentralServerDistantTest.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/generator/TestVectorReading.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/storage/index/Index.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/TestVector.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/TestUtils.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClient.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalCentralServerResizeMethodTest.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/TestVectorList.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/TestVectorMain.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/TestVectorListClient.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/server/RetrievalServerSocketXML.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/message/MessageSimilarities.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/dist/MultiServerMessageDeleteTest.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/server/RetrievalServer.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/indexer/RetrievalIndexerDistantStorage.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/ProcessUtils.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/TestVectorServer.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/config/ConfigClient.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/server/globaldatabase/KyotoCabinetDatabase.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/message/MessageNBT.java</file>
             <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/NetworkUtils.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageStorages.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/RetrievalClientToServersXML.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MultiServerMessageAction.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/indexer/RetrievalIndexerDistantTest.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/client/ListServerInformationSocket.java</file>
-            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/dist/MessageError.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/TestPoint.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/Chrono.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/TestVectorClient.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/generator/TestVectorWriting.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/CollectionUtils.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/storage/index/compress/compressNBT/CompressIndexAbstract.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/AssociativeArrayXML.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalCentralServerLocalKyotoTest.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/TestVectorListServer.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/PatchPoint.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/utils/ImageData.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/test/retrieval/client/RetrievalCentralServerAbstract.java</file>
+            <file>file:/home/lrollus/git/CBIRetrieval/src/retrieval/testvector/generator/exception/TestsVectorsArgumentException.java</file>
         </group>
     </open-files>
 </project-private>

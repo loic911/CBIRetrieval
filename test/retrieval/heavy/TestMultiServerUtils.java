@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package retrieval.test;
+package retrieval.heavy;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;

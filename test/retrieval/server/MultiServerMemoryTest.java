@@ -9,9 +9,10 @@ import org.junit.AfterClass;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
+import static retrieval.TestUtils.LOCALPICTURE1;
 import retrieval.config.ConfigServer;
 import retrieval.utils.FileUtils;
-import static retrieval.utils.TestUtils.LOCALPICTURE1;
 
 /**
  *
@@ -35,11 +36,11 @@ public class MultiServerMemoryTest extends MultiServerAbstract{
             config.setStoreName("MEMORY");
             System.out.println("server");
             multiServer = createMultiServer(config,MULTISERVERPORT1,0,"MEMORY");      
-            multiServer.createServer(CONTAINER1);
-            multiServer.createServer(CONTAINER2);
+            multiServer.createStorage(CONTAINER1);
+            multiServer.createStorage(CONTAINER2);
             
-            multiServer.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
-            multiServer.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE2),2l,null);
+            multiServer.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
+            multiServer.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE2),2l,null);
             /*
              * multiServer1
              * container 1 = LOCALPICTURE1, LOCALPICTURE2
@@ -54,6 +55,17 @@ public class MultiServerMemoryTest extends MultiServerAbstract{
     @After
     public void tearDown() {
         try{multiServer.stop();}catch(Exception e) {}
+    }
+    
+    @Override
+    public void testReadAlreadyExistImageDataGlobal() throws Exception {
+        //memory don't read data when running server
+    }
+    
+    @Test
+    @Override
+    public void testReadAlreadyExistDeleteStorageDataGlobal() throws Exception {
+        //memory don't read data when running server
     }
 
 }

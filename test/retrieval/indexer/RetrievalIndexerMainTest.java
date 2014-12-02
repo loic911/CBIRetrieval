@@ -12,13 +12,13 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import retrieval.TestUtils;
+import static retrieval.TestUtils.LOCALPICTURE1;
 import retrieval.config.ConfigServer;
 import retrieval.indexer.main.RetrievalDeleterMain;
 import retrieval.indexer.main.RetrievalIndexerMain;
 import retrieval.indexer.main.RetrievalPurgerMain;
 import retrieval.server.RetrievalServer;
-import retrieval.utils.TestUtils;
-import static retrieval.utils.TestUtils.LOCALPICTURE1;
 
     /**
      * Main methode for indexer
@@ -71,20 +71,20 @@ public class RetrievalIndexerMainTest extends TestUtils {
     @Test
     public void testMultiIndexerMainIndexLocalPicture() throws Exception {
         String container = "test";
-        multiServer.createServer(container);
+        multiServer.createStorage(container);
         String[] args = {MULTISERVERURL,MULTISERVERPORT1+"",LOCALPICTURE1,"sync",container};
         RetrievalIndexerMain.main(args);
-        assertEquals(1, multiServer.getServer(container).getNumberOfItem());      
+        assertEquals(1, multiServer.getStorage(container).getNumberOfItem());      
     } 
     
     @Test
     public void testMultiIndexerMainIndexLocalPictureWithID() throws Exception {
         String container = "test";
-        multiServer.createServer(container);
+        multiServer.createStorage(container);
         String[] args = {MULTISERVERURL,MULTISERVERPORT1+"",LOCALPICTURE1,"sync",container,"123"};
         RetrievalIndexerMain.main(args);
-        assertEquals(1, multiServer.getServer(container).getNumberOfItem()); 
-        assertEquals(true,multiServer.getServer(container).isPictureInIndex(123l));   
+        assertEquals(1, multiServer.getStorage(container).getNumberOfItem()); 
+        assertEquals(true,multiServer.getStorage(container).isPictureInIndex(123l));   
     }    
     
     @Test
@@ -94,53 +94,53 @@ public class RetrievalIndexerMainTest extends TestUtils {
         String key2 = "hel";
         String value1 = "value";
         String value2 = "lo";
-        multiServer.createServer(container);
+        multiServer.createStorage(container);
         String[] args = {MULTISERVERURL,MULTISERVERPORT1+"",LOCALPICTURE1,"sync",container,"123","key,hel","value,lo"};
         RetrievalIndexerMain.main(args);
-        assertEquals(1, multiServer.getServer(container).getNumberOfItem()); 
-        assertEquals(true,multiServer.getServer(container).isPictureInIndex(123l));
-        assertEquals(2, multiServer.getServer(container).getProperties(123l).size()); 
-        assertEquals(value1,multiServer.getServer(container).getProperties(123l).get(key1));
-        assertEquals(value2,multiServer.getServer(container).getProperties(123l).get(key2));
+        assertEquals(1, multiServer.getStorage(container).getNumberOfItem()); 
+        assertEquals(true,multiServer.getStorage(container).isPictureInIndex(123l));
+        assertEquals(2, multiServer.getStorage(container).getProperties(123l).size()); 
+        assertEquals(value1,multiServer.getStorage(container).getProperties(123l).get(key1));
+        assertEquals(value2,multiServer.getStorage(container).getProperties(123l).get(key2));
     }       
     
     
     @Test
     public void testMultiIndexerMainIndexURLWithID() throws Exception {
         String container = "test";
-        multiServer.createServer(container);
+        multiServer.createStorage(container);
         String[] args = {MULTISERVERURL,MULTISERVERPORT1+"",URLPICTURENOAUTH,"sync",container,"123"};
         RetrievalIndexerMain.main(args);
-        assertEquals(1, multiServer.getServer(container).getNumberOfItem()); 
-        assertEquals(true,multiServer.getServer(container).isPictureInIndex(123l));  
+        assertEquals(1, multiServer.getStorage(container).getNumberOfItem()); 
+        assertEquals(true,multiServer.getStorage(container).isPictureInIndex(123l));  
     }       
     
     @Test
     public void testMultiIndexerMainDelete() throws Exception {
         
         String container = "test";
-        multiServer.createServer(container);
+        multiServer.createStorage(container);
         String[] args = {MULTISERVERURL,MULTISERVERPORT1+"",URLPICTURENOAUTH,"sync",container,"123"};
         RetrievalIndexerMain.main(args);
-         assertEquals(1, multiServer.getServer(container).getNumberOfItem());                
+         assertEquals(1, multiServer.getStorage(container).getNumberOfItem());                
         String[] args2 = {MULTISERVERURL,MULTISERVERPORT1+"","123,456"};
         RetrievalDeleterMain.main(args2);       
-        assertEquals(0, multiServer.getServer(container).getNumberOfItem()); 
+        assertEquals(0, multiServer.getStorage(container).getNumberOfItem()); 
     }    
         
     @Test
     public void testMultiIndexerMainPurge() throws Exception {
         String container = "test";
-        multiServer.createServer(container);
+        multiServer.createStorage(container);
         String[] args = {MULTISERVERURL,MULTISERVERPORT1+"",URLPICTURENOAUTH,"sync",container,"123"};
         RetrievalIndexerMain.main(args);
-         assertEquals(1, multiServer.getServer(container).getNumberOfItem());                
+         assertEquals(1, multiServer.getStorage(container).getNumberOfItem());                
         String[] args2 = {MULTISERVERURL,MULTISERVERPORT1+"","123,456"};
         RetrievalDeleterMain.main(args2);       
-        assertEquals(1, multiServer.getServer(container).getNumberOfPicturesToPurge());   
+        assertEquals(1, multiServer.getStorage(container).getNumberOfPicturesToPurge());   
         String[] args3 = {MULTISERVERURL,MULTISERVERPORT1+""};
         RetrievalPurgerMain.main(args3); 
-        waitEquals(0, multiServer.getServer(container).getNumberOfPicturesToPurge());
+        waitEquals(0, multiServer.getStorage(container).getNumberOfPicturesToPurge());
     }    
 //    
 //        

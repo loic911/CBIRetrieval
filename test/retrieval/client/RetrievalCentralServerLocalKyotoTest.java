@@ -8,7 +8,6 @@ import org.junit.AfterClass;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import retrieval.client.RetrievalClient;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.server.RetrievalServer;
@@ -18,9 +17,9 @@ import retrieval.utils.FileUtils;
  *
  * @author lrollus
  */
-public class RetrievalCentralServerLocalTest extends RetrievalCentralServerAbstract{
+public class RetrievalCentralServerLocalKyotoTest extends RetrievalCentralServerAbstract{
     
-    private static Logger logger = Logger.getLogger(RetrievalCentralServerLocalTest.class);
+    private static Logger logger = Logger.getLogger(RetrievalCentralServerLocalKyotoTest.class);
     
 
     @BeforeClass
@@ -39,19 +38,19 @@ public class RetrievalCentralServerLocalTest extends RetrievalCentralServerAbstr
             configCentralServer = new ConfigClient("testdata/ConfigClient.prop");
             config.setStoreName("MEMORY");
             System.out.println("server");
-            multiServer1 = createMultiServer(config,MULTISERVERPORT1,0,"MEMORY");      
-            multiServer2 = createMultiServer(config,MULTISERVERPORT2,0,"MEMORY");
-            multiServer1.createServer(CONTAINER1);
-            multiServer1.createServer(CONTAINER2);
-            multiServer2.createServer(CONTAINER1);
+            multiServer1 = createMultiServer(config,MULTISERVERPORT1,0,"KYOTOSINGLEFILE");      
+            multiServer2 = createMultiServer(config,MULTISERVERPORT2,0,"KYOTOSINGLEFILE");
+            multiServer1.createStorage(CONTAINER1);
+            multiServer1.createStorage(CONTAINER2);
+            multiServer2.createStorage(CONTAINER1);
             
-            multiServer1.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
-            multiServer1.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE2),2l,null);
-            multiServer1.getServer(CONTAINER2).indexPicture(FileUtils.readPicture(LOCALPICTURE3),3l,null);
-            multiServer1.getServer(CONTAINER2).indexPicture(FileUtils.readPicture(LOCALPICTURE4),4l,null);
-            multiServer2.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE5),5l,null);
-            multiServer2.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE6),6l,null);
-            multiServer2.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE7),7l,null);
+            multiServer1.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
+            multiServer1.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE2),2l,null);
+            multiServer1.getStorage(CONTAINER2).indexPicture(FileUtils.readPicture(LOCALPICTURE3),3l,null);
+            multiServer1.getStorage(CONTAINER2).indexPicture(FileUtils.readPicture(LOCALPICTURE4),4l,null);
+            multiServer2.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE5),5l,null);
+            multiServer2.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE6),6l,null);
+            multiServer2.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE7),7l,null);
             /*
              * multiServer1
              * container 1 = LOCALPICTURE1, LOCALPICTURE2

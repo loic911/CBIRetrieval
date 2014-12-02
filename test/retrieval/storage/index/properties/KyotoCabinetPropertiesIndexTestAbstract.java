@@ -4,7 +4,7 @@
  */
 package retrieval.storage.index.properties;
 
-import retrieval.storage.index.properties.KyotoCabinetPropertiesIndexAbstract;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.After;
@@ -13,8 +13,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import retrieval.TestUtils;
 import retrieval.config.ConfigServer;
-import retrieval.utils.TestUtils;
 
 /**
  *
@@ -22,7 +22,7 @@ import retrieval.utils.TestUtils;
  */
 public abstract class KyotoCabinetPropertiesIndexTestAbstract extends TestUtils{
     
-    KyotoCabinetPropertiesIndexAbstract mainIndex;
+    KyotoCabinetPropertiesIndexSingleFile mainIndex;
     ConfigServer config;    
     
     
@@ -92,10 +92,10 @@ public abstract class KyotoCabinetPropertiesIndexTestAbstract extends TestUtils{
         map.put("test1", "123");
         map.put("test2", "456");
         
-        String result = KyotoCabinetPropertiesIndexAbstract.convertMapToString(map);
+        String result = KyotoCabinetPropertiesIndexSingleFile.convertMapToString(map);
         assertEquals(true,"test1;@;123;@;test2;@;456".equals(result) || "test2;@;456;@;test1;@;123".equals(result));
-        assertEquals("NULL",KyotoCabinetPropertiesIndexAbstract.convertMapToString(null));
-        assertEquals("",KyotoCabinetPropertiesIndexAbstract.convertMapToString(new HashMap<String,String>()));
+        assertEquals("NULL",KyotoCabinetPropertiesIndexSingleFile.convertMapToString(null));
+        assertEquals("",KyotoCabinetPropertiesIndexSingleFile.convertMapToString(new HashMap<String,String>()));
     }    
 
     
@@ -104,7 +104,7 @@ public abstract class KyotoCabinetPropertiesIndexTestAbstract extends TestUtils{
         System.out.println("testConvertMapToString");
 
         String test = "test1;@;123;@;test2;@;456";
-        Map<String,String> map = KyotoCabinetPropertiesIndexAbstract.convertStringToMap(test);
+        Map<String,String> map = KyotoCabinetPropertiesIndexSingleFile.convertStringToMap(test);
         
         assertEquals(2,map.size());
         assertEquals("123",map.get("test1"));

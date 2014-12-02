@@ -39,11 +39,11 @@ public class MultiServerKyotoTest extends MultiServerAbstract{
             
             multiServer = createMultiServer(config,MULTISERVERPORT1,0,"KYOTOSINGLEFILE");  
             
-            multiServer.createServer(CONTAINER1);
-            multiServer.createServer(CONTAINER2);
+            multiServer.createStorage(CONTAINER1);
+            multiServer.createStorage(CONTAINER2);
             
-            multiServer.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
-            multiServer.getServer(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE2),2l,null);
+            multiServer.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE1),1l,LOCALPICTURE1MAP);
+            multiServer.getStorage(CONTAINER1).indexPicture(FileUtils.readPicture(LOCALPICTURE2),2l,null);
             /*
              * multiServer1
              * container 1 = LOCALPICTURE1, LOCALPICTURE2

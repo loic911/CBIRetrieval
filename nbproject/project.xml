@@ -15,6 +15,7 @@
             <word>Config</word>
             <word>metadata</word>
             <word>url</word>
+            <word>visualword</word>
             <word>visualwords</word>
         </spellchecker-wordlist>
     </configuration>

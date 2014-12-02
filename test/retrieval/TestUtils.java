@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package retrieval.utils;
+package retrieval;
 import com.google.common.collect.ImmutableMap;
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,6 +26,8 @@ import retrieval.server.RetrievalServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.Storage;
 import retrieval.storage.index.ResultSim;
+import retrieval.utils.CollectionUtils;
+import retrieval.utils.FileUtils;
 /**
 /**
  *
@@ -210,7 +212,7 @@ public class TestUtils {
         long maxTime = 10000;
         Storage server = null;
         while((System.currentTimeMillis()-startTime)<maxTime) {
-            server = multi.getServer(key);
+            server = multi.getStorage(key);
             if(server!=null) return true;
             try {
                 Thread.sleep(25);
@@ -238,10 +240,6 @@ public class TestUtils {
 
     public static RetrievalServer createMultiServer(ConfigServer cc, int port, int serverNumber) {
            return createMultiServer(cc,port,serverNumber,"MEMORY");
-    }
-    
-     public Storage createServer(String id,ConfigServer cc) throws Exception {
-         return createServer(id,cc,null);   
     }
      
      public Storage createServer(String id,ConfigServer cc, GlobalDatabase database) throws Exception {

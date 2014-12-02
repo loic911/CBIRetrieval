@@ -11,10 +11,10 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import retrieval.TestUtils;
 import retrieval.config.ConfigClient;
 import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
-import retrieval.utils.TestUtils;
 
 /**
  *
@@ -65,7 +65,7 @@ public class TestVectorMainTest extends TestUtils{
         ConfigClient config =  new ConfigClient("testdata/ConfigClient.prop");
         config.setNumberOfTV(numberOfVector);
         
-        TestVectorListCentralServer tests = TestVectorReading.readClient(buildDirectory,config);
+        TestVectorListClient tests = TestVectorReading.readClient(buildDirectory,config);
         assertEquals(numberOfVector,tests.size());
     }
        
@@ -91,7 +91,7 @@ public class TestVectorMainTest extends TestUtils{
         ConfigClient config =  new ConfigClient("testdata/ConfigClient.prop");
         config.setNumberOfTV(numberOfVector);
         
-        TestVectorListCentralServer tests = TestVectorReading.readClient(buildDirectory,config);
+        TestVectorListClient tests = TestVectorReading.readClient(buildDirectory,config);
         assertEquals(numberOfVector,tests.size());        
     }
 }

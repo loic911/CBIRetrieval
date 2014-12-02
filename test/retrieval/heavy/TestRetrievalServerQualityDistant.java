@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package retrieval.test;
+package retrieval.heavy;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import retrieval.utils.FileUtils;
  *
  * @author lrollus
  */
-public class RetrievalServerQualityDistantTest extends TestMultiServerUtils{
+public class TestRetrievalServerQualityDistant extends TestMultiServerUtils{
     
     public static void main(String[] args) {
         
@@ -51,7 +51,7 @@ public class RetrievalServerQualityDistantTest extends TestMultiServerUtils{
                 id++;
             }
             
-            System.out.println("Total size: " + server.getServersSize());
+            System.out.println("Total size: " + server.getStoragesSize());
             
             File test = new File("/media/DATA_/image/cbir/test");
             List<String> searchFiles = new ArrayList<String>();

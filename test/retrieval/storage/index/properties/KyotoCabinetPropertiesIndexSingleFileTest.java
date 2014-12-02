@@ -4,7 +4,6 @@
  */
 package retrieval.storage.index.properties;
 
-import retrieval.storage.index.properties.KyotoCabinetPropertiesIndexSingleFile;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
