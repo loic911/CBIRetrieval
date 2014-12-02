@@ -15,8 +15,6 @@
  */
 package retrieval.client;
 
-import retrieval.client.message.MessageResults;
-import retrieval.client.message.MessageNBT;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +23,8 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
+import retrieval.client.message.MessageNBT;
+import retrieval.client.message.MessageResults;
 import retrieval.client.message.MessageSimilarities;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.server.RetrievalServer;
@@ -86,7 +86,7 @@ public class RetrievalClientToServersObject  {
         
         //Only get storages from storages param
         for(RetrievalServer server : listsServer) {
-            for(Storage storage : server.getServerList()) {
+            for(Storage storage : server.getStorageList()) {
                 if(storages==null || storages.length==0) {
                     this.storages.put(server.getIndexPath()+"#"+storage.getStorageName(),storage);
                 } else {

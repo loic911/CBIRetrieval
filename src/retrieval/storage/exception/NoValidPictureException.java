@@ -13,34 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package retrieval.testvector.generator.exception;
-
-import retrieval.exception.CBIRException;
+package retrieval.storage.exception;
 
 /**
- * Argument for tests vectors creation error (ex: negative value for m)
- * @author Rollus Loic
+
  */
-public class TestsVectorsArgumentException extends CBIRException {
+public class NoValidPictureException extends Exception {
 
     /**
-     * Error Code
+     * Creates a new instance of <code>NoValidPicturException</code> without detail message.
      */
-    public static final String CODE = "5001";
-
-    /**
-     * Creates a new instance of <code>AlreadyInPuctureIndexException</code> without detail message.
-     */
-    public TestsVectorsArgumentException() {
-        super(CODE,"");
+    public NoValidPictureException() {
     }
 
 
     /**
-     * Constructs an instance of <code>AlreadyInPuctureIndexException</code> with the specified detail message.
+     * Constructs an instance of <code>NoValidPicturException</code> with the specified detail message.
      * @param msg the detail message.
      */
-    public TestsVectorsArgumentException(String msg) {
-        super(CODE,msg);
+    public NoValidPictureException(String msg) {
+        super(msg);
     }
 }

@@ -15,18 +15,8 @@
  */
 package retrieval.client.message;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.Element;
 import retrieval.client.ListServerInformationSocket;
-import retrieval.client.ListServerInformationSocket;
-import retrieval.client.ServerInformationSocket;
-import retrieval.dist.Message;
-import retrieval.dist.NotValidMessageXMLException;
 import retrieval.storage.index.ResultSim;
 
 /**

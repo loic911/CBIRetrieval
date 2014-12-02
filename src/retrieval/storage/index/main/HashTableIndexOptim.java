@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage.index.main;
 
 import java.util.List;
@@ -8,31 +23,27 @@ import retrieval.storage.index.compress.compressNBT.CompressIndexNBT;
 
 /**
  * Interface which force to implements method for HashTable
+ * ONLY for Hashtable like Redis that already implement the concept of "map for value"
  * @author Rollus Loic
  */
 public abstract class HashTableIndexOptim {
 
     /**
-     * Add a key value on the store
-     * @param key Key
-     * @param Value Value
-     */
-    //public abstract void put(String key, ValueStructure value);
-    /**
-     * Delete a key and i'ts value in the store
+     * Delete a key and it's value in the store
      * @param key Key
      */
     public abstract void delete(String key);
-    /**
-     * Get the value for a key
-     * @param key Key
-     * @return Value
-     */
+
     public abstract void incrementHashValue(String mainkey, String haskey, long value);
     public abstract void incrementHashValue(ConcurrentHashMap<String, Long> visualWords, int I, CompressIndexNBT compress);
     public abstract String getHashValue(String mainkey, String haskey);
+    
+        /**
+     * Get the value for a key
+     * @param mainkey Key
+     * @return Value
+     */
     public abstract Map<String,String> getValue(String mainkey);
-   // public abstract ConcurrentHashMap<String, Long> getAllValues(ConcurrentHashMap<String, Long> result);
 
     /**
      * Get each value map with each key from keys list
@@ -60,7 +71,7 @@ public abstract class HashTableIndexOptim {
     public abstract void sync();
     /**
      * Fill each entry from entries map with entries from the store
-     * @param entires that must be looked on the store
+     * @param result that must be looked on the store
      * @return A map with each value from the store
      */
     public abstract ConcurrentHashMap<String, Long> getAllValues(ConcurrentHashMap<String, Long> result);

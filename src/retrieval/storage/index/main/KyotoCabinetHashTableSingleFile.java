@@ -1,8 +1,19 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package retrieval.storage.index.main.kyoto;
+package retrieval.storage.index.main;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
@@ -14,17 +25,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import kyotocabinet.Cursor;
 import kyotocabinet.DB;
 import org.apache.log4j.Logger;
+import retrieval.Value;
 import retrieval.config.ConfigServer;
+import retrieval.server.globaldatabase.KyotoCabinetDatabase;
+import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.index.ValueStructure;
-import retrieval.storage.index.main.HashTableIndex;
 import retrieval.utils.ConvertUtils;
-import retrieval.utils.Value.ValueInfo;
 
 /**
  *
  * @author lrollus
  */
-public abstract class KyotoCabinetHashTableAbstract extends HashTableIndex {
+public class KyotoCabinetHashTableSingleFile extends HashTableIndex {
 
     /**
      * HashTable
@@ -37,11 +49,36 @@ public abstract class KyotoCabinetHashTableAbstract extends HashTableIndex {
      */
     protected ConfigServer config;
     /**
+     * Name of Hashtable
+     */
+    public static String NAME = "KYOTOSINGLEFILE";
+    /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(KyotoCabinetHashTableAbstract.class);
+    private static Logger logger = Logger.getLogger(KyotoCabinetHashTableSingleFile.class);
 
     /**
+     * Constructor for a memory Hash Table
+     * @param file Name of file which will contain store
+     * @param configStore Configuration object
+     * @param read If true, read index (if already exist), else create new index
+     * @throws ReadIndexException Error during the read of index
+     */
+    public KyotoCabinetHashTableSingleFile(Object database,String idServer, String idTestVector, ConfigServer config) throws ReadIndexException {
+        logger.info("KyotoCabinetMultipleFile: start");
+        this.visuwalWordPosition = 2;
+        this.config = config;
+        try {
+           logger.debug("init database");
+           hashmap = (DB)((KyotoCabinetDatabase)database).getDatabase(); 
+           logger.debug("database OK");
+        } catch(ClassCastException e) {
+            throw new ReadIndexException("Cannot convert database to kyoto database!"+e);
+        }
+        this.prefix = idServer+"#"+idTestVector+"#";
+    }
+    
+   /**
      * Put a key and its value on the store
      * @param key Key
      * @param Value Value
@@ -63,7 +100,7 @@ public abstract class KyotoCabinetHashTableAbstract extends HashTableIndex {
                 
         if (data != null) {
             try {
-                return ConvertUtils.convertProtoBufToValueStructure(ValueInfo.parseFrom(data), config);
+                return ConvertUtils.convertProtoBufToValueStructure(Value.ValueInfo.parseFrom(data), config);
             } catch (Exception e) {
                 logger.error(e);
                 return null;
@@ -89,7 +126,7 @@ public abstract class KyotoCabinetHashTableAbstract extends HashTableIndex {
                 byte[] valueData = result[i + 1];
                 if (valueData != null) {
                     try {
-                        ValueStructure value = ConvertUtils.convertProtoBufToValueStructure(ValueInfo.parseFrom(valueData), config);
+                        ValueStructure value = ConvertUtils.convertProtoBufToValueStructure(Value.ValueInfo.parseFrom(valueData), config);
                         String fullKey = new String(keyData);
                         String correctKey = fullKey.split("#")[visuwalWordPosition];
                         map.put(correctKey, value);
@@ -123,7 +160,7 @@ public abstract class KyotoCabinetHashTableAbstract extends HashTableIndex {
                 String correctKey = fullKey.split("#")[visuwalWordPosition];
                 if (valueData != null) {
                     try {
-                        ValueStructure value = ConvertUtils.convertProtoBufToValueStructure(ValueInfo.parseFrom(valueData), config);
+                        ValueStructure value = ConvertUtils.convertProtoBufToValueStructure(Value.ValueInfo.parseFrom(valueData), config);
 
                         visualWord.put(correctKey, value != null ? value.getNBT() : 0);
                     } catch (InvalidProtocolBufferException ex) {
@@ -151,7 +188,7 @@ public abstract class KyotoCabinetHashTableAbstract extends HashTableIndex {
         while ((rec = cur.get(true)) != null) {
             try {
                 String key = new String(rec[0]);
-                ValueStructure value = ConvertUtils.convertProtoBufToValueStructure(ValueInfo.parseFrom(rec[1]), config);
+                ValueStructure value = ConvertUtils.convertProtoBufToValueStructure(Value.ValueInfo.parseFrom(rec[1]), config);
                 value.deleteValue(mapID);
                 if (value.getEntries().isEmpty()) {
                     emptyKeys.add(key);
@@ -159,7 +196,7 @@ public abstract class KyotoCabinetHashTableAbstract extends HashTableIndex {
                     hashmap.replace(key.getBytes(), ConvertUtils.convertObjectToProtoBuf(value).toByteArray());
                 }
             } catch (InvalidProtocolBufferException ex) {
-                java.util.logging.Logger.getLogger(KyotoCabinetHashTableAbstract.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                java.util.logging.Logger.getLogger(KyotoCabinetHashTableSingleFile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
         }
         for(int i=0;i<emptyKeys.size();i++) {
@@ -174,12 +211,12 @@ public abstract class KyotoCabinetHashTableAbstract extends HashTableIndex {
         byte[] rec;
         while ((rec = cur.get_value(true)) != null) {
             try {
-                ValueStructure value = ConvertUtils.convertProtoBufToValueStructure(ValueInfo.parseFrom(rec), config);
+                ValueStructure value = ConvertUtils.convertProtoBufToValueStructure(Value.ValueInfo.parseFrom(rec), config);
                 if (value.isPicturePresent(id)){
                     return true;
                 }
             } catch (InvalidProtocolBufferException ex) {
-                java.util.logging.Logger.getLogger(KyotoCabinetHashTableAbstract.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                java.util.logging.Logger.getLogger(KyotoCabinetHashTableSingleFile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
         }
         return false;
@@ -207,9 +244,8 @@ public abstract class KyotoCabinetHashTableAbstract extends HashTableIndex {
         //memory-only so no sync between memory and disk
     }
 
-    @Override
     public void delete(String key) {
         String keyPrefixed = prefix+key;
         hashmap.remove(keyPrefixed);
-    }
+    }    
 }

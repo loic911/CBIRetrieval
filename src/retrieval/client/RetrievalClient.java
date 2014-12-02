@@ -24,7 +24,7 @@ import retrieval.config.ConfigClient;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.exception.CBIRException;
 import retrieval.server.RetrievalServer;
-import retrieval.testvector.TestVectorListCentralServer;
+import retrieval.testvector.TestVectorListClient;
 import retrieval.testvector.generator.TestVectorReading;
 
 /**
@@ -43,7 +43,7 @@ public class RetrievalClient implements RetrievalClientInterface{
     /**
      * Tests vectors to build request pictures data
      */
-    private TestVectorListCentralServer testVectors;
+    private TestVectorListClient testVectors;
     
     /**
      * All server info (port, url,...)

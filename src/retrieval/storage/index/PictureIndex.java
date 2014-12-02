@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage.index;
 
 import java.io.Serializable;
@@ -14,11 +29,9 @@ import retrieval.storage.exception.StartIndexException;
 import retrieval.storage.index.patchs.KyotoCabinetPatchsIndexSingleFile;
 import retrieval.storage.index.patchs.PicturePatchsIndex;
 import retrieval.storage.index.patchs.SimpleHashMapPatchsIndex;
-import retrieval.storage.index.patchs.SimpleHashMapPatchsIndexTest;
 import retrieval.storage.index.properties.KyotoCabinetPropertiesIndexSingleFile;
 import retrieval.storage.index.properties.PicturePropertiesIndex;
 import retrieval.storage.index.properties.SimpleHashMapPropertiesIndex;
-import retrieval.storage.index.properties.SimpleHashMapPropertiesIndexTest;
 
 /**
  * Picture index (not visual word index!)
@@ -51,8 +64,9 @@ public final class PictureIndex implements Serializable {
 
     /**
      * Only way to get Picture Index (which is a singleton)
+     * @param idServer
      * @param cs Configuration object
-     * @param read Read index if already exist on disk, else delete them
+     * @param globalDatabase
      * @return Picture Index object
      * @throws StartIndexException Error during index start
      * @throws ReadIndexException Error during index read
@@ -68,22 +82,19 @@ public final class PictureIndex implements Serializable {
      * @throws ReadIndexException Error during index read
      */
     private PictureIndex(String idServer,ConfigServer configStore, GlobalDatabase globalDatabase) throws StartIndexException, ReadIndexException {
-        if (configStore.getStoreName().equals("MEMORY") || configStore.getStoreName().equals("NESSDB")) {
+        if (configStore.getStoreName().equals("MEMORY")) {
             picturePathIndex = new SimpleHashMapPropertiesIndex(false);
             picturePatchsIndex =  new SimpleHashMapPatchsIndex(false);
         } else if (configStore.getStoreName().equals("KYOTOSINGLEFILE")){
             picturePathIndex = new KyotoCabinetPropertiesIndexSingleFile(globalDatabase,idServer);
             picturePatchsIndex = new KyotoCabinetPatchsIndexSingleFile(globalDatabase,idServer);
-       }else if (configStore.getStoreName().equals("MEMORYTEST") || configStore.getStoreName().equals("KYOTOTEST")){
-            picturePathIndex = new SimpleHashMapPropertiesIndexTest(false);
-            picturePatchsIndex =  new SimpleHashMapPatchsIndexTest(false);
-        }else
+       }else
             throw new StartIndexException(configStore.getStoreName() + " is not implemented for metadata index");
     }
 
     /**
      * Delete pictures files from picture index
-     * @param files Pictures files
+     * @param ids Pictures files
      * @return Map with id of pictures files
      */
     public Map<Long, Integer> delete(List<Long> ids) {
@@ -96,6 +107,8 @@ public final class PictureIndex implements Serializable {
 
     /**
      * Mark picture as indexed
+     * @param id Image id
+     * @param properties Image properties
      * @param fullPathName Picture
      * @param numberOfPatch Number of patch (N)
      * @return Picture id

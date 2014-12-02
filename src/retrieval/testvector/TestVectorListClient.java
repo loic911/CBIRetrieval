@@ -13,34 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package retrieval.storage.exception;
-
-import retrieval.exception.CBIRException;
+package retrieval.testvector;
 
 /**
- * No Exception
+ * Tests Vectors List from central server which extends Abstract class for
+ * Test vector list.
+ * Does not implements special methods, just override add/get
  * @author Rollus Loic
  */
-public class NoException extends CBIRException {
+public class TestVectorListClient extends TestVectorList {
 
     /**
-     * Error Code
+     * Get the Tests vector central server at index i
+     * @param i Index
+     * @return Test vector central server i
      */
-    public static final String CODE = "1000";
-
-    /**
-     * Creates a new instance of <code>AlreadyInPuctureIndexException</code> without detail message.
-     */
-    public NoException() {
-        super(CODE,"");
+    @Override public TestVectorClient get(int i)
+    {
+        return (TestVectorClient)super.get(i);
     }
 
-
     /**
-     * Constructs an instance of <code>AlreadyInPuctureIndexException</code> with the specified detail message.
-     * @param msg the detail message.
+     * Add Tests vector central server at list
+     * @param tvs Test vector central server
      */
-    public NoException(String msg) {
-        super(CODE,msg);
+    public void add(TestVectorClient tvs)
+    {
+        super.add(tvs);
     }
+
 }

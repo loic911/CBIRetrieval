@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 import retrieval.dist.NotValidMessageXMLException;
 import retrieval.exception.CBIRException;
 import retrieval.storage.Storage;
-import retrieval.storage.index.NoValidPictureException;
+import retrieval.storage.exception.NoValidPictureException;
 
 /**
  * Retrieval indexer for a local RetrievalServer (a java object).

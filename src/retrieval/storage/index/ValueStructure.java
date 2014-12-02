@@ -1,12 +1,25 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage.index;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import retrieval.config.ConfigServer;
 
@@ -49,47 +62,6 @@ public class ValueStructure implements Serializable {
         }
     }
 
-    /**
-     * Construct a value structure
-     * @param config Configuration object
-     * @param imagesI Image I
-     * @param NIBT Number of patchs produced by I for visual word B
-     * @param NBT Number of patch map with B
-     */
-    public ValueStructure(ConfigServer config, long[] imagesI, int[] NIBT, long NBT) {
-
-        if (config.getStrucType() == 0) {
-            this.valList = new HashMap<Long, Integer>(imagesI.length * 3);
-        }
-        else {
-            this.valList = new TreeMap<Long, Integer>();
-        }
-
-        Nbt = NBT;
-        for (int i = 0; i < imagesI.length; i++) {
-            this.valList.put(imagesI[i], NIBT[i]);
-        }
-    }
-
-    public ValueStructure(ConfigServer config, Map<String, String> mapList, long NBT) {
-
-        if (config.getStrucType() == 0) {
-            this.valList = new HashMap<Long, Integer>(mapList.size() * 3);
-        }
-        else {
-            this.valList = new TreeMap<Long, Integer>();
-        }
-
-        Nbt = NBT;
-        Set<java.util.Map.Entry<String, String>> set = mapList.entrySet();
-
-        Iterator<java.util.Map.Entry<String, String>> iterator = set.iterator();
-        while (iterator.hasNext()) {
-            java.util.Map.Entry<String, String> entry = iterator.next();
-            this.valList.put(Long.parseLong(entry.getKey()), (int) Long.parseLong((entry.getValue())));
-        }
-    }
-
     public ValueStructure(ConfigServer config, int numberOfItemPrevision, long NBT) {
 
         if (config.getStrucType() == 0) {
@@ -100,17 +72,6 @@ public class ValueStructure implements Serializable {
         }
 
         Nbt = NBT;
-    }
-
-    /**
-     * Construct a value structure
-     * @param config Configuration object
-     * @param mapList ValueStructure in a map
-     */
-    public ValueStructure(Map<String, Object> mapList) {
-
-        this.valList = (Map<Long, Integer>) mapList.get("valList");
-        Nbt = (Long) mapList.get("nbt");
     }
 
     /**
@@ -133,15 +94,6 @@ public class ValueStructure implements Serializable {
             valList.remove(key);
         }
 
-    }
-
-    public boolean isValidNBT() {
-        Long staticNBT = Nbt;
-        Long dynamicNBT = 0L;
-        for (Map.Entry<Long, Integer> entry : valList.entrySet()) {
-            dynamicNBT = dynamicNBT + entry.getValue();
-        }
-        return staticNBT.equals(dynamicNBT);
     }
 
     /**
@@ -174,18 +126,6 @@ public class ValueStructure implements Serializable {
 
     public void addEntryWithoutNBT(long I, int NIBT) {
         valList.put(I, new Integer(NIBT));
-    }
-
-    /**
-     * Get all picture id of the value structure
-     * @return Picture id
-     **/
-    public List<Long> getPicturesID() {
-        List<Long> v = new ArrayList<Long>();
-        for (Map.Entry<Long, Integer> entree : valList.entrySet()) {
-            v.add(entree.getKey());
-        }
-        return v;
     }
 
     public boolean isPicturePresent(Long id) {

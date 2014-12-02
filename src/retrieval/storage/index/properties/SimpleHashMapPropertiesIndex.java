@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage.index.properties;
 
 import java.util.ArrayList;
@@ -57,7 +72,7 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
 
     /**
      * Delete all path from picturesPath list and get their id
-     * @param picturesPath Pictures paths that mus be delete
+     * @param ids Pictures ids that must be delete
      * @return Pictures paths deleted id
      */
     public Map<Long, Integer> delete(List<Long> ids) {
@@ -85,7 +100,7 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
 
     /**
      * Add a new picture path, generate a new id and get the id
-     * @param path Picture path
+     * @param id Picture id
      * @return Picture ID
      */
     public Long addPicture(Long id, Map<String,String> properties) {
@@ -97,28 +112,10 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
         logger.info(";"+date.getTime() + ";" +"" + id + ";" + properties);
         return id;
     }
-//
-//    /**
-//     * Get a picture path from the image ID
-//     * @param imageID Image id
-//     * @return Picture path
-//     */
-//    public String getPicturePath(Integer imageID) {
-//        return map.get(imageID);
-//    }
-
-//    /**
-//     * Get a picture id from a picture path
-//     * @param imagePath Picture path
-//     * @return Picture id
-//     */
-//    public Integer getPictureId(String imagePath) {
-//        return mapReverse.get(imagePath);
-//    }
 
     /**
      * Check if map contains picture path
-     * @param path Picture path
+     * @param id Picture id
      * @return True if map contains picture path, else false
      */
 //    public boolean containsPicture(String path) {
@@ -127,15 +124,7 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
     public boolean containsPicture(Long id) {
         return map.containsKey(id);
     }
-//    
-//    /**
-//     * Get a map with all pictures
-//     * @return All pictures map
-//     */
-//    public Map<String, Integer> getPathMap() {
-//        return mapReverse;
-//    }
-//    
+   
     /**
      * Get a list with all pictures
      * @return All pictures list

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import retrieval.dist.NotValidMessageXMLException;
 import retrieval.exception.CBIRException;
-import retrieval.storage.index.NoValidPictureException;
+import retrieval.storage.exception.NoValidPictureException;
 import retrieval.utils.FileUtils;
 
 /**

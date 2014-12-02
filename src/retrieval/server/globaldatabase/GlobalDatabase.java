@@ -15,6 +15,9 @@
  */
 package retrieval.server.globaldatabase;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * This represent a GlobalDatabase.
  * Generic return type because a database may be a hashmap, jedis db object,...
@@ -26,10 +29,22 @@ public interface GlobalDatabase {
     
     Object getDatabasePatchs();
     
-    Object getDatabasePath();
-    
-    Object getDatabasePathInverse();
+    Object getDatabaseProperties();
     
     Object getDatabaseCompress();
+    
+    Object getDatabaseStorage();
+    
+    List<String> getStorages();
+    
+    void addStorage(String name);
+    
+    void deleteStorage(String name);
+    
+    void putToPurge(String storage,Map<Long, Integer> toPurge);
+    
+    Map<Long, Integer> getPicturesToPurge(String storage);
+    
+    void clearPurge(String storage); 
     
 }

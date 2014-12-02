@@ -1,8 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 package retrieval.utils;
 
 import java.util.ArrayList;
@@ -87,19 +97,6 @@ public class CollectionUtils {
     }    
 
     /**
-     * Copy all element from words in a new list
-     * @param words Element to copy
-     * @return List with element
-     */
-    public static List<String> cloneStringList(Collection<String> words) {
-        List<String> wordList = new ArrayList<String>();
-        for (String word : words) {
-            wordList.add(word);
-        }
-        return wordList;
-    }
-
-    /**
      * Split a list in number list
      * @param list List to split
      * @param number Number of sublist to create
@@ -121,6 +118,14 @@ public class CollectionUtils {
                 idx = idx + incrx;
             }
             return pictureByServer;
+    }
+
+    public static List<String> createNewContainers(int number) {
+        List<String> containers = new ArrayList<String>();
+        for (int i = 0; i < number; i++) {
+            containers.add(i + "");
+        }
+        return containers;
     }
      
 }

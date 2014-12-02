@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage;
 
 import java.awt.image.BufferedImage;
@@ -17,19 +32,19 @@ final class StorageIndexThread extends Thread {
     /**
      * Server which carry index request
      */
-    private Storage server;
+    private final Storage storage;
     /**
      * Queue for Path indexer (heavy indexer)
      */
-    private BlockingQueue<PictureInfo> indexQueuePicture;
+    private final BlockingQueue<PictureInfo> indexQueuePicture;
     /**
      * Max Size of picture queue
      */
-    private int sizeOfPictureQueue;
+    private final int sizeOfPictureQueue;
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(StorageIndexThread.class);
+    private static final Logger logger = Logger.getLogger(StorageIndexThread.class);
 
     /**
      * Constructor (private) for a index thread.
@@ -40,7 +55,7 @@ final class StorageIndexThread extends Thread {
      */
     private StorageIndexThread(Storage server, int sizeOfPictureQueue) {
         logger.info("IndexThread sizeOfPictureQueue="+sizeOfPictureQueue);
-        this.server = server;
+        this.storage = server;
         this.sizeOfPictureQueue = sizeOfPictureQueue;
         //for light indexer: put a limit
         if(sizeOfPictureQueue==0) {
@@ -114,8 +129,8 @@ final class StorageIndexThread extends Thread {
             try {
                 if (indexQueuePicture.size() > 0) {
                     PictureInfo info = indexQueuePicture.take();
-                    server.setCurrentIndexedPicture(info.id);
-                    server.indexPicture(info.image,info.id,info.properties);
+                    storage.setCurrentIndexedPicture(info.id);
+                    storage.indexPicture(info.image,info.id,info.properties);
                 }
 
                 //If two queue are empty, wait some times
@@ -132,7 +147,7 @@ final class StorageIndexThread extends Thread {
 }
 
 /**
- * This class define a entry path, authorization
+ * This class define image data to index
  * @author lrollus
  */
 class PictureInfo {

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage.index;
 
 import java.awt.image.BufferedImage;
@@ -10,7 +25,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.dist.RequestPictureVisualWord;
+import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.exception.AlreadyIndexedException;
+import retrieval.storage.exception.NoValidPictureException;
 import retrieval.storage.exception.PictureTooHomogeneous;
 import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.index.compress.compressPictureHomogeneous.CompressIndexPicture;
@@ -33,13 +50,13 @@ public class IndexMultiThread extends Index {
      * @param testVectors List of test vectors
      * @param pictureIndex Picture index
      */
-    public IndexMultiThread(String idStorage,ConfigServer config, TestVectorListServer testVectors, PictureIndex pictureIndex) throws ReadIndexException {
+    public IndexMultiThread(String idStorage,GlobalDatabase database,ConfigServer config, TestVectorListServer testVectors, PictureIndex pictureIndex) throws ReadIndexException {
         this.idStorage = idStorage;
         this.testVectors = testVectors;
         this.pictureIndex = pictureIndex;
         this.testVectors.setPictureIndexForAllTestVectors(pictureIndex);
         this.compress= new CompressIndexPicture(config.getMaxPercentageSimilarWord());
-        this.picturesToPurge = PicturesToPurge.readPurgeIndex(idStorage,config);
+        this.picturesToPurge = new PicturesToPurge(idStorage,database);
     }
 
     /**
@@ -141,7 +158,7 @@ public class IndexMultiThread extends Index {
     public synchronized List<ResultSim> computeSimilarity(
             List<ConcurrentHashMap<String, RequestPictureVisualWord>> visualWordsByTestVector,
             int Niq) {
-        
+
         try {
             //map with all pictures with at least one visual word similar
             ConcurrentHashMap<Long, Entry> resultsForAllTV = new ConcurrentHashMap<Long, Entry>(this.getSize());
@@ -161,7 +178,7 @@ public class IndexMultiThread extends Index {
             List<ResultSim> resultsList = new ArrayList<ResultSim>(this.getSize());
             for (Map.Entry<Long, Entry> entry : resultsForAllTV.entrySet()) {
                 Map<String,String> properties = pictureIndex.getProperties(entry.getKey());
-                resultsList.add(new ResultSim(entry.getKey(), properties, entry.getValue().getSimilarity()));
+                resultsList.add(new ResultSim(entry.getKey(), properties, entry.getValue().getSimilarities()));
 
             }
 
@@ -184,7 +201,7 @@ public class IndexMultiThread extends Index {
  */
 class FillNBTThread extends Thread {
 
-    private TestVectorServer tv;
+    private final TestVectorServer tv;
     private ConcurrentHashMap<String, Long> visualWords;
 
     FillNBTThread(TestVectorServer tv, ConcurrentHashMap<String, Long> visualWords) {
@@ -199,15 +216,15 @@ class FillNBTThread extends Thread {
 }
 
 /**
- * Compute similarities for ona test vector for each visual word visualwords
+ * Compute similarities for on test vector for each visual word visualwords
  * @author Rollus Loic
  */
 class ComputeSimilaritiesThread extends Thread {
 
-    private ConcurrentHashMap<Long, Entry> resultsForAllTV;
-    private ConcurrentHashMap<String, RequestPictureVisualWord> visualWords;
-    private TestVectorServer tv;
-    private int Niq;
+    private final ConcurrentHashMap<Long, Entry> resultsForAllTV;
+    private final ConcurrentHashMap<String, RequestPictureVisualWord> visualWords;
+    private final TestVectorServer tv;
+    private final int Niq;
     
     private static Logger logger = Logger.getLogger(ComputeSimilaritiesThread.class);
 

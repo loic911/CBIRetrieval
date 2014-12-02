@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage.index;
 
 import java.awt.image.BufferedImage;
@@ -7,8 +22,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.dist.RequestPictureVisualWord;
+import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.exception.AlreadyIndexedException;
 import retrieval.storage.exception.CloseIndexException;
+import retrieval.storage.exception.NoValidPictureException;
 import retrieval.storage.exception.PictureTooHomogeneous;
 import retrieval.testvector.TestVectorListServer;
 
@@ -21,6 +38,8 @@ import retrieval.testvector.TestVectorListServer;
 public abstract class Index {
     
     protected String idStorage;
+    
+    protected GlobalDatabase database;
     
     private static Logger logger = Logger.getLogger(Index.class);
     /**
@@ -40,11 +59,14 @@ public abstract class Index {
     
     /**
      * Add a picture to index
-     * @param uri Picture path
-     * @param N Number of patchs
-     * @param resizeMethod Method for resizing patchs
+     * @param image Image to index
+     * @param id Image id
+     * @param properties Image properties
+     * @param N Number of patches
+     * @param resizeMethod Method for resizing patches
      * @param sizeOfPatchW Size of patch (w)
      * @param sizeOfPatchH Size of patch (h)
+     * @param sync Use sync or async method
      * @throws AlreadyIndexedException Picture is already indexed
      * @throws NoValidPictureException Picture is not valid
      */
@@ -83,15 +105,6 @@ public abstract class Index {
         return pictureIndex.getSize();
     }
 
-//    /**
-//     * Get the absolut path on server for picture id
-//     * @param id Picture id
-//     * @return Absoluth path on server
-//     */
-//    public synchronized String getPictureName(Long id) {
-//        return pictureIndex.getPictureName(id);
-//    }
-
     /**
      * Get the number of tests vectors (T)
      * @return T
@@ -104,7 +117,7 @@ public abstract class Index {
      * Delete all picture path on index
      * USE ONLY FOR MAINTENANCE
      * VERY BAD PERFORMANCE (must browse all index!)
-     * @param uri Picture path to delete
+     * @param uri ids path to delete
      */
     public void deletePicture(List<Long> ids) {
         logger.info("deletePicture " + ids.size() +" resources");
@@ -123,7 +136,7 @@ public abstract class Index {
 
     /**
      * Purge index from deleted pictures
-     * @param config Vonfig file
+     * @param config Config file
      */
     public synchronized void purge(ConfigServer config) {
         logger.info("purge " + picturesToPurge.size() +" resources");
@@ -215,7 +228,7 @@ public abstract class Index {
             if (e1 != null) {
                 //if already exist, increment value
                 e1.incrementNIBT(e2.getNIBT());
-                e1.incrementSimilarity(e2.getSimilarity());
+                e1.incrementSimilarities(e2.getSimilarities());
             } else {
                 //if not exist, add it to l1
                 l1.put(e2.getI(), (Entry) e2.clone());

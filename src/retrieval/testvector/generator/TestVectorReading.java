@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.testvector.generator;
 
 import java.io.File;
@@ -13,8 +28,8 @@ import org.jdom.input.SAXBuilder;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.storage.exception.TestsVectorsNotFoundServerException;
-import retrieval.testvector.TestVectorCentralServer;
-import retrieval.testvector.TestVectorListCentralServer;
+import retrieval.testvector.TestVectorClient;
+import retrieval.testvector.TestVectorListClient;
 import retrieval.testvector.TestVectorListServer;
 import retrieval.testvector.TestVectorServer;
 
@@ -34,10 +49,10 @@ public class TestVectorReading {
      * @return Test vector central server list
      * @throws TestsVectorsNotFoundServerException Cannot read tests vectors
      */
-    public static TestVectorListCentralServer readClient(String directory, ConfigClient config) throws TestsVectorsNotFoundServerException {
+    public static TestVectorListClient readClient(String directory, ConfigClient config) throws TestsVectorsNotFoundServerException {
 
         logger.debug("readClient:" + directory);
-        TestVectorListCentralServer lists = new TestVectorListCentralServer();
+        TestVectorListClient lists = new TestVectorListClient();
         File f = new File(directory);
         if (!f.exists()) {
             throw new TestsVectorsNotFoundServerException();
@@ -59,7 +74,7 @@ public class TestVectorReading {
 
                 logger.debug("readClient: [" + i + "]" + storeName);
 
-                TestVectorCentralServer tv = new TestVectorCentralServer(storeName, key, val, pos);
+                TestVectorClient tv = new TestVectorClient(storeName, key, val, pos);
                 lists.add(tv);
 
             } catch (Exception e) {

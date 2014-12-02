@@ -26,7 +26,6 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import retrieval.client.ListServerInformationSocket;
-import retrieval.client.ServerInformationSocket;
 import retrieval.storage.index.ResultSim;
 
 /**

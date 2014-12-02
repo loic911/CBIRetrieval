@@ -35,7 +35,6 @@ import retrieval.dist.NotValidMessageXMLException;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.exception.CBIRException;
 import retrieval.storage.index.ResultSim;
-import retrieval.utils.Chrono;
 import retrieval.utils.NetworkUtils;
 
 /**
@@ -241,18 +240,17 @@ class ClientAskNbtThread extends Thread {
     public void run() {
 
         try {
-            Chrono c = new Chrono();
             server.connect();
             //set max wait for a server
             //write message
-            logger.debug("ClientAskNbtThread run nbt: 1 write msg1 to " + server +" " +c.getTime() );
+            logger.debug("ClientAskNbtThread run nbt: 1 write msg1 to " + server);
 
             NetworkUtils.writeXmlToSocket(server.getSocket(), msgSource.toXML());
             //read reponse
-            logger.debug("ClientAskNbtThread run nbt: 2 read msg1 from " + server+" " +c.getTime());
+            logger.debug("ClientAskNbtThread run nbt: 2 read msg1 from " + server);
             Document msg1xml = NetworkUtils.readXmlFromSocket(server.getSocket());
 
-            logger.debug("ClientAskNbtThread run nbt: 3 read msg1 from " + server+" " +c.getTime());
+            logger.debug("ClientAskNbtThread run nbt: 3 read msg1 from " + server);
             //check if error message
             if (MessageError.isErrorMessage(msg1xml)) {
                 throw MessageError.getException(msg1xml);
@@ -302,21 +300,20 @@ class ClientAskSimilaritiesThread extends Thread {
     public void run() {
 
         try {
-            Chrono c = new Chrono();
             //write request
-            logger.debug("ClientAskSimilaritiesThread run sim: 1 write message...:"+c.getTime());
+            logger.debug("ClientAskSimilaritiesThread run sim: 1 write message...:");
             NetworkUtils.writeXmlToSocket(server.getSocket(), msgToSend.toXML());
             //read response
-            logger.debug("ClientAskSimilaritiesThread run sim: 2 read response..."+c.getTime());
+            logger.debug("ClientAskSimilaritiesThread run sim: 2 read response...");
             Document msg3xml = NetworkUtils.readXmlFromSocket(server.getSocket());
-            logger.debug("ClientAskSimilaritiesThread run sim: 3 read response..."+c.getTime());
+            logger.debug("ClientAskSimilaritiesThread run sim: 3 read response...");
             //if error message, throw it
             if (MessageError.isErrorMessage(msg3xml)) {
                 throw MessageError.getException(msg3xml);
             }
             //else add similarity on array
             msgToReceive[numberOfThread] = new MultiServerMessageResults(msg3xml);
-            logger.debug("ClientAskSimilaritiesThread run sim: 4 read response..."+c.getTime());
+            logger.debug("ClientAskSimilaritiesThread run sim: 4 read response...");
         } catch (SocketTimeoutException e) {
             logger.error("run sim: timeout " + e);
             server.changeState(ServerInformationSocket.TIMEOUT, e.getMessage());

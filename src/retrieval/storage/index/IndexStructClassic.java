@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage.index;
 
 import java.util.List;
@@ -10,9 +25,8 @@ import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.exception.StartIndexException;
 import retrieval.storage.index.compress.compressNBT.CompressIndexNBT;
 import retrieval.storage.index.main.HashTableIndex;
-import retrieval.storage.index.main.hashmap.MemoryHashTable;
-import retrieval.storage.index.main.hashmap.MemoryHashTableTest;
-import retrieval.storage.index.main.kyoto.KyotoCabinetHashTableSingleFile;
+import retrieval.storage.index.main.KyotoCabinetHashTableSingleFile;
+import retrieval.storage.index.main.MemoryHashTable;
 
 /**
  * A visual word index which is implemented by:
@@ -62,9 +76,6 @@ public final class IndexStructClassic extends IndexStructAbs {
         if (    configStore.getStoreName().equals(MemoryHashTable.NAME)) {
             //MEMORY
             map = new MemoryHashTable(configStore, false);
-        }  else if (configStore.getStoreName().equals(MemoryHashTableTest.NAME)) {
-            //MEMORY HASHTABLE TEST
-            map = new MemoryHashTableTest(Integer.parseInt(idTestVector), configStore,false);
         }  else if (configStore.getStoreName().equals(KyotoCabinetHashTableSingleFile.NAME)) {
             //KYOTO SINGLE FILE (1 file for N servers and T test vector)
             map = new KyotoCabinetHashTableSingleFile(database,idStorage,idTestVector,configStore);
@@ -128,42 +139,12 @@ public final class IndexStructClassic extends IndexStructAbs {
     }
 
     /**
-     * Get NBT value map with B
-     * @param B Visual word B
-     * @return Number of patchs map with B in index
-     */
-    public long getNBT(String B) {
-        ValueStructure valueStruct = map.get(B);
-        if (valueStruct == null) {
-            return 0;
-        }
-        else {
-            return valueStruct.getNBT();
-        }
-    }
-
-    /**
      * Get NBT value map with map visualWord
      * @param visualWord Visual Words
      * @return NBT for each Visual Words
      */
     public ConcurrentHashMap<String, Long> getNBT(ConcurrentHashMap<String, Long> visualWord) {
          return map.fillAllEntry(visualWord);
-    }
-
-    /**
-     * Get all pictures I (and their NBIT) map with B
-     * @param B Visual word
-     * @return Pictures map with B
-     */
-    public ValueStructure get(String B) {
-        ValueStructure valList = map.get(B);
-        if (valList != null) {
-            return valList;
-        }
-        else {
-            return null;
-        }
     }
 
     /**

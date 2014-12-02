@@ -17,24 +17,16 @@ package retrieval.client.main;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import retrieval.client.ListServerInformationSocket;
 import retrieval.client.RetrievalClient;
 import retrieval.client.ServerInformationSocket;
-import retrieval.config.Config;
 import retrieval.config.ConfigClient;
 import retrieval.dist.ResultsSimilarities;
-import retrieval.indexer.RetrievalIndexer;
-import retrieval.indexer.RetrievalIndexerDistantStorage;
 import retrieval.indexer.main.RetrievalIndexerMain;
-import retrieval.server.RetrievalServer;
 import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
 

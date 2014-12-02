@@ -1,16 +1,23 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage.index;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
-import retrieval.config.ConfigServer;
-import retrieval.storage.exception.ReadIndexException;
+import retrieval.server.globaldatabase.GlobalDatabase;
 
 /**
  * This class implement a set of pictures that has been deleted from server but
@@ -21,81 +28,33 @@ public class PicturesToPurge {
     
     private static Logger logger = Logger.getLogger(PicturesToPurge.class);
     
-    private Map<Long, Integer> mustBePurge;
-    private ConfigServer config = null;
     private String idServer;
     
+    private GlobalDatabase database;
     
-    public PicturesToPurge(String idServer,ConfigServer config,Map<Long, Integer> mustBePurge) {
+    
+    public PicturesToPurge(String idServer,GlobalDatabase database) {
+        logger.info("PicturesToPurge "+database);
         this.idServer = idServer;
-        this.config = config;
-        this.mustBePurge = mustBePurge;
+        this.database = database;
     }
 
     public int size() {
-        return mustBePurge.size();
+        logger.info("PicturesToPurge "+database);
+        logger.info("PicturesToPurge "+database.getPicturesToPurge(idServer));
+        return database.getPicturesToPurge(idServer).size();
     }
     
     public void putToPurge(Map<Long, Integer> toPurge) {
-        mustBePurge.putAll(toPurge);
-        writePurgeIndex();
+        database.putToPurge(idServer, toPurge);
     }
     
     public Map<Long, Integer> getPicturesToPurge() {
-        return mustBePurge;
+        return database.getPicturesToPurge(idServer);
     }
     
     public void clear() {
-        mustBePurge.clear();
-        writePurgeIndex();        
-    }
-
-    private void writePurgeIndex()  {
-        if(config.getStoreName().equals("MEMORY")) {
-            return;
-        }
-        logger.info("writePurgeIndex " +config.getIndexPath() +"/purge/purge"+idServer+".ser");
-        FileOutputStream fos;
-        ObjectOutputStream out;
-        try
-        {
-            File dir = new File(config.getIndexPath() +"/purge");
-            if(!dir.exists()) {
-                dir.mkdirs();
-            }
-            fos = new FileOutputStream(config.getIndexPath() +"/purge/purge"+idServer+".ser");
-            out = new ObjectOutputStream(fos);
-            out.writeObject(mustBePurge);
-            out.close();
-        }
-        catch(IOException ex)
-        {
-            logger.error(ex.toString());
-        }
-    }
-
-    public static PicturesToPurge readPurgeIndex(String idServer,ConfigServer config) throws ReadIndexException {
-       if(config.getStoreName().equals("MEMORY")) {
-           return new PicturesToPurge(idServer,config,new HashMap<Long, Integer>());
-       }
-       String path = config.getIndexPath() +"/purge/purge"+idServer+".ser";
-       logger.info("readPurgeIndex " +path);
-       if(!new File(path).exists()) {
-           return new PicturesToPurge(idServer,config,new HashMap<Long, Integer>());
-       }
-
-       try
-       {
-         FileInputStream fis = new FileInputStream(path);
-         ObjectInputStream in = new ObjectInputStream(fis);
-         Map<Long, Integer>  mustBePurge = (HashMap<Long, Integer>)in.readObject();
-         in.close();
-         return new PicturesToPurge(idServer,config,mustBePurge);
-       }
-       catch(Exception ex)
-       {
-         throw new ReadIndexException("Purge index:"+ex);
-      }
+        database.clearPurge(idServer);       
     }
     
 }

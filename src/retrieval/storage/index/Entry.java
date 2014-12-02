@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage.index;
 /**
  * This class implements an entry for a visual word B in the index
@@ -51,7 +66,7 @@ public class Entry implements java.lang.Comparable, java.lang.Cloneable {
      * else -1
      **/
     public int compareTo(Object other) {
-        double nombre1 = ((Entry) other).getSimilarity();
+        double nombre1 = ((Entry) other).getSimilarities();
         double nombre2 = this.similarity;
         if (nombre1 > nombre2) {
             return 1;
@@ -91,20 +106,6 @@ public class Entry implements java.lang.Comparable, java.lang.Cloneable {
         return NIBT;
     }
 
-    /**
-     * Increment number NIBT
-     */
-    public void incrementNIBT() {
-        this.setNIBT(this.NIBT + 1);
-    }
-
-    /**
-     * Divide similarity by n
-     * @param n A number (ex. test vector numbers)
-     */
-    public void divideSimilarity(int n) {
-        similarity = similarity / (double) n;
-    }
 
     /**
      * Increment number NIBT
@@ -147,14 +148,6 @@ public class Entry implements java.lang.Comparable, java.lang.Cloneable {
     }
 
     /**
-     * Setter I
-     * @param value Request pictures ID
-     */
-    public void setI(long value) {
-        this.I = value;
-    }
-
-    /**
      * Setter NIBT
      * @param number New NIBT
      */
@@ -163,26 +156,18 @@ public class Entry implements java.lang.Comparable, java.lang.Cloneable {
     }
 
     /**
-     * Getter Similarity
-     * @return the similarity
+     * Getter Similarities
+     * @return the similarities
      */
-    public double getSimilarity() {
+    public double getSimilarities() {
         return similarity;
     }
 
     /**
-     * Setter Similarity
-     * @param similarity the similarity to set
+     * Increment similarities
+     * @param similarity Similarity to add to this similarities number
      */
-    public void setSimilarity(double similarity) {
-        this.similarity = similarity;
-    }
-
-    /**
-     * Increment similiraty
-     * @param similarity Similarity to add to this similiraty number
-     */
-    public void incrementSimilarity(double similarity) {
+    public void incrementSimilarities(double similarity) {
         this.similarity = this.similarity + similarity;
     }
 

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2009-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package retrieval.storage;
 
 import java.awt.image.BufferedImage;
@@ -16,8 +31,8 @@ import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.exception.AlreadyIndexedException;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.InternalServerException;
-import retrieval.storage.exception.InvalidPictureException;
 import retrieval.storage.exception.NoException;
+import retrieval.storage.exception.NoValidPictureException;
 import retrieval.storage.exception.PictureInIndexQueueException;
 import retrieval.storage.exception.PictureNotFoundException;
 import retrieval.storage.exception.PictureTooHomogeneous;
@@ -28,7 +43,6 @@ import retrieval.storage.exception.TooMuchIndexRequestException;
 import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
 import retrieval.storage.index.Index;
 import retrieval.storage.index.IndexMultiThread;
-import retrieval.storage.index.NoValidPictureException;
 import retrieval.storage.index.PictureIndex;
 import retrieval.storage.index.ResultSim;
 import retrieval.testvector.TestVectorListServer;
@@ -36,59 +50,53 @@ import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
 
 /**
- * This class implement a server which index pictures and response to
- * serach request from central server
+ * This class implement a storage which index pictures and response to
+ * search request from client
  * @author Rollus Loic
  */
 public final class Storage {
 
+    /**
+     * Storage name
+     */
     private String idServer;
-    private GlobalDatabase globalDatabase; //may be null if database is not shared between all subserver
+    
+    /**
+     * Storage database (memory, redis,...)
+     */
+    private GlobalDatabase globalDatabase;
+    
     /**
      * Configuration object for server
      */
     private ConfigServer config;
+    
     /**
      * Hight level Index (pictures information index, visual words index,...)
      */
     private Index index;
+    
     /**
      * Indexer Thread
      */
     private StorageIndexThread threadIndex;
-//    /**
-//     * Communicator for a central server request (search)
-//     */
-//    private StorageNetworkInterface serverNetworkSearch;
-//    /**
-//     * Communicator for an indexer picture request
-//     */
-//    private StorageNetworkInterface serverNetworkPicture;
-//    /**
-//     * Communicator for an indexer request (which want information)
-//     */
-//    private StorageNetworkInterface serverNetworkInfo;
-    /**
-     * All thread request
-     */
-//    WaitRequestThread searchThread;
-//    WaitRequestThread indexPictureThread;
-//    WaitRequestThread infoThread;    
+
     /**
      * Last picture that was taken from queue but not already
      * mark as indexed (between waited queue and index process)
      */
     private Long currentIndexedId;
+    
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(Storage.class);
+    private static final Logger logger = Logger.getLogger(Storage.class);
 
     /**
      * Constructor for a server
+     * @param idServer Storage name
      * @param config Configuration object
-     * @param configStore Configuration object for store
-     * @param indexPath Path to index at the start of server
+     * @param globalDatabase Storage databse
      * @throws InternalServerException Internal error during server start
      * @throws TestsVectorsNotFoundServerException Tests vectors not found
      * @throws StartIndexException Error during the start of index
@@ -114,13 +122,13 @@ public final class Storage {
         logger.info("Store name:" + config.getStoreName());
         logger.info("Server: read tests vectors in " + config.getVectorPath());
         
-        TestVectorListServer testVectors = TestVectorReading.readServer(this.idServer,config.getVectorPath(),config,initDatabase());
+        TestVectorListServer testVectors = TestVectorReading.readServer(this.idServer,config.getVectorPath(),config,this.globalDatabase);
 
         logger.info("Server: " + testVectors.size() + " tests vectors");
 
         logger.info("Server: get Picture Index");
         PictureIndex pi = PictureIndex.getPictureIndex(idServer,config,globalDatabase);
-        index = new IndexMultiThread(idServer,config, testVectors, pi);
+        index = new IndexMultiThread(idServer,globalDatabase,config, testVectors, pi);
         logger.info("Purge size = " +index.getPurgeSize());
         index.sync();
         logger.info("There are " + index.getSize() + " images");
@@ -131,44 +139,10 @@ public final class Storage {
             logger.error(e);
             throw e;
         }
-    }
-    
-    private Object initDatabase() {
-        logger.info("Create multiple database");
-        Object database = null;
-        if(config.getStoreName().equals("KYOTOSINGLEFILE")) {
-            //if database is shared with multiple server, return it
-            database=this.globalDatabase; 
-        } else if(config.getStoreName().equals("KYOTOMULTIPLEFILE")) {
-//            //if database is juste for this server, create it
-//                     //String file, String indexPath, String apox, String bnum, String cache, String funit
-//            database=KyotoCabinetDatabase.openDatabase(
-//                    "main.kch",
-//                    config.getIndexPath(),
-//                    config.getKyotoApox(),
-//                    config.getKyotoBNum(),
-//                    config.getKyotoCacheSizeForMainIndexWith1T(), 
-//                    config.getKyotoFUnit());
-        }
-        return database;
     } 
-
-    
-    /**
-     * Constructor for a server
-     * @param config Configuration object
-     * @throws InternalServerException Internal error during server start
-     * @throws TestsVectorsNotFoundServerException Tests vectors not found
-     * @throws StartIndexException Error during the start of index
-     * @throws ReadIndexException Error during the read of index
-     */
-    public Storage(String idServer,ConfigServer config) throws InternalServerException, TestsVectorsNotFoundServerException, StartIndexException, ReadIndexException,Exception {
-        this(idServer,config,null);
-    }    
   
     /**
      * Start server
-     * @param initSocket Init socket for client/indexer or not
      * @throws InternalServerException Error during the server start
      */
     public void start() throws InternalServerException {
@@ -194,16 +168,17 @@ public final class Storage {
     public long getNumberOfItem() {
         return index.getSize();
     }
-       
-    
+         
     /**
      * Index a picture directly in index (without waiting on queue)
      * THIS METHOD IS NOT SAFE IF YOU MAKE MULTIPLE INDEX
-     * @param path Picture path
-     * @param authorization Authorization to access picture
+     * @param image Picture
+     * @param id Image id
+     * @param properties Picture properties 
      * @return ID of picture
+     * @throws retrieval.storage.exception.AlreadyIndexedException
+     * @throws retrieval.storage.exception.NoValidPictureException
      * @throws PictureTooHomogeneous Picture is too homogeneous to be indexed (ex: only one color,...)
-     * @throws Exception Error during indexing
      */
     public Long indexPicture(BufferedImage image, Long id, Map<String,String> properties) throws AlreadyIndexedException, NoValidPictureException, PictureTooHomogeneous {
 
@@ -220,12 +195,13 @@ public final class Storage {
     
      /**
      * Add a single picture file to index queue
-     * @param file Picture File
+     * @param image Picture
+     * @param id Image id
+     * @param properties Picture properties 
      * @return Indexed Picture file
-     * @throws InvalidPictureException Picture was not valid
      * @throws TooMuchIndexRequestException Waited queue are full
      */
-    public Long addToIndexQueue(BufferedImage image, Long id, Map<String,String> properties) throws InvalidPictureException, TooMuchIndexRequestException {
+    public Long addToIndexQueue(BufferedImage image, Long id, Map<String,String> properties) throws TooMuchIndexRequestException {
         logger.debug("addToIndexQueue="+id);
         while(id==null) {
             id = System.currentTimeMillis() + new Random().nextLong();
@@ -239,10 +215,10 @@ public final class Storage {
     
     
     /**
-     * Delete pictures in paths list from server
+     * Delete pictures in ids list from storage
      * THIS METHOD DOES NOT REMOVED PICTURES DATA FROM INDEX, just removed pictures from result.
-     * If this method is used many times, invoque purge method sometimes
-     * @param paths Pictures to delete
+     * If this method is used many times, call purge method sometimes
+     * @param ids Pictures to delete
      * @return Map with pictures path and exception (NoException if ok)
      * @throws InternalServerException Error during delete
      */
@@ -264,12 +240,25 @@ public final class Storage {
         }
     }
     
+    /**
+     * Delete picture id from storage
+     * THIS METHOD DOES NOT REMOVED PICTURES DATA FROM INDEX, just removed pictures from result.
+     * If this method is used many times, call purge method sometimes
+     * @param id Picture to delete
+     * @return Map with pictures path and exception (NoException if ok)
+     * @throws InternalServerException Error during delete
+     */    
     public Map<Long, CBIRException> deletePicture(Long id) throws InternalServerException {
         List<Long> ids = new ArrayList<Long>();
         ids.add(id);
         return deletePictures(ids);
     }
        
+    /**
+     * Get a picture properties
+     * @param id Picture id
+     * @return Properties
+     */
     public Map<String,String> getProperties(Long id) {
         return index.getProperties(id);
     }
@@ -324,7 +313,7 @@ public final class Storage {
     }    
 
     /**
-     * Print index and stats (not avalaible with all index type
+     * Print index and stats (not available with all index type
      */
     public void printIndex() {
         index.printStat();
@@ -378,7 +367,7 @@ public final class Storage {
     /**
      * Check if a picture with this id is indexed 
      * @param id Picture id
-     * @return True if picture is indexed, othrerwise false
+     * @return True if picture is indexed, otherwise false
      */
     public boolean isPictureInIndex(Long id) {
         return index.isPictureAlreadyIndexed(id);
@@ -386,17 +375,22 @@ public final class Storage {
     
     /**
      * Check if index queue is empty (Pictures are still waiting to be indexed)
-     * @return True if index queue is empty, othewise false
+     * @return True if index queue is empty, otherwise false
      */
     public boolean isIndexQueueEmpty() {
        return threadIndex.isIndexQueueEmpty();
     }
+    
+    /**
+     * Get the image index queue size (= number of image to index)
+     * @return Image index queue size
+     */
     public int getIndexQueueSize() {
        return threadIndex.getIndexQueueSize();
     }    
 
     /**
-     * Fill NBT (number of patchs map with visual word B in index) for each
+     * Fill NBT (number of patches map with visual word B in index) for each
      * visual words from visualwords structures
      * FIRST PART OF SEARCH WITH CENTRAL SERVER
      * @param visualWords Tests vectors lists and their visual words
@@ -416,7 +410,7 @@ public final class Storage {
      * Get (maximum) k most similar pictures from server with vw and niq information
      * SECOND PART OF SEARCH WITH CENTRAL SERVER
      * @param vw Visual words from Request image Iq
-     * @param Niq Number of patchs extract from Iq
+     * @param Niq Number of patches extract from Iq
      * @param k Max similar pictures
      * @return Most similar pictures
      */
@@ -439,7 +433,7 @@ public final class Storage {
      * Change current indexed Picture
      * Rem: If picture is not yet indexed and not in queue, we can say that it
      * is in index process
-     * @param currentIndexedPicture Current indexed Picture
+     * @param currentIndexedId Current indexed Picture
      */
     public void setCurrentIndexedPicture(Long currentIndexedId) {
         this.currentIndexedId = currentIndexedId;

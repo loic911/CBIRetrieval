@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,27 +40,25 @@ import retrieval.dist.NotValidMessageXMLException;
 import retrieval.dist.RequestPictureVisualWord;
 import retrieval.exception.CBIRException;
 import retrieval.storage.Storage;
-import retrieval.storage.StorageNetworkInterface;
 import retrieval.storage.exception.InternalServerException;
 import retrieval.storage.exception.NoException;
-import retrieval.storage.exception.TooMuchSimilarPicturesAskException;
 import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
 import retrieval.storage.index.ResultSim;
 import retrieval.utils.NetworkUtils;
 
 /**
- * Server side Communication class between Central Server and server
+ * Server side Communication class between Client and server
  * with XML message and TCP/IP Socket.
  * This include NBT and similarities exchange
  * @author Rollus Loic
  */
-public class RetrievalServerSocketXML implements StorageNetworkInterface {
+public class RetrievalServerSocketXML implements ServerNetworkInterface {
 
     
     /**
      * Server which will carry request
      */
-    private RetrievalServer multiServer;
+    private RetrievalServer server;
     /**
      * Socket for this server
      */
@@ -69,21 +66,19 @@ public class RetrievalServerSocketXML implements StorageNetworkInterface {
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(RetrievalServerSocketXML.class);
+    private static final Logger logger = Logger.getLogger(RetrievalServerSocketXML.class);
 
     /**
      * Constructor for a central server vs server communication
      * @param server Server which will carry request
      * @param port Port for request
-     * @param maxSearch Max search Thread allowed on this server at a time
-     * @param maxK Max number of similar pictures server will answer
      * @throws InternalServerException Exception during the start of the request thread
      */
-    public RetrievalServerSocketXML(RetrievalServer multiServer,int port)
+    public RetrievalServerSocketXML(RetrievalServer server,int port)
             throws InternalServerException {
         logger.info("MultiServerSocketXML: start on " + port);
 
-        this.multiServer = multiServer;
+        this.server = server;
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
@@ -115,7 +110,7 @@ public class RetrievalServerSocketXML implements StorageNetworkInterface {
 
                 logger.debug("waitForRequest: connexion on " + clientSocket.getInetAddress().getHostAddress());
 
-                NewClientThread ncw = new NewClientThread(multiServer,clientSocket);
+                NewClientThread ncw = new NewClientThread(server,clientSocket);
                 ncw.start();
 
             } catch (Exception e) {
@@ -188,10 +183,6 @@ class NewClientThread extends Thread {
                 throw new NotValidMessageXMLException("Command "+requestXML.getRootElement().getAttributeValue("type")+ " not valid!");
             }
 
-        } catch (TooMuchSimilarPicturesAskException e) {
-            logger.error(e);
-            MessageError msg = new MessageError(e);
-            NetworkUtils.writeXmlToSocketWithoutException(client, msg.toXML());
         } catch (WrongNumberOfTestsVectorsException e) {
             logger.error(e);
             MessageError msg = new MessageError(e);
@@ -207,7 +198,7 @@ class NewClientThread extends Thread {
         }
     }
 
-    private void takeSearchRequest(Document xml) throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
+    private void takeSearchRequest(Document xml) throws NotValidMessageXMLException, IOException,WrongNumberOfTestsVectorsException, Exception {
             logger.debug("takeSearchRequest");
             MultiServerMessageNBT msgAskNBT = new MultiServerMessageNBT(xml);
             
@@ -227,7 +218,7 @@ class NewClientThread extends Thread {
             //send results messages
             logger.debug("run: write response results");
             Map<String,List<ResultSim>> results = multiServer.getPicturesSimilarities(vw, Niq, k,msg2.getContainers());
-            Map<String,Long> serverSize = multiServer.getServersSize();
+            Map<String,Long> serverSize = multiServer.getStoragesSize();
 
             logger.debug("### Server size:"+serverSize);
             MultiServerMessageResults msg3 = new MultiServerMessageResults(results, serverSize);
@@ -238,7 +229,7 @@ class NewClientThread extends Thread {
     }
 
 
-    private void takeIndexRequest(Document xml, BufferedImage image) throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
+    private void takeIndexRequest(Document xml, BufferedImage image) throws NotValidMessageXMLException, IOException,WrongNumberOfTestsVectorsException, Exception {
         logger.debug("takeIndexRequest");
         MultiServerMessageIndex msgIndex = new MultiServerMessageIndex(xml);
         MultiServerMessageIndexResults msgResult;
@@ -260,12 +251,12 @@ class NewClientThread extends Thread {
             Storage server;
             logger.debug("msgIndex.getStorage()="+msgIndex.getStorage() + "=>"+msgIndex.getStorage().equals(RetrievalServer.EQUITABLY));
             if(msgIndex.getStorage().equals(RetrievalServer.EQUITABLY)) {
-                server = multiServer.getNextServer();
+                server = multiServer.getNextStorage();
             } else {
-                server = multiServer.getServer(msgIndex.getStorage());
+                server = multiServer.getStorage(msgIndex.getStorage());
                 if(server==null) {
-                    multiServer.createServer(msgIndex.getStorage());
-                    server = multiServer.getServer(msgIndex.getStorage());
+                    multiServer.createStorage(msgIndex.getStorage());
+                    server = multiServer.getStorage(msgIndex.getStorage());
                 }
             }
             
@@ -295,12 +286,12 @@ class NewClientThread extends Thread {
             System.out.println("msgIndex.getStorage()="+msgIndex.getStorage());
             Storage server;
             if(msgIndex.getStorage().equals(RetrievalServer.EQUITABLY)) {
-                server = multiServer.getNextServer();
+                server = multiServer.getNextStorage();
             } else {
-                server = multiServer.getServer(msgIndex.getStorage());
+                server = multiServer.getStorage(msgIndex.getStorage());
                 if(server==null) {
-                    multiServer.createServer(msgIndex.getStorage());
-                    server = multiServer.getServer(msgIndex.getStorage());
+                    multiServer.createStorage(msgIndex.getStorage());
+                    server = multiServer.getStorage(msgIndex.getStorage());
                 }
             }
             logger.debug(msgIndex);
@@ -321,7 +312,7 @@ class NewClientThread extends Thread {
     }
     
     
-    private void takeDeleteRequest(Document xml) throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
+    private void takeDeleteRequest(Document xml) throws NotValidMessageXMLException, IOException,WrongNumberOfTestsVectorsException, Exception {
         logger.debug("takeDeleteRequest");
         MultiServerMessageDelete msgIndex = new MultiServerMessageDelete(xml);
         List<Long> ids = msgIndex.getIds();
@@ -330,12 +321,12 @@ class NewClientThread extends Thread {
         doc.setRootElement(new Element(NetworkUtils.NORESPONSE));
         NetworkUtils.writeXmlToSocket(client, doc);
     }
-    private void takePurgeRequest() throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
+    private void takePurgeRequest() throws NotValidMessageXMLException, IOException,WrongNumberOfTestsVectorsException, Exception {
         logger.debug("takePurgeRequest");
         multiServer.purge();
     }
 
-     private void takeStatsRequest(Document xml) throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
+     private void takeStatsRequest(Document xml) throws NotValidMessageXMLException, IOException,WrongNumberOfTestsVectorsException, Exception {
          MultiServerMessageInfos msgRequest = new MultiServerMessageInfos(xml);
          //String storage = msgRequest.getStorage();
          logger.info("Get infos for storage = "+msgRequest.getStorage());
@@ -343,9 +334,9 @@ class NewClientThread extends Thread {
          NetworkUtils.writeXmlToSocket(client, msgResult.toXML());
     }
      
-     private void takeStoragesRequest(Document xml) throws NotValidMessageXMLException, IOException,TooMuchSimilarPicturesAskException,WrongNumberOfTestsVectorsException, Exception {
+     private void takeStoragesRequest(Document xml) throws NotValidMessageXMLException, IOException,WrongNumberOfTestsVectorsException, Exception {
          //String storage = msgRequest.getStorage();
-         MultiServerMessageStorages msgResult = new MultiServerMessageStorages(multiServer.getServersSize());
+         MultiServerMessageStorages msgResult = new MultiServerMessageStorages(multiServer.getStoragesSize());
          NetworkUtils.writeXmlToSocket(client, msgResult.toXML());
     }     
 }
