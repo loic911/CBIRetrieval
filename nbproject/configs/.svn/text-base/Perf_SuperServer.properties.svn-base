@@ -1,3 +1,0 @@
-$label=Perf SuperServer
-main.class=tfe.test.PerfSuperServerTest
-run.jvmargs=-Xmx7G -Xms1G -server -Djava.library.path=.:/usr/local/lib
