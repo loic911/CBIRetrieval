@@ -1,4 +1,4 @@
 /build/
 /dist/
 /target/
-/testdata/testsvectorsBUILD/
+/testdata/testsvectorsBUILD/*
