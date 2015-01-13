@@ -591,4 +591,19 @@ public class ConfigServer extends Config implements Cloneable {
         this.kyotoCacheCompress = kyotoCacheCompress;
     }
 
+    public String getRedisHost() {
+        return redisHost;
+    }
+
+    public void setRedisHost(String redisHost) {
+        this.redisHost = redisHost;
+    }
+
+    public String getRedisPort() {
+        return redisPort;
+    }
+
+    public void setRedisPort(String redisPort) {
+        this.redisPort = redisPort;
+    }
 }

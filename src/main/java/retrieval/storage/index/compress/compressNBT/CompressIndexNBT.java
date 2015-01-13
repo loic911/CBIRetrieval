@@ -37,7 +37,9 @@ public abstract class CompressIndexNBT {
         if(config.getStoreName().equals("MEMORY")) {
             return new HashMapCompressIndex(config);
         }  else if(config.getStoreName().equals("KYOTOSINGLEFILE")) {
-            return new KyotoCompressIndexSingleFile((GlobalDatabase)globalDatabase,config,idStorage,idTV);
+            return new KyotoCompressIndex((GlobalDatabase)globalDatabase,config,idStorage,idTV);
+        }else if(config.getStoreName().equals("REDIS")) {
+            return new RedisCompressIndex((GlobalDatabase)globalDatabase,config,idStorage,idTV);
         }
         throw new StartIndexException(config.getStoreName() + " is not implemented for compress index");
     }

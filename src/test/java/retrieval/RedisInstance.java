@@ -6,6 +6,9 @@
 package retrieval;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import retrieval.config.ConfigServer;
 import retrieval.utils.FileUtils;
 
@@ -14,57 +17,67 @@ import retrieval.utils.FileUtils;
  * @author lrollus
  */
 public class RedisInstance {
-    ConfigServer config;
-    Process processRedis1;
-    Process processRedis2;
 
-    public RedisInstance(ConfigServer config) {
-        this.config = config;
+    List<Process> processRedis = new ArrayList<Process>();
+
+    public static int PORT = 6000;
+    private int numberOfRedis;
+    static String REDIS_PATH = "testdata/redis";
+    static String REDIS_EXEC_PATH = REDIS_PATH+"/redis-server";
+    static String REDIS_CONF = REDIS_PATH+"/redis.conf";
+    static String DATA_PATH = "testdata/index/redis";
+
+    public RedisInstance() {
+        this(1);
     }
+
+    public RedisInstance(int numberOfRedis) {
+        this.numberOfRedis = numberOfRedis;
+    }
+
+    public int getPort() {
+        return getPort(0);
+    }
+
+    public int getPort(int incr) {
+        return PORT+incr;
+    }
+
 
     public void initRedis() throws Exception {
-        System.out.println("RetrievalMultiServerRedisTest");
-        config.setStoreName("REDIS");
-        config.setIndexPath(config.getIndexPath() + config.getStoreName() + "/");
-        System.out.println("DELETE FILES");
-        FileUtils.deleteAllFilesRecursively(new File(config.getIndexPath()));
-        System.out.println("RUNTIME");
+        System.out.println("initRedis");
+
         Runtime runtime = Runtime.getRuntime();
-        processRedis1 = runtime.exec("testdata/redis-2.2.13/src/redis-server testdata/redis-2.2.13/redis1.conf");
-        System.out.println("PROCESS:"+ProcessUtils.getUnixPID(processRedis1));
+
+        for(int i=0;i<numberOfRedis;i++) {
+            int portRedis = PORT+i;
+            System.out.println("Redis: open database localhost:" + portRedis);
+            String command = REDIS_EXEC_PATH + " " +  REDIS_CONF + " --port " + portRedis + " --dir "+DATA_PATH+" --dbfilename " + portRedis+".db";
+            System.out.println(command);
+            processRedis.add(runtime.exec(command));
+        }
     }
 
-    public void initRedisAll() throws Exception {
-        config = ConfigServer.getConfigServerForTest();
-        System.out.println("RetrievalMultiServerRedisTest");
-        config.setStoreName("REDIS");
-        config.setIndexPath(config.getIndexPath() + config.getStoreName() + "/");
-         System.out.println("DELETE FILES");
-        FileUtils.deleteAllFilesRecursively(new File(config.getIndexPath()));
-         System.out.println("RUNTIME");
-        Runtime runtime = Runtime.getRuntime();
-        processRedis1 = runtime.exec("testdata/redis-2.2.13/src/redis-server testdata/redis-2.2.13/redis1.conf");
-        processRedis2 = runtime.exec("testdata/redis-2.2.13/src/redis-server testdata/redis-2.2.13/redis2.conf");
-        System.out.println("PROCESS:"+ProcessUtils.getUnixPID(processRedis1) + " " + ProcessUtils.getUnixPID(processRedis2));
+    public void deleteRedisData() throws Exception {
+        FileUtils.deleteAllFilesRecursively(new File(DATA_PATH));
+        new File(DATA_PATH).mkdirs();
     }
-
 
 
     public void killRedis() {
-        try {killRedis1(); } catch(Exception e) {}
+        try {
+            killRedis(0); } catch(Exception e) {}
     }
     public void killRedisAll() throws Exception{
-        try {killRedis1(); } catch(Exception e) {}
-        try {killRedis2(); } catch(Exception e) {}
+        for(int i=0;i<numberOfRedis;i++) {
+            try {killRedis(i); } catch(Exception e) {}
+        }
     }
 
-    private void killRedis1() throws Exception{
-         ProcessUtils.killUnixProcess(processRedis1);
-        try {processRedis1.destroy();}catch(Exception e) {}
+    private void killRedis(int process) throws Exception{
+         ProcessUtils.killUnixProcess(processRedis.get(process));
+        try {processRedis.get(process).destroy();}catch(Exception e) {}
     }
-    private void killRedis2() throws Exception{
-         ProcessUtils.killUnixProcess(processRedis2);
-        try {processRedis2.destroy();}catch(Exception e) {}
-    }
+
 
 }

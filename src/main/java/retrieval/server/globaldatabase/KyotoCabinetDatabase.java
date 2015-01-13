@@ -37,7 +37,6 @@ public class KyotoCabinetDatabase implements GlobalDatabase{
     private DB database;
     private DB databasePatchs;
     private DB databasePath;
-    private DB databasePathInverse;
     private DB databaseCompress;
     private DB databaseStorage;
     private DB databasePurge;
@@ -49,7 +48,6 @@ public class KyotoCabinetDatabase implements GlobalDatabase{
             database = openDatabase("main.kch",config.getIndexPath(),config.getKyotoApox(),config.getKyotoBNum(),config.getKyotoCacheSizeForAll(),config.getKyotoFUnit());
             databasePatchs = openDatabase("patchs.kch",config.getIndexPath(),config.getKyotoApox(),config.getKyotoBNum(),config.getKyotoCacheSizeForMetaData(),config.getKyotoFUnit());
             databasePath = openDatabase("path.kch",config.getIndexPath(),config.getKyotoApox(),config.getKyotoBNum(),config.getKyotoCacheSizeForMetaData(),config.getKyotoFUnit());
-            databasePathInverse = openDatabase("pathInverse.kch",config.getIndexPath(),config.getKyotoApox(),config.getKyotoBNum(),config.getKyotoCacheSizeForMetaData(),config.getKyotoFUnit());
             databaseCompress = openDatabase("compress.kch",config.getIndexPath(),config.getKyotoApox(),config.getKyotoBNum(),config.getKyotoCacheSizeForMetaData(),config.getKyotoFUnit());
             databaseStorage = openDatabase("storage.kch",config.getIndexPath(),config.getKyotoApox(),config.getKyotoBNum(),config.getKyotoCacheSizeForMetaData(),config.getKyotoFUnit());
             databasePurge = openDatabase("purge.kch",config.getIndexPath(),config.getKyotoApox(),config.getKyotoBNum(),config.getKyotoCacheSizeForMetaData(),config.getKyotoFUnit());

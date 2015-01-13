@@ -11,6 +11,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Test;
+import retrieval.TestUtils;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.exception.StartIndexException;
@@ -19,7 +20,7 @@ import retrieval.storage.exception.StartIndexException;
  *
  * @author lrollus
  */
-public abstract class CompressIndexAbstract {
+public abstract class CompressIndexAbstract extends TestUtils {
 
     static ConfigServer config;
     static GlobalDatabase database;
