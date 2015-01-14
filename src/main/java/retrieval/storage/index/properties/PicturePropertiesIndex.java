@@ -77,4 +77,6 @@ public interface PicturePropertiesIndex {
     Map<Long, Map<String,String>> getMap(); 
 
     void sync();
+
+
 }

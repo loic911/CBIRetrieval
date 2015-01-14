@@ -36,7 +36,7 @@ import retrieval.utils.ConvertUtils;
  *
  * @author lrollus
  */
-public class KyotoCabinetHashTableSingleFile extends HashTableIndex {
+public class KyotoCabinetHashTable extends HashTableIndex {
 
     /**
      * HashTable
@@ -55,7 +55,7 @@ public class KyotoCabinetHashTableSingleFile extends HashTableIndex {
     /**
      * Logger
      */
-    private static Logger logger = Logger.getLogger(KyotoCabinetHashTableSingleFile.class);
+    private static Logger logger = Logger.getLogger(KyotoCabinetHashTable.class);
 
     /**
      * Constructor for a memory Hash Table
@@ -64,7 +64,7 @@ public class KyotoCabinetHashTableSingleFile extends HashTableIndex {
      * @param read If true, read index (if already exist), else create new index
      * @throws ReadIndexException Error during the read of index
      */
-    public KyotoCabinetHashTableSingleFile(Object database,String idServer, String idTestVector, ConfigServer config) throws ReadIndexException {
+    public KyotoCabinetHashTable(Object database, String idServer, String idTestVector, ConfigServer config) throws ReadIndexException {
         logger.info("KyotoCabinetMultipleFile: start");
         this.visuwalWordPosition = 2;
         this.config = config;
@@ -196,7 +196,7 @@ public class KyotoCabinetHashTableSingleFile extends HashTableIndex {
                     hashmap.replace(key.getBytes(), ConvertUtils.convertObjectToProtoBuf(value).toByteArray());
                 }
             } catch (InvalidProtocolBufferException ex) {
-                java.util.logging.Logger.getLogger(KyotoCabinetHashTableSingleFile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                java.util.logging.Logger.getLogger(KyotoCabinetHashTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
         }
         for(int i=0;i<emptyKeys.size();i++) {
@@ -216,7 +216,7 @@ public class KyotoCabinetHashTableSingleFile extends HashTableIndex {
                     return true;
                 }
             } catch (InvalidProtocolBufferException ex) {
-                java.util.logging.Logger.getLogger(KyotoCabinetHashTableSingleFile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                java.util.logging.Logger.getLogger(KyotoCabinetHashTable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
         }
         return false;

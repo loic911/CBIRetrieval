@@ -129,10 +129,8 @@ public class KyotoCabinetPropertiesIndexSingleFile implements PicturePropertiesI
         } else if(!strMap.isEmpty()) {
             for(Map.Entry<String,String> entry : strMap.entrySet()) {
                 str = str + entry.getKey() + ";@;" + entry.getValue() + ";@;";
-            }  
-            System.out.println("strstr="+str);
+            }
             str = str.substring(0, str.length()-3);
-            System.out.println("strstr="+str);
         }
         return str;
     }    
@@ -149,8 +147,6 @@ public class KyotoCabinetPropertiesIndexSingleFile implements PicturePropertiesI
         String[] rec;
         while ((rec = cur.get_str(true)) != null) {
             if(!rec[0].startsWith("COUNT#") && rec[0].startsWith(prefix)) {
-                System.out.println("1652:"+rec[0]);
-                System.out.println("1652:"+rec[1]);
                hashmap.put(Long.parseLong(rec[0].replaceFirst(prefix, "")),convertStringToMap(rec[1])); 
             }                
         }
@@ -186,12 +182,8 @@ public class KyotoCabinetPropertiesIndexSingleFile implements PicturePropertiesI
      */
     public Long addPicture(Long id, Map<String,String> properties) {
         try {
-            System.out.println("azert="+id);
-            System.out.println("azert="+properties);
                 String propertiesStr = convertMapToString(properties);
-                System.out.println("azert="+propertiesStr);
                 map.set(this.prefix+id,propertiesStr );
-                System.out.println("azert4="+this.prefix+id);
                 incrCountSize();
                 Date date = Calendar.getInstance().getTime();
                 logger.info(";" + date.getTime() + ";" + "" + id + ";" + propertiesStr);

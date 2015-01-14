@@ -56,6 +56,7 @@ public class RedisInstance {
             System.out.println(command);
             processRedis.add(runtime.exec(command));
         }
+        Thread.sleep(2000);
     }
 
     public void deleteRedisData() throws Exception {
@@ -75,8 +76,9 @@ public class RedisInstance {
     }
 
     private void killRedis(int process) throws Exception{
-         ProcessUtils.killUnixProcess(processRedis.get(process));
-        try {processRedis.get(process).destroy();}catch(Exception e) {}
+        System.out.println("*****KILL*****");
+        try {ProcessUtils.killUnixProcess(processRedis.get(process));}catch(Exception e) {System.out.println("1="+e);}
+        try {processRedis.get(process).destroy();}catch(Exception e) {System.out.println("2="+e);}
     }
 
 

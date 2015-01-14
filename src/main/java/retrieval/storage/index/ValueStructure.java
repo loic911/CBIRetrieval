@@ -16,11 +16,8 @@
 package retrieval.storage.index;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+
 import retrieval.config.ConfigServer;
 
 /**
@@ -72,6 +69,25 @@ public class ValueStructure implements Serializable {
         }
 
         Nbt = NBT;
+    }
+
+    public ValueStructure(ConfigServer config, Map<String, String> mapList, long NBT) {
+
+        if (config.getStrucType() == 0) {
+            this.valList = new HashMap<Long, Integer>(mapList.size() * 3);
+        }
+        else {
+            this.valList = new TreeMap<Long, Integer>();
+        }
+
+        Nbt = NBT;
+        Set<Map.Entry<String, String>> set = mapList.entrySet();
+
+        Iterator<java.util.Map.Entry<String, String>> iterator = set.iterator();
+        while (iterator.hasNext()) {
+            java.util.Map.Entry<String, String> entry = iterator.next();
+            this.valList.put(Long.parseLong(entry.getKey()), (int) Long.parseLong((entry.getValue())));
+        }
     }
 
     /**

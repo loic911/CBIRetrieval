@@ -25,7 +25,7 @@ import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.exception.StartIndexException;
 import retrieval.storage.index.compress.compressNBT.CompressIndexNBT;
 import retrieval.storage.index.main.HashTableIndex;
-import retrieval.storage.index.main.KyotoCabinetHashTableSingleFile;
+import retrieval.storage.index.main.KyotoCabinetHashTable;
 import retrieval.storage.index.main.MemoryHashTable;
 
 /**
@@ -34,6 +34,9 @@ import retrieval.storage.index.main.MemoryHashTable;
  * -bdb for BDB config
  * -voldemort for VOLDEMORT config
  * -mysql for a MYSQL config
+ * -kyoto for kyoto cabinet
+ * -...
+ * Only MEMORY and KYOTO were supported
  * @author Rollus Loic
  */
 public final class IndexStructClassic extends IndexStructAbs {
@@ -76,9 +79,9 @@ public final class IndexStructClassic extends IndexStructAbs {
         if (    configStore.getStoreName().equals(MemoryHashTable.NAME)) {
             //MEMORY
             map = new MemoryHashTable(configStore, false);
-        }  else if (configStore.getStoreName().equals(KyotoCabinetHashTableSingleFile.NAME)) {
+        }  else if (configStore.getStoreName().equals(KyotoCabinetHashTable.NAME)) {
             //KYOTO SINGLE FILE (1 file for N servers and T test vector)
-            map = new KyotoCabinetHashTableSingleFile(database,idStorage,idTestVector,configStore);
+            map = new KyotoCabinetHashTable(database,idStorage,idTestVector,configStore);
         }else {
             throw new StartIndexException(configStore.getStoreName() + " is not implemented");
         }

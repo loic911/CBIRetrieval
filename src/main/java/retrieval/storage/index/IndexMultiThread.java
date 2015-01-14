@@ -117,6 +117,7 @@ public class IndexMultiThread extends Index {
         } catch (PictureTooHomogeneous e) {
             throw new PictureTooHomogeneous();
         }catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.toString());
         }
         return null;

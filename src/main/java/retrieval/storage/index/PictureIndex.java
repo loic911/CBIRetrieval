@@ -26,11 +26,13 @@ import retrieval.storage.exception.AlreadyIndexedException;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.exception.StartIndexException;
-import retrieval.storage.index.patchs.KyotoCabinetPatchsIndexSingleFile;
+import retrieval.storage.index.patchs.KyotoCabinetPatchsIndex;
 import retrieval.storage.index.patchs.PicturePatchsIndex;
+import retrieval.storage.index.patchs.RedisPatchsIndex;
 import retrieval.storage.index.patchs.SimpleHashMapPatchsIndex;
 import retrieval.storage.index.properties.KyotoCabinetPropertiesIndexSingleFile;
 import retrieval.storage.index.properties.PicturePropertiesIndex;
+import retrieval.storage.index.properties.RedisPropertiesIndex;
 import retrieval.storage.index.properties.SimpleHashMapPropertiesIndex;
 
 /**
@@ -87,8 +89,11 @@ public final class PictureIndex implements Serializable {
             picturePatchsIndex =  new SimpleHashMapPatchsIndex(false);
         } else if (configStore.getStoreName().equals("KYOTOSINGLEFILE")){
             picturePathIndex = new KyotoCabinetPropertiesIndexSingleFile(globalDatabase,idServer);
-            picturePatchsIndex = new KyotoCabinetPatchsIndexSingleFile(globalDatabase,idServer);
-       }else
+            picturePatchsIndex = new KyotoCabinetPatchsIndex(globalDatabase,idServer);
+       }else if (configStore.getStoreName().equals("REDIS")){
+            picturePathIndex = new RedisPropertiesIndex(globalDatabase,idServer);
+            picturePatchsIndex = new RedisPatchsIndex(globalDatabase,idServer);
+        }else
             throw new StartIndexException(configStore.getStoreName() + " is not implemented for metadata index");
     }
 

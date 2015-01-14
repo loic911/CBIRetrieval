@@ -35,7 +35,7 @@ public abstract class HashTableIndexOptim {
     public abstract void delete(String key);
 
     public abstract void incrementHashValue(String mainkey, String haskey, long value);
-    public abstract void incrementHashValue(ConcurrentHashMap<String, Long> visualWords, int I, CompressIndexNBT compress);
+    public abstract void incrementHashValue(ConcurrentHashMap<String, Long> visualWords, Long I, CompressIndexNBT compress);
     public abstract String getHashValue(String mainkey, String haskey);
     
         /**

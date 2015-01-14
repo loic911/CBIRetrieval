@@ -27,6 +27,7 @@ public class RedisCompressIndexTest extends CompressIndexAbstract{
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+
         enableLog();
         config = ConfigServer.getConfigServerForTest();
         FileUtils.deleteAllSubFilesRecursively(new File(config.getIndexPath()));

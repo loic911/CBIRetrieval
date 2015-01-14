@@ -26,11 +26,8 @@ import retrieval.dist.RequestPictureVisualWord;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.exception.StartIndexException;
-import retrieval.storage.index.Entry;
-import retrieval.storage.index.IndexStructAbs;
-import retrieval.storage.index.IndexStructClassic;
-import retrieval.storage.index.PictureIndex;
-import retrieval.storage.index.ValueStructure;
+import retrieval.storage.index.*;
+import retrieval.storage.index.main.RedisHashTable;
 
 /**
  * A tests vector or Server used so it has an index
@@ -79,7 +76,11 @@ public class TestVectorServer extends TestVector {
         this.tests = new ArrayList<TestPoint>(pts.size());
 
         logger.debug("TestVectorServer: init of index " + this.name);
-        this.index = new IndexStructClassic(idServer,idTestVector, configServer, Integer.parseInt(this.name),database);
+        if(configServer.getStoreName().equals(RedisHashTable.NAME)) {
+            this.index = new IndexStructOptim(idServer,idTestVector, configServer, Integer.parseInt(this.name),database);
+        } else {
+            this.index = new IndexStructClassic(idServer,idTestVector, configServer, Integer.parseInt(this.name),database);
+        }
 
         //Create the new list of test with the pts and the val list
         logger.debug("TestVectorServer: build tests lists");
