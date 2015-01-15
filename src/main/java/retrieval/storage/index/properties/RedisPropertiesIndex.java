@@ -74,9 +74,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
 
 
     public int getCountValue() {
-       String data = redis.get("COUNT#"+idServer);
-        System.out.println("COUNT#"+idServer);
-        System.out.println("data="+data);
+       String data = redis.hget("COUNT#"+idServer,"CBIR");
        if(data==null) {
            return 0;
        }
@@ -85,7 +83,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
     }
 
     public void setCountValue(long value) {
-        redis.set("COUNT#"+idServer, value+"");
+        redis.hset("COUNT#" + idServer, "CBIR", value+"");
     }
 
     public void incrCountSize() {

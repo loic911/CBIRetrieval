@@ -33,6 +33,7 @@ import retrieval.exception.CBIRException;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.server.globaldatabase.MemoryDatabase;
+import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.InternalServerException;
 import retrieval.storage.index.ResultSim;
@@ -141,7 +142,10 @@ public final class RetrievalServer {
             } else if(configMain.getStoreName().equals("KYOTOSINGLEFILE")) {
                 logger.info("Init global kyoto database");
                globalDatabase = new KyotoCabinetDatabase(configServer); 
-            }  else throw new CBIRException("Index name "+configMain.getStoreName() +" not supported!");          
+            } else if(configMain.getStoreName().equals("REDIS")) {
+                logger.info("Init global redis database");
+                globalDatabase = new RedisDatabase(configServer);
+            }  else throw new CBIRException("Index name "+configMain.getStoreName() +" not supported!");
                        
             logger.info("Read container...");
             List<String> containers;

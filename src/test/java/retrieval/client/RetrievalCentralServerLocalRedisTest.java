@@ -43,8 +43,8 @@ public class RetrievalCentralServerLocalRedisTest extends RetrievalCentralServer
             configCentralServer = new ConfigClient("testdata/ConfigClient.prop");
             config.setStoreName("REDIS");
             config.setRedisPort(RedisInstance.PORT + "");
-            redis.deleteRedisData();
             redis.initRedis();
+            redis.clearData();
             System.out.println("server");
             config.setRedisPort(redis.getPort(0)+"");
             multiServer1 = createMultiServer(config,MULTISERVERPORT1,0,"REDIS");

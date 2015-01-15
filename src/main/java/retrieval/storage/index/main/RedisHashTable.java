@@ -84,12 +84,14 @@ public class RedisHashTable extends HashTableIndexOptim{
                     compress.blacklistVW(entry.getKey());
                     p.del(this.prefix +entry.getKey());
                 } else {
-                    p.hincrBy(this.prefix +entry.getKey(), String.valueOf(I), entry.getValue());
+                    //System.out.println(this.prefix +entry.getKey() + "=>"  +String.valueOf(I) + "=" + entry.getValue());
+                    p.hincrBy(this.prefix + entry.getKey(), String.valueOf(I), entry.getValue());
                     p.hincrBy(this.prefix +entry.getKey(),"-1",entry.getValue());
                 }
             }
         }
         p.sync();
+        //try{Thread.sleep(1000000);}catch(Exception e){};
     }
 
     public String getHashValue(String mainkey, String haskey) {
@@ -156,7 +158,7 @@ public class RedisHashTable extends HashTableIndexOptim{
     }
 
     public void delete(String key) {
-        redis.del(this.prefix +key);
+        redis.del(this.prefix + key);
     }
     public void deleteAll(Map<Long, Integer> mapID)  {
         Set<String> keys = redis.keys("*");
@@ -164,22 +166,23 @@ public class RedisHashTable extends HashTableIndexOptim{
 
         while(it.hasNext()) {
             String key = it.next();
-            Map<String, String> submap = redis.hgetAll(this.prefix +key);
+            Map<String, String> submap = redis.hgetAll(key);
             Set<String> keys2 = submap.keySet();
             Iterator<String> it2 = keys2.iterator();
 
             while(it2.hasNext()) {
                 String subkeys = it2.next();
-                if(mapID.containsKey(Integer.parseInt(subkeys))) {
-                    Long value = redis.hdel(this.prefix +key, subkeys);
-                    redis.hincrBy(this.prefix +key, "-1", -value);
-                    if(redis.hlen(this.prefix +key)<=1) {
+                if(mapID.containsKey(Long.parseLong(subkeys))) {
+                    Long value = redis.hdel(key, subkeys);
+                    redis.hincrBy(key, "-1", -value);
+                    if(redis.hlen(key)<=1) {
                         //1 because nbt is store there
-                        redis.del(this.prefix +key);
+                        redis.del(key);
                     }
                 }
             }
         }
+        //try{Thread.sleep(1000000);}catch(Exception e){};
     }
 
 
@@ -189,12 +192,14 @@ public class RedisHashTable extends HashTableIndexOptim{
 
         while(it.hasNext()) {
             String key = it.next();
-            Map<String, String> submap = redis.hgetAll(this.prefix +key);
-            Set<String> keys2 = submap.keySet();
-            Iterator<String> it2 = keys2.iterator();
-
+//            System.out.println("key="+key + " id="+id);
+//            System.out.println();
+            Map<String, String> submap = redis.hgetAll(key);
+//            System.out.println("submap="+submap);
             if(submap.containsKey(id+"")) return true;
+            //try{Thread.sleep(10000);}catch(Exception e){};
         }
+
         return false;
     }
 

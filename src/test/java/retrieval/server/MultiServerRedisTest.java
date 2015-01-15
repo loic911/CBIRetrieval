@@ -39,9 +39,8 @@ public class MultiServerRedisTest extends MultiServerAbstract{
         try {
             config = new ConfigServer("testdata/ConfigServer.prop");
             config.setRedisPort(RedisInstance.PORT + "");
-            redis.deleteRedisData();
             redis.initRedis();
-
+            redis.clearData();
             multiServer = createMultiServer(config,MULTISERVERPORT1,0,"REDIS");
             
             multiServer.createStorage(CONTAINER1);

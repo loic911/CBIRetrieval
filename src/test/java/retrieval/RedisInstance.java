@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import redis.clients.jedis.Jedis;
 import retrieval.config.ConfigServer;
 import retrieval.utils.FileUtils;
 
@@ -56,12 +57,20 @@ public class RedisInstance {
             System.out.println(command);
             processRedis.add(runtime.exec(command));
         }
-        Thread.sleep(2000);
+        Thread.sleep(500);
     }
 
     public void deleteRedisData() throws Exception {
-        FileUtils.deleteAllFilesRecursively(new File(DATA_PATH));
-        new File(DATA_PATH).mkdirs();
+//        FileUtils.deleteAllFilesRecursively(new File(DATA_PATH));
+//        new File(DATA_PATH).mkdirs();
+    }
+
+    public void clearData() throws Exception {
+        for(int i=0;i<numberOfRedis;i++) {
+            int portRedis = PORT+i;
+            Jedis jedis = new Jedis("localhost",portRedis,20000);
+            jedis.flushAll();
+        }
     }
 
 

@@ -155,7 +155,9 @@ public abstract class StorageTestAbstract extends TestUtils {
     @Test
     public void testServerIsPictureCorrectlyRemovedFromIndex() throws Exception {
         System.out.println("testServerIsPictureCorrectlyRemovedFromIndex");
-        Long id = storage.indexPicture(FileUtils.readPicture(LOCALPICTURE1),null,null);
+        assertEquals(true,storage.isPictureCorrectlyRemovedFromIndex(15l));
+        Long id = storage.indexPicture(FileUtils.readPicture(LOCALPICTURE1),15l,null);
+        assertEquals(false,storage.isPictureCorrectlyRemovedFromIndex(id));
         storage.deletePicture(id);
         //check if picture is in this file
         assertEquals(false,storage.isPictureCorrectlyRemovedFromIndex(id));

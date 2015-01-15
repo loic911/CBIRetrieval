@@ -43,9 +43,9 @@ public class StorageRedisTest extends StorageTestAbstract {
             config = ConfigServer.getConfigServerForTest();
             config.setStoreName("REDIS");
             config.setIndexCompressThreshold(10);
-            config.setRedisPort(RedisInstance.PORT+"");
-            redis.deleteRedisData();
+            config.setRedisPort(RedisInstance.PORT + "");;
             redis.initRedis();
+            redis.clearData();
             GlobalDatabase database = new RedisDatabase(config);
             storage = createServer("0",config,database);
         } catch (Exception e) {
@@ -56,7 +56,9 @@ public class StorageRedisTest extends StorageTestAbstract {
     
     @After
     public void tearDown() {
-        try { Thread.sleep(1000);storage.stop();}catch(Exception e) {}
+        try {
+            //Thread.sleep(1000);
+            storage.stop();}catch(Exception e) {}
         storage=null;
         try {redis.killRedisAll();}catch(Exception e) {}
 
