@@ -242,6 +242,7 @@ class AskNBTObjectThread extends Thread {
         } catch (WrongNumberOfTestsVectorsException ex) {
             logger.error("run nbt: undef1:" + ex.toString() + " storage="+storage.getStorageName());
         } catch (Exception ex) {
+            ex.printStackTrace();
             logger.error("run nbt: undef2:" + ex.toString() + " storage="+storage.getStorageName());
         }
     }

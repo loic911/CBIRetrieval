@@ -9,11 +9,14 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
+import redis.clients.jedis.Jedis;
+import retrieval.RedisInstance;
 import retrieval.TestUtils;
 import static retrieval.TestUtils.LOCALPICTURE1;
 import static retrieval.TestUtils.LOCALPICTURE1MAP;
 import static retrieval.TestUtils.LOCALPICTURE2;
 import retrieval.config.ConfigServer;
+import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.Storage;
 import retrieval.utils.FileUtils;
 import retrieval.utils.NetworkUtils;
@@ -271,6 +274,10 @@ public class MultiServerAbstract extends TestUtils{
     @Test
     public void testReadAlreadyExistImageDataGlobal() throws Exception {
         System.out.println("testReadAlreadyExistData");
+
+        //redis data because the retrievalserver is local to the method
+        Jedis jedis = new Jedis("localhost",RedisInstance.PORT, 20000);
+        jedis.flushAll();
         
         System.out.println("StoreName="+config.getStoreName());
         RetrievalServer server = new RetrievalServer(config, "testNetbeans", 0, true);
@@ -279,7 +286,6 @@ public class MultiServerAbstract extends TestUtils{
         Long id2 = server.getStorage("serverName").indexPicture(FileUtils.readPicture(LOCALPICTURE2),null,null);
         server.stop();
         server = null;
-        System.out.println("### READ OLD SERVER DATA");
         RetrievalServer server2 = new RetrievalServer(config, "testNetbeans",false);
         assert server2.getStorageList().size()==1;
         assert server2.getStorageMap().keySet().iterator().next().equals("serverName");        
@@ -294,7 +300,9 @@ public class MultiServerAbstract extends TestUtils{
      @Test
     public void testReadAlreadyExistDeleteStorageDataGlobal() throws Exception {
         System.out.println("testReadAlreadyExistData");
-        
+         //redis data because the retrievalserver is local to the method
+         Jedis jedis = new Jedis("localhost",RedisInstance.PORT, 20000);
+         jedis.flushAll();
         System.out.println("StoreName="+config.getStoreName());
         RetrievalServer server = new RetrievalServer(config, "testNetbeans", 0, true);
         server.createStorage("serverName");

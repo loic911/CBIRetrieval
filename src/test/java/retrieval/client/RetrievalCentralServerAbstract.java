@@ -101,5 +101,6 @@ public abstract class RetrievalCentralServerAbstract extends TestUtils{
         BufferedImage img = ImageIO.read(new File(LOCALPICTURE1));
         ResultsSimilarities result = multiCentralWithAllServer.search(img, 1000,30,new String[]{});
         assertEquals(true,containsPictures(result, 1l));
+
     }
 }

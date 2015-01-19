@@ -87,12 +87,11 @@ public class RedisDatabase implements GlobalDatabase{
         List<String> storages = new ArrayList<String>();
 
         Set<String> keys = databaseStorage.keys("*");
-        Iterator<String> it = keys.iterator();
 
-        while(it.hasNext()) {
-            String key = it.next();
+        for (String key : keys) {
             storages.add(key);
         }
+        logger.info("storages="+storages);
         return storages;
     }
     

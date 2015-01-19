@@ -46,7 +46,8 @@ public class RedisHashTable extends HashTableIndexOptim{
     public RedisHashTable(Object database,String idServer, String idTestVector, ConfigServer config) throws StartIndexException {
         try {
             this.config = config;
-            redis = (Jedis)((RedisDatabase)database).getDatabase();
+            Jedis base = (Jedis)((RedisDatabase)database).getDatabase();
+            redis = new Jedis(base.getClient().getHost(),base.getClient().getPort(),20000);
             logger.info("Redis client will be launch for host=" + redis.getClient().getHost() + " port="+redis.getClient().getPort());
             this.prefix = idServer+"#"+idTestVector+"#";
         }
@@ -107,12 +108,26 @@ public class RedisHashTable extends HashTableIndexOptim{
         List<Response<String>> hgetsR = new ArrayList<Response<String>>(500);
         List<String> keys = new ArrayList<String>(500);
         Iterator<String> searchKey = result.keySet().iterator();
+        int j=0;
         while (searchKey.hasNext()) {
             String k = searchKey.next();
             k=prefix+k;
             keys.add(k);
-            hgetsR.add(p.hget(k,"-1"));
+            System.out.println(j+" => getAllValues="+k);
+            try {
+                hgetsR.add(p.hget(k, "-1"));
+            } catch (Exception e) {
+                try {
+                    Thread.sleep(1000000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                e.printStackTrace();
+            }
+            j++;
         }
+
+
         p.sync();
 
         for(int i=0;i<keys.size();i++) {
