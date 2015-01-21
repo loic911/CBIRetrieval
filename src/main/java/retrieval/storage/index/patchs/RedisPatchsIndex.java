@@ -29,10 +29,8 @@ import retrieval.storage.exception.StartIndexException;
  */
 public class RedisPatchsIndex implements PicturePatchsIndex{
 
-    /**
-     * Store map
-     */
-    Jedis redis;
+    private Jedis redis;
+    public static int REDIS_PATCH_STORE = 2;
     /**
      * Logger
      */
@@ -45,7 +43,9 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
             throws StartIndexException,ReadIndexException {
         logger.info("JedisPatchsIndex: start");
         try {
-            redis = (Jedis)global.getDatabasePatchs();
+            Jedis base = (Jedis)global.getDatabasePatchs();
+            this.redis = new Jedis(base.getClient().getHost(),base.getClient().getPort(),20000);
+            this.getRedis().select(2);
         }
         catch(Exception e) {
             logger.fatal(e.toString());
@@ -59,7 +59,7 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      */
     public void delete(Map<Long, Integer> picturesID) {
         for (Map.Entry<Long, Integer> entry : picturesID.entrySet()) {
-            redis.del(entry.getKey().toString());
+            getRedis().del(entry.getKey().toString());
         }
     }
 
@@ -69,7 +69,7 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      * @param N NI (Number of patch extracted from I to index it)
      */
     public void put(Long imageID, Integer N) {
-        redis.set(imageID.toString(), N.toString());
+        getRedis().set(imageID.toString(), N.toString());
     }
 
     /**
@@ -78,7 +78,7 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      * @return Number of patch extracted from I to index it
      */
     public Integer get(Long imageID) {
-        String numberOfPatch = redis.get(imageID.toString());
+        String numberOfPatch = getRedis().get(imageID.toString());
         if (numberOfPatch == null) {
             return -1;
 
@@ -103,11 +103,11 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
     public void print() {
         // traverse records
         logger.info("PatchIndex");
-        Set<String> keys = redis.keys("*");
+        Set<String> keys = getRedis().keys("*");
         Iterator<String> it = keys.iterator();
         while (it.hasNext()) {
             String key = it.next();
-            String value = redis.get(key);
+            String value = getRedis().get(key);
             logger.info(key + "=" + value);
 
         }
@@ -118,11 +118,19 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      * @throws CloseIndexException Error during index close
      */
     public void close() throws CloseIndexException {
-        redis.disconnect();
+        getRedis().disconnect();
 
     }
 
     public void sync() {
 
+    }
+
+    /**
+     * Store map
+     */
+    public Jedis getRedis() {
+        redis.select(REDIS_PATCH_STORE);
+        return redis;
     }
 }

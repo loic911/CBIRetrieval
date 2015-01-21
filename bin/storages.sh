@@ -1,1 +1,1 @@
-java -cp ../dist/CBIRetrievalFull.jar retrieval.indexer.main.RetrievalStoragesMain $1 $2
+java -cp bin/JavaImageRetrieval.jar retrieval.indexer.main.RetrievalStoragesMain $1 $2

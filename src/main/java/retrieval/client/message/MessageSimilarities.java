@@ -116,8 +116,9 @@ public class MessageSimilarities implements Cloneable {
                 Element assoc = (Element) it2.next();
                 String vw = assoc.getAttributeValue("b");
                 int nbit = Integer.parseInt(assoc.getAttributeValue("nbit"));
-                System.out.println("tvList="+tvList);
+                //System.out.println("tvList="+tvList);
                 RequestPictureVisualWord item = tvList.get(i).get(vw);
+                //System.out.println("vw="+vw);
                 //add the NBT of server s to the total NBT
                 item.addNbtSum(nbit);
                 tvList.get(i).put(vw, item);

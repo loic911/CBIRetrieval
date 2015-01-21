@@ -59,7 +59,7 @@ SIZEOFINDEXQUEUE=1000000
 #######################################################
 
 # Store name: MEMORY, KYOTO, KYOTOSINGLEFILE, REDIS, NESSDB, BDB, ...
-STORENAME=KYOTOSINGLEFILE
+STORENAME=MEMORY
 
 # Path of index files
 INDEXPATH=index/
@@ -118,4 +118,4 @@ KYOTOCACHECOMPRESS=50M
 REDISHOST=localhost
 
 # Redis host port
-REDISPORT=6368
+REDISPORT=6379

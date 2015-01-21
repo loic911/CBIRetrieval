@@ -16,8 +16,6 @@
 
 package retrieval.storage.index.properties;
 
-import kyotocabinet.Cursor;
-import kyotocabinet.DB;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import retrieval.server.globaldatabase.GlobalDatabase;
@@ -31,12 +29,11 @@ import java.util.*;
  * @author lrollus
  */
 public class RedisPropertiesIndex implements PicturePropertiesIndex{
-    /**
-     * BDB database object for map and mapreverse
-     */
-    Jedis redis;
+    private Jedis redis;
     protected String prefix;
     protected String idServer;
+
+    public static int REDIS_PROPERTIES_STORE = 3;
 
     /**
      * Number of pictures indexed
@@ -56,7 +53,12 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
         try {
             logger.info("KyotoCabinetPathIndexSingleFile: start");
             this.idServer = idServer;
-            this.redis = (Jedis)global.getDatabaseProperties();
+            Jedis base = (Jedis)global.getDatabaseProperties();
+
+            this.redis = new Jedis(base.getClient().getHost(),base.getClient().getPort(),20000);
+            System.out.println("redis="+ getRedis().getDB());
+            this.getRedis().select(3);
+            System.out.println("redis="+ getRedis().getDB());
             this.prefix = idServer + "#";
 
             ///if empty insert first tuple
@@ -74,7 +76,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
 
 
     public int getCountValue() {
-       String data = redis.hget("COUNT#"+idServer,"CBIR");
+       String data = getRedis().hget("COUNT#" + idServer, "CBIR");
        if(data==null) {
            return 0;
        }
@@ -83,7 +85,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
     }
 
     public void setCountValue(long value) {
-        redis.hset("COUNT#" + idServer, "CBIR", value+"");
+        getRedis().hset("COUNT#" + idServer, "CBIR", value + "");
     }
 
     public void incrCountSize() {
@@ -117,9 +119,9 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
      */
     public Long addPicture(Long id, Map<String,String> properties) {
         try {
-            redis.hset(this.prefix+id,"CBIRTRUE","CBIRTRUE");
+            getRedis().hset(this.prefix + id, "CBIRTRUE", "CBIRTRUE");
             for(Map.Entry<String,String> prop : properties.entrySet()) {
-                redis.hset(this.prefix+id,prop.getKey(),prop.getValue());
+                getRedis().hset(this.prefix + id, prop.getKey(), prop.getValue());
             }
             incrCountSize();
             Date date = Calendar.getInstance().getTime();
@@ -138,10 +140,13 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
     public List<Long> getIdsList() {
         List<Long> list = new ArrayList<Long>();
 
-        Set<String> keys = redis.keys("*");
+        Set<String> keys = getRedis().keys("*");
         Iterator<String> it = keys.iterator();
         while (it.hasNext()) {
             String key = it.next();
+            System.out.println("key="+key + " => " + getRedis().getDB() + " " + getRedis().getClient());
+            getRedis().select(2);
+            System.out.println("key="+key + " => " + getRedis().getDB() + " " + getRedis().getClient());
             if(key.startsWith(prefix)) {
                 list.add(Long.parseLong(key.replaceFirst(prefix, "")));
             }
@@ -155,7 +160,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
      * @return Picture path
      */
     public Map<String,String> getPictureProperties(Long id) {
-        Map<String,String> properties = redis.hgetAll(this.prefix+id);
+        Map<String,String> properties = getRedis().hgetAll(this.prefix + id);
         properties.remove("CBIRTRUE");
         return properties;
     }
@@ -178,7 +183,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
 
 
     public boolean containsPicture(Long id) {
-        return redis.hget(this.prefix + id, "CBIRTRUE") != null;
+        return getRedis().hget(this.prefix + id, "CBIRTRUE") != null;
     }
     /**
      * Print index
@@ -196,11 +201,11 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
         Map<Long, Integer> picturesID = new HashMap<Long, Integer>(ids.size());
         for (int i = 0; i < ids.size(); i++) {
             //logger.info("delete: " + ids.get(i));
-            String value = redis.hget(this.prefix + ids.get(i), "CBIRTRUE");
+            String value = getRedis().hget(this.prefix + ids.get(i), "CBIRTRUE");
             if(value!=null) {
                 logger.info("delete: id=" + ids.get(i));
                 picturesID.put(ids.get(i), 0);
-                redis.del(this.prefix + ids.get(i));
+                getRedis().del(this.prefix + ids.get(i));
                 decrCountSize();
             }
 
@@ -224,10 +229,18 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
 
     /** Closes the database. */
     private void closeBDB() throws Exception {
-        redis.close();
+        getRedis().close();
     }
 
     public void sync() {
 
+    }
+
+    /**
+     * BDB database object for map and mapreverse
+     */
+    public Jedis getRedis() {
+        redis.select(REDIS_PROPERTIES_STORE);
+        return redis;
     }
 }

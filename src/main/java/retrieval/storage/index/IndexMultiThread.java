@@ -190,6 +190,7 @@ public class IndexMultiThread extends Index {
             return resultsList;
 
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.toString());
         }
         return new ArrayList<ResultSim>();
@@ -244,6 +245,9 @@ class ComputeSimilaritiesThread extends Thread {
         try {
         ConcurrentHashMap<Long, Entry> results = tv.completeSimilarityPictures(visualWords, Niq);
         Index.fusion(resultsForAllTV, results);
-        } catch(Exception e) {logger.error(e.toString());}
+        } catch(Exception e) {
+            //e.printStackTrace();
+            logger.error(e.toString());
+        }
     }
 }
