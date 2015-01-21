@@ -25,7 +25,7 @@ import retrieval.utils.NetworkUtils;
  *
  * @author lrollus
  */
-public class MultiServerAbstract extends TestUtils{
+public abstract class MultiServerAbstract extends TestUtils{
     
     protected RetrievalServer multiServer;
     protected String CONTAINER1 = "myContainer1";

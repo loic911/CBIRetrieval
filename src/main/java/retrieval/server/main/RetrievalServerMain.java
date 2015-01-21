@@ -39,7 +39,9 @@ public class RetrievalServerMain {
             } catch (Exception e) {
                 throw new ConfigurationFileNotFoundException("Configuration file was not found or invalid:" + e.getMessage());
             }
-
+            if(args.length>2) {
+                cc.setStoreName(args[2]);
+            }
             RetrievalServer multiServer = new RetrievalServer(cc, "main", 0, false);
             multiServer.loadWithSocket(Integer.parseInt(args[1]));
 

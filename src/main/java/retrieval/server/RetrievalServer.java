@@ -149,12 +149,12 @@ public final class RetrievalServer {
                        
             logger.info("Read container...");
             List<String> containers;
-            if(storageKeys!=null) {
+            if(storageKeys!=null && !storageKeys.isEmpty()) {
                containers = storageKeys; 
             } else {
                 containers = globalDatabase.getStorages();
             } 
-            logger.info("serverKeys:"+containers);
+            logger.info("getStorages:"+containers);
 
 
             storageMap = new HashMap<String, Storage>();

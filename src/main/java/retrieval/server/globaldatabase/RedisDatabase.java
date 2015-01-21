@@ -23,6 +23,10 @@ import redis.clients.jedis.Jedis;
 import retrieval.config.ConfigServer;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.ReadIndexException;
+import retrieval.storage.index.compress.compressNBT.RedisCompressIndex;
+import retrieval.storage.index.main.RedisHashTable;
+import retrieval.storage.index.patchs.RedisPatchsIndex;
+import retrieval.storage.index.properties.RedisPropertiesIndex;
 
 import java.io.File;
 import java.util.*;
@@ -44,10 +48,10 @@ public class RedisDatabase implements GlobalDatabase{
         logger.info("redis: start");
         try {
             logger.info("redis: Creating database...");
-            database = openDatabase(config.getRedisHost(), config.getRedisPort(),1);
-            databasePatchs = openDatabase(config.getRedisHost(), config.getRedisPort(),2);
-            databasePath = openDatabase(config.getRedisHost(), config.getRedisPort(),3);
-            databaseCompress = openDatabase(config.getRedisHost(), config.getRedisPort(),4);
+            database = openDatabase(config.getRedisHost(), config.getRedisPort(), RedisHashTable.REDIS_INDEX_STORE);
+            databasePatchs = openDatabase(config.getRedisHost(), config.getRedisPort(), RedisPatchsIndex.REDIS_PATCH_STORE);
+            databasePath = openDatabase(config.getRedisHost(), config.getRedisPort(), RedisPropertiesIndex.REDIS_PROPERTIES_STORE);
+            databaseCompress = openDatabase(config.getRedisHost(), config.getRedisPort(), RedisCompressIndex.REDIS_COMPRESS_STORE);
             databaseStorage = openDatabase(config.getRedisHost(), config.getRedisPort(),5);
             databasePurge = openDatabase(config.getRedisHost(), config.getRedisPort(),6);
             logger.info("redis: Database ready!");
@@ -80,13 +84,13 @@ public class RedisDatabase implements GlobalDatabase{
     }
     
     public Object getDatabaseStorage() {
+        databaseStorage.select(5);
         return (Object)databaseStorage;
     }   
     
     public List<String> getStorages() {
         List<String> storages = new ArrayList<String>();
-
-        Set<String> keys = databaseStorage.keys("*");
+        Set<String> keys = ((Jedis)getDatabaseStorage()).keys("*");
 
         for (String key : keys) {
             storages.add(key);
@@ -96,17 +100,18 @@ public class RedisDatabase implements GlobalDatabase{
     }
     
     public void addStorage(String name) {
-        databaseStorage.set(name, "");
+        ((Jedis)getDatabaseStorage()).set(name, "");
     }
     
     public void deleteStorage(String name) {
-        databaseStorage.del(name);
+        ((Jedis)getDatabaseStorage()).del(name);
     }    
 
     public void putToPurge(String storage, Map<Long, Integer> toPurge) {
 //        byte[] data = SerializationUtils.serialize(yourObject);
 //        YourObject yourObject = (YourObject) SerializationUtils.deserialize(byte[] data)
         HashMap<Long,Integer> map;
+        databasePurge.select(6);
         byte[] data = databasePurge.get(SerializationUtils.serialize(storage));
         if(data!=null) {
             map = (HashMap<Long,Integer>) SerializationUtils.deserialize(data);
@@ -114,11 +119,13 @@ public class RedisDatabase implements GlobalDatabase{
             map = new HashMap<Long,Integer>();
         }
         map.putAll(toPurge);
+        databasePurge.select(6);
         databasePurge.set(SerializationUtils.serialize(storage),SerializationUtils.serialize(map));       
     }
 
     public Map<Long, Integer> getPicturesToPurge(String storage) {
          HashMap<Long,Integer> map;
+        databasePurge.select(6);
         byte[] data = databasePurge.get(SerializationUtils.serialize(storage));
         if(data!=null) {
             map = (HashMap<Long,Integer>) SerializationUtils.deserialize(data);
@@ -129,6 +136,7 @@ public class RedisDatabase implements GlobalDatabase{
     }
 
     public void clearPurge(String storage) {
+        databasePurge.select(6);
         databasePurge.set(SerializationUtils.serialize(storage),SerializationUtils.serialize(new HashMap<Long,Integer>()));  
     }
     

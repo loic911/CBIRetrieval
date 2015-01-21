@@ -1,21 +1,5 @@
 #######################################################
 ###
-### Information about network
-### Note: Only used if server is used as an application, not as an object
-###
-#######################################################
-
-# Port for search with central server
-PORTSEARCH=6301
-
-# Port for picture indexer
-PORTINDEXPICTURE=6302
-
-# Port for information
-PORTINFO=6303
-
-#######################################################
-###
 ### Information about quality / speedup
 ###
 #######################################################
@@ -75,7 +59,7 @@ SIZEOFINDEXQUEUE=1000000
 #######################################################
 
 # Store name: MEMORY, KYOTO, KYOTOSINGLEFILE, REDIS, NESSDB, BDB, ...
-STORENAME=KYOTOSINGLEFILE
+STORENAME=MEMORY
 
 # Path of index files
 INDEXPATH=index/
@@ -134,4 +118,4 @@ KYOTOCACHECOMPRESS=50M
 REDISHOST=localhost
 
 # Redis host port
-REDISPORT=6368
+REDISPORT=6369

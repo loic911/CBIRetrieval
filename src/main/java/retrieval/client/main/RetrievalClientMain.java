@@ -89,7 +89,7 @@ public class RetrievalClientMain {
         }        
         
             
-        String[] storages = null;
+        String[] storages = new String[0];
          if(args.length>4) {
             storages = args[4].split(",");  
         }     

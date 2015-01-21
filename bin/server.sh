@@ -1,1 +1,2 @@
-java -cp ../dist/CBIRetrievalFull.jar retrieval.server.main.RetrievalServerMain $1 $2
+#!/bin/bash
+java -cp bin/JavaImageRetrieval.jar retrieval.server.main.RetrievalServerMain $1 $2 $3
