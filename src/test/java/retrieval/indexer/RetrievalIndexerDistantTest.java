@@ -421,25 +421,7 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         assertEquals(new Long(2l),storages.get(container1));
     }      
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 
 
     @Test

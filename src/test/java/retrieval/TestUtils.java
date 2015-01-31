@@ -4,7 +4,6 @@
  */
 
 package retrieval;
-import com.google.common.collect.ImmutableMap;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -106,10 +105,13 @@ public class TestUtils {
     public static String LOCALPICTUREPATH = "testdata/pictures/cyto/";
     public static String LOCALPICTURE1 = LOCALPICTUREPATH+"crop1.jpg";
     
-    public static final Map<String, String> LOCALPICTURE1MAP = ImmutableMap.of(
-        "name", "CROP1",
-        "date", new Date().toString()
-    );
+    public static final Map<String, String> LOCALPICTURE1MAP = new HashMap<String, String>();
+
+    static {
+        LOCALPICTURE1MAP.put("name", "CROP1");
+        LOCALPICTURE1MAP.put("date", new Date().toString());
+    }
+
     
     public static String LOCALPICTURE2 = LOCALPICTUREPATH+"crop2.jpg";
     public static String LOCALPICTURE3 = LOCALPICTUREPATH+"crop3.jpg";
