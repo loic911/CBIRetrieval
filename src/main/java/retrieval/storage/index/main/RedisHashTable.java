@@ -77,7 +77,7 @@ public class RedisHashTable extends HashTableIndexOptim{
 
         for (Map.Entry<String, Long> entry : visualWords.entrySet()) {
 
-            if(!compress.isBlackListed(entry.getKey())) {
+            if(!compress.isCompessEnabled() || (compress.isCompessEnabled() && !compress.isBlackListed(entry.getKey()))) {
                 Long oldNBTValue=null;
                 if(compress.isCompessEnabled()) {
 
