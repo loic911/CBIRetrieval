@@ -287,7 +287,7 @@ public abstract class MultiServerAbstract extends TestUtils{
         server.stop();
         server = null;
         RetrievalServer server2 = new RetrievalServer(config, "testNetbeans",false);
-        assert server2.getStorageList().size()==1;
+        assertEquals(1,server2.getStorageList().size());
         assert server2.getStorageMap().keySet().iterator().next().equals("serverName");        
         assert server2.getStorageList().get(0).isPictureInIndex(id1);       
         assert server2.getStorageList().get(0).isPictureInIndex(id2);

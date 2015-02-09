@@ -44,27 +44,33 @@ public class RedisDatabase implements GlobalDatabase{
     private Jedis databaseStorage;
     private Jedis databasePurge;
 
+    public static String REDIS_INDEX_STORE = "M";
+    public static String REDIS_PATCH_STORE = "PATCHS";
+    public static String REDIS_PROPERTIES_STORE = "PROPERTIES";
+    public static String REDIS_LIST_ID = "IDS";
+    public static String REDIS_COMPRESS_STORE = "COMPRESS";
+    public static String REDIS_STORAGE_STORE = "STORAGE";
+    public static String REDIS_PURGE_STORE = "PURGE";
+
     public RedisDatabase(ConfigServer config) throws ReadIndexException {
         logger.info("redis: start");
         try {
             logger.info("redis: Creating database...");
-            database = openDatabase(config.getRedisHost(), config.getRedisPort(), RedisHashTable.REDIS_INDEX_STORE);
-            databasePatchs = openDatabase(config.getRedisHost(), config.getRedisPort(), RedisPatchsIndex.REDIS_PATCH_STORE);
-            databasePath = openDatabase(config.getRedisHost(), config.getRedisPort(), RedisPropertiesIndex.REDIS_PROPERTIES_STORE);
-            databaseCompress = openDatabase(config.getRedisHost(), config.getRedisPort(), RedisCompressIndex.REDIS_COMPRESS_STORE);
-            databaseStorage = openDatabase(config.getRedisHost(), config.getRedisPort(),5);
-            databasePurge = openDatabase(config.getRedisHost(), config.getRedisPort(),6);
+            database = openDatabase(config.getRedisHost(), config.getRedisPort());
+            databasePatchs = openDatabase(config.getRedisHost(), config.getRedisPort());
+            databasePath = openDatabase(config.getRedisHost(), config.getRedisPort());
+            databaseCompress = openDatabase(config.getRedisHost(), config.getRedisPort());
+            databaseStorage = openDatabase(config.getRedisHost(), config.getRedisPort());
+            databasePurge = openDatabase(config.getRedisHost(), config.getRedisPort());
             logger.info("redis: Database ready!");
         } catch (Exception e) {
             throw new ReadIndexException(e.toString());
         }        
     }    
     
-    public static Jedis openDatabase(String host, String port, int store) {
+    public static Jedis openDatabase(String host, String port) {
             logger.info("Redis: open database "+host +":" + port);
             Jedis jedis = new Jedis(host,Integer.parseInt(port),20000);
-            logger.info("Open jedis, select store "+store);
-            jedis.select(store);
             return jedis;
     }
 
@@ -90,7 +96,7 @@ public class RedisDatabase implements GlobalDatabase{
     
     public List<String> getStorages() {
         List<String> storages = new ArrayList<String>();
-        Set<String> keys = ((Jedis)getDatabaseStorage()).keys("*");
+        Set<String> keys = ((Jedis)getDatabaseStorage()).smembers(REDIS_STORAGE_STORE);
 
         for (String key : keys) {
             storages.add(key);
@@ -100,33 +106,31 @@ public class RedisDatabase implements GlobalDatabase{
     }
     
     public void addStorage(String name) {
-        ((Jedis)getDatabaseStorage()).set(name, "");
+        ((Jedis)getDatabaseStorage()).sadd(REDIS_STORAGE_STORE,name);
     }
     
     public void deleteStorage(String name) {
-        ((Jedis)getDatabaseStorage()).del(name);
+        ((Jedis)getDatabaseStorage()).srem(REDIS_STORAGE_STORE,name);
     }    
 
     public void putToPurge(String storage, Map<Long, Integer> toPurge) {
 //        byte[] data = SerializationUtils.serialize(yourObject);
 //        YourObject yourObject = (YourObject) SerializationUtils.deserialize(byte[] data)
         HashMap<Long,Integer> map;
-        databasePurge.select(6);
-        byte[] data = databasePurge.get(SerializationUtils.serialize(storage));
+
+        byte[] data = databasePurge.hget(SerializationUtils.serialize(REDIS_PURGE_STORE),SerializationUtils.serialize(storage));
         if(data!=null) {
             map = (HashMap<Long,Integer>) SerializationUtils.deserialize(data);
         } else {
             map = new HashMap<Long,Integer>();
         }
         map.putAll(toPurge);
-        databasePurge.select(6);
-        databasePurge.set(SerializationUtils.serialize(storage),SerializationUtils.serialize(map));       
+        databasePurge.hset(SerializationUtils.serialize(REDIS_PURGE_STORE),SerializationUtils.serialize(storage), SerializationUtils.serialize(map));
     }
 
     public Map<Long, Integer> getPicturesToPurge(String storage) {
          HashMap<Long,Integer> map;
-        databasePurge.select(6);
-        byte[] data = databasePurge.get(SerializationUtils.serialize(storage));
+        byte[] data = databasePurge.hget(SerializationUtils.serialize(REDIS_PURGE_STORE),SerializationUtils.serialize(storage));
         if(data!=null) {
             map = (HashMap<Long,Integer>) SerializationUtils.deserialize(data);
         } else {
@@ -136,8 +140,7 @@ public class RedisDatabase implements GlobalDatabase{
     }
 
     public void clearPurge(String storage) {
-        databasePurge.select(6);
-        databasePurge.set(SerializationUtils.serialize(storage),SerializationUtils.serialize(new HashMap<Long,Integer>()));  
+        databasePurge.hset(SerializationUtils.serialize(REDIS_PURGE_STORE), SerializationUtils.serialize(storage), SerializationUtils.serialize(new HashMap<Long,Integer>()));
     }
     
 }
