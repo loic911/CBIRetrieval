@@ -184,7 +184,7 @@ public class ConfigServer extends Config implements Cloneable {
         logger.info("Config init");
         
         numberOfPatch = Integer.parseInt(p.getProperty("NUMBEROFPATCH", propertiesError));
-        numberOfTV = Integer.parseInt(p.getProperty("NUMBEROFTV", propertiesError));
+        setNumberOfTV(Integer.parseInt(p.getProperty("NUMBEROFTV", propertiesError)));
         
         resizeMethod = Integer.parseInt(p.getProperty("RESIZEMETHOD", propertiesError));
         indexCompressThreshold = Integer.parseInt(p.getProperty("INDEXCOMPRESSTHRESHOLD", propertiesError)); 
@@ -280,7 +280,7 @@ public class ConfigServer extends Config implements Cloneable {
      * @return the numberOfTestVector
      */
     public int getNumberOfTestVector() {
-        return numberOfTV;
+        return getNumberOfTV();
     }
 
     /**
@@ -605,5 +605,13 @@ public class ConfigServer extends Config implements Cloneable {
 
     public void setRedisPort(String redisPort) {
         this.redisPort = redisPort;
+    }
+
+    public int getNumberOfTV() {
+        return numberOfTV;
+    }
+
+    public void setNumberOfTV(int numberOfTV) {
+        this.numberOfTV = numberOfTV;
     }
 }

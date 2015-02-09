@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.RedisDatabase;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,7 +35,6 @@ public class RedisCompressIndex extends CompressIndexNBT {
    private Jedis redis;
    protected String prefix;
 
-    public static int REDIS_COMPRESS_STORE = 4;
 
     private static Logger logger = Logger.getLogger(RedisCompressIndex.class);
 
@@ -48,7 +48,7 @@ public class RedisCompressIndex extends CompressIndexNBT {
     public RedisCompressIndex(GlobalDatabase global, ConfigServer config, String idStorage, String idTV) {
         super(config.getIndexCompressThreshold());
         logger.info("KyotoCompressIndexSingleFile: start");
-        this.prefix =idStorage+"#"+idTV+"#";
+        this.prefix = RedisDatabase.REDIS_COMPRESS_STORE + "#"+idStorage+"#"+idTV+"#";
         this.redis = (Jedis)global.getDatabaseCompress();
        
     }
@@ -58,7 +58,7 @@ public class RedisCompressIndex extends CompressIndexNBT {
      * @param b visualword
      */    
     public void blacklistVW(String b) {
-        getRedis().set(prefix + b, "1");
+        redis.sadd(prefix, b);
     }
 
     /**
@@ -66,16 +66,13 @@ public class RedisCompressIndex extends CompressIndexNBT {
      */    
     public Map<String,Integer> getBlacklistedVW() {
 
-        Map<String, Integer> blacklistedVW = new HashMap<String, Integer>(getRedis().dbSize().intValue());
+        Map<String, Integer> blacklistedVW = new HashMap<String, Integer>(redis.dbSize().intValue());
 
-        Set<String> keys = getRedis().keys("*");
+        Set<String> keys = redis.smembers(this.prefix);
         Iterator<String> it = keys.iterator();
         while (it.hasNext()) {
             String key = it.next();
-            String value = getRedis().get(key);
-
-            blacklistedVW.put(key.split("#")[2], Integer.parseInt(value));
-            logger.info(key + "=" + value);
+            blacklistedVW.put(key, -1);
 
         }
 
@@ -88,11 +85,7 @@ public class RedisCompressIndex extends CompressIndexNBT {
      * @return true if b is blacklisted
      */    
     public boolean isBlackListed(String b) {
-        return getRedis().get(prefix + b)!=null;
+        return redis.sismember(prefix,b);
     }
 
-    public Jedis getRedis() {
-        redis.select(REDIS_COMPRESS_STORE);
-        return redis;
-    }
 }

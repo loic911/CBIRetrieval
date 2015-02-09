@@ -143,10 +143,15 @@ public class ResultsSimilarities {
 
     
     public void print() {
+
+    }
+
+    public String toString() {
         String result = "";
 
         for(int i=0;i<getResults().size();i++) {
             result = result + i + " => " + getResults().get(i).getId() + " (" + getResults().get(i).getSimilarities() + ")\n";
-        }   
+        }
+        return result;
     }
-}
+ }

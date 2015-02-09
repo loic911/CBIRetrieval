@@ -41,7 +41,7 @@ public class RedisHashTable extends HashTableIndexOptim{
     ConfigServer config;
     public static String NAME = "REDIS";
 
-    public static int REDIS_INDEX_STORE = 1;
+
 
     private static Logger logger = Logger.getLogger(RedisHashTable.class);
 
@@ -50,8 +50,8 @@ public class RedisHashTable extends HashTableIndexOptim{
             this.config = config;
             Jedis base = (Jedis)((RedisDatabase)database).getDatabase();
             redis = new Jedis(base.getClient().getHost(),base.getClient().getPort(),20000);
-            logger.info("Redis client will be launch for host=" + getRedis().getClient().getHost() + " port="+ getRedis().getClient().getPort());
-            this.prefix = idServer+"#"+idTestVector+"#";
+            logger.info("Redis client will be launch for host=" + redis.getClient().getHost() + " port="+ redis.getClient().getPort());
+            this.prefix = RedisDatabase.REDIS_INDEX_STORE + "#"+idServer+"#"+idTestVector+"#";
         }
         catch(Exception e){
             logger.fatal(e.toString());
@@ -59,15 +59,15 @@ public class RedisHashTable extends HashTableIndexOptim{
         }
     }
     public void clear() {
-        getRedis().flushDB();
+        redis.flushDB();
     }
 
     public void incrementHashValue(String mainkey, String haskey, long value) {
-        getRedis().hincrBy(this.prefix + mainkey, haskey, value);
+        redis.hincrBy(this.prefix + mainkey, haskey, value);
     }
 
     public void incrementHashValue(ConcurrentHashMap<String, Long> visualWords, Long I, CompressIndexNBT compress) {
-        Pipeline p = getRedis().pipelined();
+        Pipeline p = redis.pipelined();
         ConcurrentHashMap<String, Long> visualWordsWithNBT=null;
         if(compress.isCompessEnabled()) {
             visualWordsWithNBT = new ConcurrentHashMap<String, Long>(500);
@@ -98,15 +98,15 @@ public class RedisHashTable extends HashTableIndexOptim{
     }
 
     public String getHashValue(String mainkey, String haskey) {
-        String str = getRedis().hget(this.prefix + mainkey, haskey);
+        String str = redis.hget(this.prefix + mainkey, haskey);
         return str;
     }
     public Map<String,String> getValue(String mainkey) {
-        return getRedis().hgetAll(this.prefix + mainkey);
+        return redis.hgetAll(this.prefix + mainkey);
     }
 
     public ConcurrentHashMap<String, Long> getAllValues(ConcurrentHashMap<String, Long> result) {
-        Pipeline p = getRedis().pipelined();
+        Pipeline p = redis.pipelined();
         List<Response<String>> hgetsR = new ArrayList<Response<String>>(500);
         List<String> keys = new ArrayList<String>(500);
         Iterator<String> searchKey = result.keySet().iterator();
@@ -132,7 +132,7 @@ public class RedisHashTable extends HashTableIndexOptim{
             try {
                 if(value.get()!=null) { //????
                     String[] keyParts =  keys.get(i).split("#");
-                    result.put(keyParts[2], Long.parseLong(value.get()));
+                    result.put(keyParts[3], Long.parseLong(value.get()));
                 }
 
             } catch(NullPointerException e) {
@@ -146,7 +146,7 @@ public class RedisHashTable extends HashTableIndexOptim{
 
     public Map<String,ValueStructure> getAll(List<String> key) {
         List<Response<Map<String, String>>> hgetAllsR = new  ArrayList<Response<Map<String, String>>> (key.size());
-        Pipeline p = getRedis().pipelined();
+        Pipeline p = redis.pipelined();
 
         Iterator<String> searchKey = key.iterator();
         while (searchKey.hasNext()) {
@@ -171,26 +171,26 @@ public class RedisHashTable extends HashTableIndexOptim{
     }
 
     public void delete(String key) {
-        getRedis().del(this.prefix + key);
+        redis.del(this.prefix + key);
     }
     public void deleteAll(Map<Long, Integer> mapID)  {
-        Set<String> keys = getRedis().keys("*");
+        Set<String> keys = redis.keys("M*");
         Iterator<String> it = keys.iterator();
 
         while(it.hasNext()) {
             String key = it.next();
-            Map<String, String> submap = getRedis().hgetAll(key);
+            Map<String, String> submap = redis.hgetAll(key);
             Set<String> keys2 = submap.keySet();
             Iterator<String> it2 = keys2.iterator();
 
             while(it2.hasNext()) {
                 String subkeys = it2.next();
                 if(mapID.containsKey(Long.parseLong(subkeys))) {
-                    Long value = getRedis().hdel(key, subkeys);
-                    getRedis().hincrBy(key, "-1", -value);
-                    if(getRedis().hlen(key)<=1) {
+                    Long value = redis.hdel(key, subkeys);
+                    redis.hincrBy(key, "-1", -value);
+                    if(redis.hlen(key)<=1) {
                         //1 because nbt is store there
-                        getRedis().del(key);
+                        redis.del(key);
                     }
                 }
             }
@@ -200,14 +200,15 @@ public class RedisHashTable extends HashTableIndexOptim{
 
 
     public boolean isRessourcePresent(Long id) {
-        Set<String> keys = getRedis().keys("*");
+
+        Set<String> keys = redis.keys("M*");
         Iterator<String> it = keys.iterator();
 
         while(it.hasNext()) {
             String key = it.next();
 //            System.out.println("key="+key + " id="+id);
 //            System.out.println();
-            Map<String, String> submap = getRedis().hgetAll(key);
+            Map<String, String> submap = redis.hgetAll(key);
 //            System.out.println("submap="+submap);
             if(submap.containsKey(id+"")) return true;
             //try{Thread.sleep(10000);}catch(Exception e){};
@@ -220,16 +221,11 @@ public class RedisHashTable extends HashTableIndexOptim{
     }
 
     public void closeIndex() throws Exception {
-        getRedis().disconnect();
+        redis.disconnect();
     }
 
     public void printStat() {
-        System.out.println("INDEX TOTAL SIZE:"+ getRedis().dbSize());
+        System.out.println("INDEX TOTAL SIZE:"+ redis.dbSize());
 
-    }
-
-    public Jedis getRedis() {
-        redis.select(REDIS_INDEX_STORE);
-        return redis;
     }
 }
