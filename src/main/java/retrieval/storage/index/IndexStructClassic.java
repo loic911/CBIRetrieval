@@ -114,7 +114,7 @@ public final class IndexStructClassic extends IndexStructAbs {
         for (Map.Entry<String, Long> entry : visualWords.entrySet()) {
 
             ValueStructure valueStruct = map.get(entry.getKey());
-            if(!isCompressIndexEnabled() || !compressIndex.isBlackListed(entry.getKey())) {
+            if(!isCompressIndexEnabled() || (isCompressIndexEnabled() && !compressIndex.isBlackListed(entry.getKey()))) {
                 if (valueStruct == null) {
                     //if key does not exist, create it
                     valueStruct = new ValueStructure(configStore);

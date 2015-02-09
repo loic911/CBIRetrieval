@@ -66,7 +66,7 @@ public class RedisCompressIndex extends CompressIndexNBT {
      */    
     public Map<String,Integer> getBlacklistedVW() {
 
-        Map<String, Integer> blacklistedVW = new HashMap<String, Integer>(redis.dbSize().intValue());
+        Map<String, Integer> blacklistedVW = new HashMap<String, Integer>();
 
         Set<String> keys = redis.smembers(this.prefix);
         Iterator<String> it = keys.iterator();
