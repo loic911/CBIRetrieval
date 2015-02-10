@@ -56,7 +56,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
             this.idServer = idServer;
             Jedis base = (Jedis)global.getDatabaseProperties();
 
-            this.redis = new Jedis(base.getClient().getHost(),base.getClient().getPort(),20000);;
+            this.redis = new Jedis(base.getClient().getHost(),base.getClient().getPort(),20000);
             this.prefix = RedisDatabase.REDIS_PROPERTIES_STORE + "#" + idServer + "#";
             this.prefixIds = RedisDatabase.REDIS_LIST_ID + "#" + idServer + "#";
             ///if empty insert first tuple

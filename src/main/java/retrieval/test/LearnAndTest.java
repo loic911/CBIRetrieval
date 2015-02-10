@@ -23,8 +23,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class LearnAndTest {
 
     public static void main(String[] args) throws Exception {
-        String learnPath = "/media/DATA_/image/cropSmall";
-        String testPath = "/media/DATA_/image/cropSmall";
+        String learnPath = "/media/DATA_/image/crop";
+        String testPath = "/media/DATA_/image/crop";
 
         int numberOfStorage = 8;
 
@@ -51,18 +51,20 @@ public class LearnAndTest {
 
         RetrievalServer server = new RetrievalServer(cs,"test",false);
 
-        List<RetrievalIndexer> indexers = new ArrayList<RetrievalIndexer>();
-        List<IndexMultiServerThread> threads = new ArrayList<IndexMultiServerThread>();
-        for(int i=0;i<numberOfStorage;i++) {
-            server.createStorage(i+"");
-            RetrievalIndexer ri = new RetrievalIndexerLocalStorage(server.getStorage(i+""),false);
-            indexers.add(ri);
-            threads.add(new IndexMultiServerThread(ri,queue));
-            threads.get(i).start();
-        }
+        if(server.getSize()==0) {
+            List<RetrievalIndexer> indexers = new ArrayList<RetrievalIndexer>();
+            List<IndexMultiServerThread> threads = new ArrayList<IndexMultiServerThread>();
+            for(int i=0;i<numberOfStorage;i++) {
+                server.createStorage(i+"");
+                RetrievalIndexer ri = new RetrievalIndexerLocalStorage(server.getStorage(i+""),false);
+                indexers.add(ri);
+                threads.add(new IndexMultiServerThread(ri,queue));
+                threads.get(i).start();
+            }
 
-        for(int i=0;i<threads.size();i++) {
-            threads.get(i).join();
+            for(int i=0;i<threads.size();i++) {
+                threads.get(i).join();
+            }
         }
 
 
