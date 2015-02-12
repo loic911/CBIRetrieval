@@ -16,7 +16,7 @@ NUMBEROFTV=5
 RESIZEMETHOD=3
 
 # Maximum NBT for a visual word (0 = no max). Avoid very big entry with all pictures
-INDEXCOMPRESSTHRESHOLD=0
+INDEXCOMPRESSTHRESHOLD=5000
 
 # Maximum percentage (between 0 and 1) of a word from a picture (0 = no max). Avoid too homogenous pictures
 MAXPERCTENTAGESIMILARWORD=0

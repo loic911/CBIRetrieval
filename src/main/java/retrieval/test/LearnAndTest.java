@@ -1,5 +1,7 @@
 package retrieval.test;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.PropertyConfigurator;
 import retrieval.client.RetrievalClient;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
@@ -23,63 +25,84 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class LearnAndTest {
 
     public static void main(String[] args) throws Exception {
+
+        BasicConfigurator.configure();
+        PropertyConfigurator.configure("log4j.properties");
+
         String learnPath = "/media/DATA_/image/crop";
         String testPath = "/media/DATA_/image/crop";
 
         int numberOfStorage = 8;
+        int numberOfSearchThreads = 8;
 
         ConfigServer cs = new ConfigServer("config/ConfigServer.prop");
-        cs.setStoreName("REDIS");
+        cs.setStoreName("MEMORY");
         cs.setIndexPath("redisindex");
         cs.setNumberOfPatch(200);
-        cs.setNumberOfTV(10);
+        cs.setNumberOfTV(5);
 
         ConfigClient cc = new ConfigClient("config/ConfigClient.prop");
-        cc.setNumberOfTV(10);
+        cc.setNumberOfTV(5);
         cc.setNumberOfPatch(200);
 
 
         List<String> indexFiles = new ArrayList<String>();
         FileUtils.listFiles(new File(learnPath), indexFiles);
-        Queue<String> queue = new ConcurrentLinkedQueue<String>();
+        indexFiles = indexFiles.subList(0,Math.min(indexFiles.size(), 50000));
+        Queue<String> queueIndex = new ConcurrentLinkedQueue<String>();
         for(String path : indexFiles) {
-            queue.add(path);
+            queueIndex.add(path);
         }
 
         List<String> searchFiles = new ArrayList<String>();
         FileUtils.listFiles(new File(testPath), searchFiles);
+        searchFiles = searchFiles.subList(0,Math.min(searchFiles.size(), 100));
+        Queue<String> queueSearch = new ConcurrentLinkedQueue<String>();
+        for(String path : indexFiles) {
+            queueSearch.add(path);
+        }
 
         RetrievalServer server = new RetrievalServer(cs,"test",false);
 
+        Long start = System.currentTimeMillis();
         if(server.getSize()==0) {
-            List<RetrievalIndexer> indexers = new ArrayList<RetrievalIndexer>();
             List<IndexMultiServerThread> threads = new ArrayList<IndexMultiServerThread>();
             for(int i=0;i<numberOfStorage;i++) {
                 server.createStorage(i+"");
-                RetrievalIndexer ri = new RetrievalIndexerLocalStorage(server.getStorage(i+""),false);
-                indexers.add(ri);
-                threads.add(new IndexMultiServerThread(ri,queue));
-                threads.get(i).start();
+                RetrievalIndexer ri = new RetrievalIndexerLocalStorage(server.getStorage(i+""),true);
+                IndexMultiServerThread thread = new IndexMultiServerThread(ri,queueIndex);
+                thread.start();
+                threads.add(thread);
             }
 
             for(int i=0;i<threads.size();i++) {
+                System.out.println("WAIT FOR THREAD " + i);
                 threads.get(i).join();
             }
         }
+        Long timeIndex = System.currentTimeMillis() - start;
 
 
         RetrievalClient client = new RetrievalClient(cc, server);
 
+        start = System.currentTimeMillis();
 
-        for(int i=0;i<searchFiles.size();i++) {
-            ResultsSimilarities rs = client.search(ImageIO.read(new File(searchFiles.get(i))), 30);
-
-            System.out.println("*******************************************************");
-            System.out.println("SEARCH="+searchFiles.get(i));
-            System.out.println("RESULTS="+rs);
-            System.out.println("*******************************************************");
+        List<SearchMultiServerThread> threads = new ArrayList<SearchMultiServerThread>();
+        for(int i=0;i<numberOfSearchThreads;i++) {
+            SearchMultiServerThread thread = new SearchMultiServerThread(new RetrievalClient(cc, server),queueSearch,numberOfSearchThreads,searchFiles.size());
+            thread.start();
+            threads.add(thread);
         }
-
+        for(int i=0;i<threads.size();i++) {
+            System.out.println("WAIT FOR THREAD " + i);
+            threads.get(i).join();
+        }
+        System.out.println(searchFiles.size() + "images index");
+        System.out.println(indexFiles.size() + "images search");
+        System.out.println((timeIndex) + "ms for index");
+        System.out.println((System.currentTimeMillis()-start) + "ms for search");
+        System.out.println((timeIndex/indexFiles.size()) + "ms for index / image");
+        System.out.println(((System.currentTimeMillis()-start)/searchFiles.size()) + "ms for search / image");
 
     }
 }
@@ -103,6 +126,44 @@ class IndexMultiServerThread extends Thread {
                 System.out.println(indexer + " => Index File:"+imageFile.getName().split("\\.")[0]);
                 String imageName = imageFile.getName().split("\\.")[0];
                 indexer.index(imageFile, Long.parseLong(imageName));
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+}
+
+
+class SearchMultiServerThread extends Thread {
+
+    private Queue<String> queue;
+    private RetrievalClient client;
+    private int numberOfThread;
+    private int numberOfItems;
+
+    public SearchMultiServerThread(RetrievalClient search,Queue<String> queue, int numberOfThread,int numberOfItems) {
+        this.queue = queue;
+        this.client = search;
+        this.numberOfThread = numberOfThread;
+        this.numberOfItems = numberOfItems;
+    }
+
+    public void run() {
+        try {
+            int i = 0; //ConcurrentLinkedQueue.size is not constant, so i*8
+            while (!queue.isEmpty()) {
+                String path = queue.poll();
+
+                ResultsSimilarities rs = client.search(ImageIO.read(new File(path)), 10);
+
+                System.out.println("*********************** approx "+ (i*numberOfThread) + "/" + (numberOfItems)+" *************************");
+                System.out.println("SEARCH="+path);
+                System.out.println("RESULTS="+rs);
+                System.out.println("*******************************************************");
+                System.out.println("*******************************************************");
+                i++;
+
             }
         } catch(Exception e) {
             e.printStackTrace();

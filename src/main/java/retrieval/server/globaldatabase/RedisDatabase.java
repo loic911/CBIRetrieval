@@ -20,6 +20,8 @@ import kyotocabinet.DB;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 import retrieval.config.ConfigServer;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.ReadIndexException;
@@ -37,12 +39,12 @@ import java.util.*;
  */
 public class RedisDatabase implements GlobalDatabase{
     private static Logger logger = Logger.getLogger(Storage.class);
-    private Jedis database;
-    private Jedis databasePatchs;
-    private Jedis databasePath;
-    private Jedis databaseCompress;
-    private Jedis databaseStorage;
-    private Jedis databasePurge;
+    private JedisPool database;
+    private JedisPool databasePatchs;
+    private JedisPool databasePath;
+    private JedisPool databaseCompress;
+    private JedisPool databaseStorage;
+    private JedisPool databasePurge;
 
     public static String REDIS_INDEX_STORE = "M";
     public static String REDIS_PATCH_STORE = "PATCHS";
@@ -68,19 +70,20 @@ public class RedisDatabase implements GlobalDatabase{
         }        
     }    
     
-    public static Jedis openDatabase(String host, String port) {
+    public static JedisPool openDatabase(String host, String port) {
             logger.info("Redis: open database "+host +":" + port);
-            Jedis jedis = new Jedis(host,Integer.parseInt(port),20000);
+            JedisPool jedis = new JedisPool(new JedisPoolConfig(), "localhost",Integer.parseInt(port));
             return jedis;
     }
 
-    
     public Object getDatabase() {
        return (Object)database; 
-    }  
+    }
+
     public Object getDatabasePatchs() {
        return (Object)databasePatchs; 
-    }  
+    }
+
     public Object getDatabaseProperties() {
        return (Object)databasePath; 
     } 
@@ -90,57 +93,73 @@ public class RedisDatabase implements GlobalDatabase{
     }
     
     public Object getDatabaseStorage() {
-        databaseStorage.select(5);
         return (Object)databaseStorage;
     }   
     
     public List<String> getStorages() {
         List<String> storages = new ArrayList<String>();
-        Set<String> keys = ((Jedis)getDatabaseStorage()).smembers(REDIS_STORAGE_STORE);
 
-        for (String key : keys) {
-            storages.add(key);
+        try (Jedis redis = ((JedisPool)getDatabaseStorage()).getResource()) {
+            Set<String> keys = redis.smembers(REDIS_STORAGE_STORE);
+
+            for (String key : keys) {
+                storages.add(key);
+            }
+            logger.info("storages="+storages);
+            return storages;
         }
-        logger.info("storages="+storages);
-        return storages;
+
+
     }
     
     public void addStorage(String name) {
-        ((Jedis)getDatabaseStorage()).sadd(REDIS_STORAGE_STORE,name);
+        try (Jedis redis = ((JedisPool)getDatabaseStorage()).getResource()) {
+            redis.sadd(REDIS_STORAGE_STORE, name);
+        }
+
+
     }
     
     public void deleteStorage(String name) {
-        ((Jedis)getDatabaseStorage()).srem(REDIS_STORAGE_STORE,name);
+        try (Jedis redis = ((JedisPool)getDatabaseStorage()).getResource()) {
+            redis.srem(REDIS_STORAGE_STORE, name);
+        }
     }    
 
     public void putToPurge(String storage, Map<Long, Integer> toPurge) {
-//        byte[] data = SerializationUtils.serialize(yourObject);
-//        YourObject yourObject = (YourObject) SerializationUtils.deserialize(byte[] data)
-        HashMap<Long,Integer> map;
+        try (Jedis redis = databasePurge.getResource()) {
+            HashMap<Long,Integer> map;
 
-        byte[] data = databasePurge.hget(SerializationUtils.serialize(REDIS_PURGE_STORE),SerializationUtils.serialize(storage));
-        if(data!=null) {
-            map = (HashMap<Long,Integer>) SerializationUtils.deserialize(data);
-        } else {
-            map = new HashMap<Long,Integer>();
+            byte[] data = redis.hget(SerializationUtils.serialize(REDIS_PURGE_STORE),SerializationUtils.serialize(storage));
+            if(data!=null) {
+                map = (HashMap<Long,Integer>) SerializationUtils.deserialize(data);
+            } else {
+                map = new HashMap<Long,Integer>();
+            }
+            map.putAll(toPurge);
+            redis.hset(SerializationUtils.serialize(REDIS_PURGE_STORE), SerializationUtils.serialize(storage), SerializationUtils.serialize(map));
         }
-        map.putAll(toPurge);
-        databasePurge.hset(SerializationUtils.serialize(REDIS_PURGE_STORE),SerializationUtils.serialize(storage), SerializationUtils.serialize(map));
+;
     }
 
     public Map<Long, Integer> getPicturesToPurge(String storage) {
          HashMap<Long,Integer> map;
-        byte[] data = databasePurge.hget(SerializationUtils.serialize(REDIS_PURGE_STORE),SerializationUtils.serialize(storage));
-        if(data!=null) {
-            map = (HashMap<Long,Integer>) SerializationUtils.deserialize(data);
-        } else {
-            map = new HashMap<Long,Integer>();
+        try (Jedis redis = databasePurge.getResource()) {
+
+            byte[] data = redis.hget(SerializationUtils.serialize(REDIS_PURGE_STORE), SerializationUtils.serialize(storage));
+            if (data != null) {
+                map = (HashMap<Long, Integer>) SerializationUtils.deserialize(data);
+            } else {
+                map = new HashMap<Long, Integer>();
+            }
+            return map;
         }
-        return map;       
     }
 
     public void clearPurge(String storage) {
-        databasePurge.hset(SerializationUtils.serialize(REDIS_PURGE_STORE), SerializationUtils.serialize(storage), SerializationUtils.serialize(new HashMap<Long,Integer>()));
+        try (Jedis redis = databasePurge.getResource()) {
+            redis.hset(SerializationUtils.serialize(REDIS_PURGE_STORE), SerializationUtils.serialize(storage), SerializationUtils.serialize(new HashMap<Long, Integer>()));
+        }
     }
     
 }

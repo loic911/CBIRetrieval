@@ -17,6 +17,7 @@ package retrieval.storage.index.compress.compressNBT;
 
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.server.globaldatabase.RedisDatabase;
@@ -32,7 +33,7 @@ import java.util.Set;
  */
 public class RedisCompressIndex extends CompressIndexNBT {
 
-   private Jedis redis;
+   private JedisPool redis;
    protected String prefix;
 
 
@@ -49,7 +50,7 @@ public class RedisCompressIndex extends CompressIndexNBT {
         super(config.getIndexCompressThreshold());
         logger.info("KyotoCompressIndexSingleFile: start");
         this.prefix = RedisDatabase.REDIS_COMPRESS_STORE + "#"+idStorage+"#"+idTV+"#";
-        this.redis = (Jedis)global.getDatabaseCompress();
+        this.redis = (JedisPool)global.getDatabaseCompress();
        
     }
     
@@ -58,7 +59,9 @@ public class RedisCompressIndex extends CompressIndexNBT {
      * @param b visualword
      */    
     public void blacklistVW(String b) {
-        redis.sadd(prefix, b);
+        try (Jedis redis = this.redis.getResource()) {
+            redis.sadd(prefix, b);
+        }
     }
 
     /**
@@ -67,13 +70,14 @@ public class RedisCompressIndex extends CompressIndexNBT {
     public Map<String,Integer> getBlacklistedVW() {
 
         Map<String, Integer> blacklistedVW = new HashMap<String, Integer>();
+        try (Jedis redis = this.redis.getResource()) {
+            Set<String> keys = redis.smembers(this.prefix);
+            Iterator<String> it = keys.iterator();
+            while (it.hasNext()) {
+                String key = it.next();
+                blacklistedVW.put(key, -1);
 
-        Set<String> keys = redis.smembers(this.prefix);
-        Iterator<String> it = keys.iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            blacklistedVW.put(key, -1);
-
+            }
         }
 
         return blacklistedVW;
@@ -85,7 +89,9 @@ public class RedisCompressIndex extends CompressIndexNBT {
      * @return true if b is blacklisted
      */    
     public boolean isBlackListed(String b) {
-        return redis.sismember(prefix,b);
+        try (Jedis redis = this.redis.getResource()) {
+            return redis.sismember(prefix, b);
+        }
     }
 
 }

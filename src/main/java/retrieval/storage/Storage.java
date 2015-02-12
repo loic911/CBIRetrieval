@@ -132,9 +132,6 @@ public final class Storage {
         logger.info("Purge size = " +index.getPurgeSize());
         index.sync();
         logger.info("There are " + index.getSize() + " images");
-        if (logger.isDebugEnabled()){
-            index.printStat();
-        }
         } catch(Exception e) {
             logger.error(e);
             throw e;

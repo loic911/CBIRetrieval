@@ -140,6 +140,7 @@ final class StorageIndexThread extends Thread {
                 
             } catch (Exception e) {
                 logger.error(e);
+                e.printStackTrace();
             }
 
         }

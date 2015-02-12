@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.exception.CloseIndexException;
@@ -30,7 +31,7 @@ import retrieval.storage.exception.StartIndexException;
  */
 public class RedisPatchsIndex implements PicturePatchsIndex{
 
-    private Jedis redis;
+    private JedisPool redis;
     /**
      * Logger
      */
@@ -43,8 +44,7 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
             throws StartIndexException,ReadIndexException {
         logger.info("JedisPatchsIndex: start");
         try {
-            Jedis base = (Jedis)global.getDatabasePatchs();
-            this.redis = new Jedis(base.getClient().getHost(),base.getClient().getPort(),20000);
+            this.redis = (JedisPool)global.getDatabasePatchs();
         }
         catch(Exception e) {
             logger.fatal(e.toString());
@@ -57,9 +57,12 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      * @param picturesID Image ID to delete (just look the key)
      */
     public void delete(Map<Long, Integer> picturesID) {
-        for (Map.Entry<Long, Integer> entry : picturesID.entrySet()) {
-            redis.hdel(RedisDatabase.REDIS_PATCH_STORE,entry.getKey().toString());
+        try (Jedis redis = this.redis.getResource()) {
+            for (Map.Entry<Long, Integer> entry : picturesID.entrySet()) {
+                redis.hdel(RedisDatabase.REDIS_PATCH_STORE,entry.getKey().toString());
+            }
         }
+
     }
 
     /**
@@ -68,7 +71,10 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      * @param N NI (Number of patch extracted from I to index it)
      */
     public void put(Long imageID, Integer N) {
-        redis.hset(RedisDatabase.REDIS_PATCH_STORE, imageID.toString(), N.toString());
+        try (Jedis redis = this.redis.getResource()) {
+            redis.hset(RedisDatabase.REDIS_PATCH_STORE, imageID.toString(), N.toString());
+        }
+
     }
 
     /**
@@ -77,13 +83,15 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      * @return Number of patch extracted from I to index it
      */
     public Integer get(Long imageID) {
-        String numberOfPatch = redis.hget(RedisDatabase.REDIS_PATCH_STORE, imageID.toString());
-        if (numberOfPatch == null) {
-            return -1;
+        try (Jedis redis = this.redis.getResource()) {
+            String numberOfPatch = redis.hget(RedisDatabase.REDIS_PATCH_STORE, imageID.toString());
+            if (numberOfPatch == null) {
+                return -1;
 
-        } else {
-            return Integer.parseInt(numberOfPatch);
+            } else {
+                return Integer.parseInt(numberOfPatch);
 
+            }
         }
     }
 
@@ -102,13 +110,18 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
     public void print() {
         // traverse records
         logger.info("PatchIndex");
-        Map<String,String> map = redis.hgetAll(RedisDatabase.REDIS_PATCH_STORE);
-        Iterator<Map.Entry<String,String>> it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String,String> entry = it.next();
-            logger.info(entry.getKey() + "=" + entry.getValue());
 
+        try (Jedis redis = this.redis.getResource()) {
+            Map<String,String> map = redis.hgetAll(RedisDatabase.REDIS_PATCH_STORE);
+            Iterator<Map.Entry<String,String>> it = map.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String,String> entry = it.next();
+                logger.info(entry.getKey() + "=" + entry.getValue());
+
+            }
         }
+
+
     }
 
     /**
@@ -116,7 +129,9 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      * @throws CloseIndexException Error during index close
      */
     public void close() throws CloseIndexException {
-        redis.disconnect();
+        try (Jedis redis = this.redis.getResource()) {
+            redis.disconnect();
+        }
 
     }
 
