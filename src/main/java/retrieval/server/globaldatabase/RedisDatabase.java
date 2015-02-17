@@ -72,7 +72,7 @@ public class RedisDatabase implements GlobalDatabase{
     
     public static JedisPool openDatabase(String host, String port) {
             logger.info("Redis: open database "+host +":" + port);
-            JedisPool jedis = new JedisPool(new JedisPoolConfig(), "localhost",Integer.parseInt(port));
+            JedisPool jedis = new JedisPool(new JedisPoolConfig(), "localhost",Integer.parseInt(port),20000);
             return jedis;
     }
 
@@ -152,8 +152,8 @@ public class RedisDatabase implements GlobalDatabase{
             } else {
                 map = new HashMap<Long, Integer>();
             }
-            return map;
         }
+        return map;       
     }
 
     public void clearPurge(String storage) {
