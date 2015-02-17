@@ -17,6 +17,7 @@ package retrieval.storage.index.main;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import retrieval.storage.index.ValueStructure;
 import retrieval.storage.index.compress.compressNBT.CompressIndexNBT;
@@ -81,7 +82,6 @@ public abstract class HashTableIndexOptim {
     public abstract void printStat();
 
 
-
-
+    public abstract Map<String,Map<String,ValueStructure>> getAll(Map<String,List<String>> keysForTVAndForStorage);
 
 }

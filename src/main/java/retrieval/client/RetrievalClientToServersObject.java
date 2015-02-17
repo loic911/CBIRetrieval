@@ -106,6 +106,8 @@ public class RetrievalClientToServersObject  {
         }
         //ask for nbt on each server
         logger.debug("getNBTFromServers");
+
+        Long start = System.currentTimeMillis();
         MessageSimilarities msgNBT = getNBTFromServers(visualWords, N, k);
         //ask for similar pictures on each server thanks to nbt
         logger.debug("getMostSimilarPictureFromServers");

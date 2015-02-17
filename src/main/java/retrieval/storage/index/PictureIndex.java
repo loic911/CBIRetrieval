@@ -59,6 +59,8 @@ public final class PictureIndex implements Serializable {
      * Allow only one instanciation of PictureIndex
      */
     private static PictureIndex instance;
+
+    private ConfigServer configStore;
     /**
      * Logger
      */
@@ -84,6 +86,7 @@ public final class PictureIndex implements Serializable {
      * @throws ReadIndexException Error during index read
      */
     private PictureIndex(String idServer,ConfigServer configStore, GlobalDatabase globalDatabase) throws StartIndexException, ReadIndexException {
+        this.configStore = configStore;
         if (configStore.getStoreName().equals("MEMORY")) {
             picturePathIndex = new SimpleHashMapPropertiesIndex(false);
             picturePatchsIndex =  new SimpleHashMapPatchsIndex(false);
@@ -160,7 +163,7 @@ public final class PictureIndex implements Serializable {
      * @return Picture path
      */
     public synchronized int getPicturePatchs(Long id) {
-        return picturePatchsIndex.get(id);
+        return configStore.getNumberOfPatch();//picturePatchsIndex.get(id);
     }
 
     /**

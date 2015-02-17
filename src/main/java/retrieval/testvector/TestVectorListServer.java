@@ -17,9 +17,11 @@ package retrieval.testvector;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.index.PictureIndex;
+import retrieval.storage.index.ValueStructure;
 
 /**
  * Tests Vectors List from central server which extends Abstract class for
@@ -114,6 +116,10 @@ public class TestVectorListServer extends TestVectorList {
         for (int i = 0; i < this.size(); i++) {
             this.get(i).printStatIndex();
         }
+    }
+
+    public Map<String,Map<String,ValueStructure>> getAll(Map<String,List<String>> keysForTV) {
+        return this.get(0).getAll(keysForTV);
     }
 
 }

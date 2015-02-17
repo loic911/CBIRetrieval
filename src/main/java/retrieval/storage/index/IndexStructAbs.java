@@ -17,6 +17,7 @@ package retrieval.storage.index;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import retrieval.config.ConfigServer;
 import retrieval.storage.exception.CloseIndexException;
@@ -103,5 +104,7 @@ public abstract class IndexStructAbs {
     /**
      * Print index stat 
      */
-    public abstract void printStat();    
+    public abstract void printStat();
+
+    public abstract Map<String,Map<String,ValueStructure>> getAll(Map<String,List<String>> keysForTV);
 }

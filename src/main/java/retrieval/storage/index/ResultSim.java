@@ -35,7 +35,7 @@ public class ResultSim implements java.lang.Comparable {
      */
     public ResultSim(Long id, Map<String,String> properties, double similarities) {
         this.id = id;
-        this.properties = properties;
+        this.setProperties(properties);
         this.similarities = similarities;
     }
 
@@ -101,5 +101,9 @@ public class ResultSim implements java.lang.Comparable {
      */
     public Map<String,String> getProperties() {
         return properties;
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties = properties;
     }
 }

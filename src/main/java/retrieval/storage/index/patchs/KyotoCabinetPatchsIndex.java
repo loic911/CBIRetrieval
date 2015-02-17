@@ -58,9 +58,6 @@ public class KyotoCabinetPatchsIndex implements PicturePatchsIndex {
      */
     public void delete(Map<Long, Integer> picturesID) {
         for (Map.Entry<Long, Integer> entry : picturesID.entrySet()) {
-            System.out.println("map="+map);
-            System.out.println("prefix="+prefix);
-            System.out.println("entry.getKey()="+entry.getKey());
             map.remove(prefix+entry.getKey().toString());
         }
     }

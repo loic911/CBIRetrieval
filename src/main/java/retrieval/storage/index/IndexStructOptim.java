@@ -16,6 +16,7 @@
 package retrieval.storage.index;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
@@ -139,5 +140,10 @@ public class IndexStructOptim extends IndexStructAbs {
      */
     public boolean isRessourcePresent(Long id) {
         return map.isRessourcePresent(id);
+    }
+
+
+    public Map<String,Map<String,ValueStructure>> getAll(Map<String,List<String>> keysForTV) {
+        return map.getAll(keysForTV);
     }
 }

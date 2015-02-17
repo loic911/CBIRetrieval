@@ -41,10 +41,7 @@ import retrieval.storage.exception.StartIndexException;
 import retrieval.storage.exception.TestsVectorsNotFoundServerException;
 import retrieval.storage.exception.TooMuchIndexRequestException;
 import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
-import retrieval.storage.index.Index;
-import retrieval.storage.index.IndexMultiThread;
-import retrieval.storage.index.PictureIndex;
-import retrieval.storage.index.ResultSim;
+import retrieval.storage.index.*;
 import retrieval.testvector.TestVectorListServer;
 import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
@@ -417,14 +414,31 @@ public final class Storage {
         if(index.getSize()<1) {
             return firstResults;
         }
-        
+
         for (int i = 0; i < allResults.size() && i < k; i++) {
             ResultSim sim = allResults.get(i);
             sim.setId(sim.getId());
+            sim.setProperties(index.getProperties(sim.getId()));
             firstResults.add(sim);
         }
         return firstResults;
     }
+//
+//    public List<ResultSim> getPicturesSimilarities(List<ConcurrentHashMap<String, RequestPictureVisualWord>> vw, int Niq, int k) {
+//        List<ResultSim> allResults = null; //index.computeSimilarity(vw,null, Niq); //TODO!!!!!!
+//        List<ResultSim> firstResults = new ArrayList<ResultSim>(k);
+//        if(index.getSize()<1) {
+//            return firstResults;
+//        }
+//
+//        for (int i = 0; i < allResults.size() && i < k; i++) {
+//            ResultSim sim = allResults.get(i);
+//            sim.setId(sim.getId());
+//            firstResults.add(sim);
+//        }
+//        return firstResults;
+//    }
+
     
     /**
      * Change current indexed Picture
@@ -449,5 +463,9 @@ public final class Storage {
      */
     public String getStorageName() {
         return idServer;
+    }
+
+    public TestVectorListServer getTestVectors() {
+        return index.getTestVectors();
     }
 }

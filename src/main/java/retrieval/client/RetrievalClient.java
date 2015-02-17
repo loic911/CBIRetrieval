@@ -205,11 +205,11 @@ public class RetrievalClient implements RetrievalClientInterface{
                 ListServerInformationSocket serversSocket = (ListServerInformationSocket) this.getListsServerSocket().getServers();
                 logger.info("Search on "+serversSocket);
                 RetrievalClientToServersXML serverNetwork = new RetrievalClientToServersXML(serversSocket);
-                logger.info("search: " + k + " similar pictures on "+ serverNetwork.getNumberOfServer() + " servers");
+//                logger.info("search: " + k + " similar pictures on "+ serverNetwork.getNumberOfServer() + " servers");
                 result = serverNetwork.searchMultiThread(visualWords, N, k,storages);                
             } else {
                  RetrievalClientToServersObject serverNetwork = new RetrievalClientToServersObject(listServerObjects);
-                logger.info("search: " + k + " similar pictures on "+ serverNetwork.getNumberOfServer() + " servers");
+//                logger.info("search: " + k + " similar pictures on "+ serverNetwork.getNumberOfServer() + " servers");
                 result = serverNetwork.searchMultiThread(visualWords, N, k,storages);                  
             }
 

@@ -42,10 +42,6 @@ public abstract class Index {
     protected GlobalDatabase database;
     
     private static Logger logger = Logger.getLogger(Index.class);
-    /**
-     * List of tests vectors
-     * Each test vector contains its own index (for visual words)
-     */
     protected TestVectorListServer testVectors;
     /**
      * Picture index
@@ -96,7 +92,7 @@ public abstract class Index {
      * @return Ordered lists of similar pictures (ordered by similarities with Iq)
      */
     public abstract List<ResultSim> computeSimilarity(List<ConcurrentHashMap<String, RequestPictureVisualWord>> visualWordsByTestVector,int Niq);
-
+//    public abstract List<ResultSim> computeSimilarity(Map<String,Map<String,ValueStructure>> vws, List<ConcurrentHashMap<String, RequestPictureVisualWord>> visualWordsByTestVector, int Niq);
     /**
      * Get the number of indexed pictures on index
      * @return Size of index
@@ -110,7 +106,7 @@ public abstract class Index {
      * @return T
      */
     public synchronized int getNumberOfTestsVectors() {
-        return testVectors.size();
+        return getTestVectors().size();
     }
 
     /**
@@ -140,7 +136,7 @@ public abstract class Index {
      */
     public synchronized void purge(ConfigServer config) {
         logger.info("purge " + picturesToPurge.size() +" resources");
-        testVectors.delete(picturesToPurge.getPicturesToPurge());
+        getTestVectors().delete(picturesToPurge.getPicturesToPurge());
         logger.info("clear purge index");
         picturesToPurge.clear();
         logger.info("picture to purge = " + getPurgeSize());
@@ -153,7 +149,7 @@ public abstract class Index {
      * @return True if pictures id is still in index
      */
     public boolean isPicturePresentInIndex(Long id) {
-        return testVectors.isPicturePresentInIndex(id);
+        return getTestVectors().isPicturePresentInIndex(id);
     }
 
     /**
@@ -189,7 +185,7 @@ public abstract class Index {
      */
     public void close() throws CloseIndexException {
         pictureIndex.close();
-        testVectors.closeIndex();
+        getTestVectors().closeIndex();
     }
 
     /**
@@ -197,14 +193,14 @@ public abstract class Index {
      */
     public void sync()  {
         pictureIndex.sync();
-        testVectors.sync();
+        getTestVectors().sync();
     }
 
     /**
      * Print stats on index (not for all database)
      */
     public void printStat()  {
-        testVectors.printStat();
+        getTestVectors().printStat();
     }
     
     public Map<String,String> getProperties(Long id) {
@@ -234,5 +230,13 @@ public abstract class Index {
                 l1.put(e2.getI(), (Entry) e2.clone());
             }
         }
+    }
+
+    /**
+     * List of tests vectors
+     * Each test vector contains its own index (for visual words)
+     */
+    public TestVectorListServer getTestVectors() {
+        return testVectors;
     }
 }

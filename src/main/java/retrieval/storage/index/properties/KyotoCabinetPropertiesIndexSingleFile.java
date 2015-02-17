@@ -106,12 +106,9 @@ public class KyotoCabinetPropertiesIndexSingleFile implements PicturePropertiesI
       
     
     public static Map<String,String> convertStringToMap(String str) {
-        System.out.println("1659:"+str);
         if(str==null) return new HashMap<String,String>();
         if(str.equals("NULL") || str.equals("")) return new HashMap<String,String>();
         String[] properties = str.split(";@;");
-        System.out.println("propertiesproperties="+str);
-        System.out.println("propertiesproperties="+properties.length);
         Map<String,String> map = new HashMap<String,String>();
         for(int i=0;i<properties.length;i=i+2) {
             map.put(properties[i], properties[i+1]);
@@ -266,7 +263,6 @@ public class KyotoCabinetPropertiesIndexSingleFile implements PicturePropertiesI
         Map<Long, Integer> picturesID = new HashMap<Long, Integer>(ids.size());
         for (int i = 0; i < ids.size(); i++) {
             //logger.info("delete: " + ids.get(i));
-            System.out.println(map.get(this.prefix+ids.get(i)));
             String value = map.get(this.prefix+ids.get(i));
             if(value!=null) {
                 //map.

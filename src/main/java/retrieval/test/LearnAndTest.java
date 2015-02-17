@@ -35,8 +35,8 @@ public class LearnAndTest {
         int numberOfSearchThreads = 4;
 
         ConfigServer cs = new ConfigServer("config/ConfigServer.prop");
-        cs.setStoreName("MEMORY");
-        cs.setIndexPath("redisindex");
+        cs.setStoreName("REDIS"); //KYOTOSINGLEFILE
+        cs.setIndexPath("index");
         cs.setNumberOfPatch(200);
         cs.setNumberOfTV(5);
 
@@ -71,6 +71,7 @@ public class LearnAndTest {
         System.out.println("searchFiles="+queueSearch.size());
         System.out.println("***************************************************");
 
+        Queue<Long> timesIndex = new ConcurrentLinkedQueue<Long>();
         RetrievalServer server = new RetrievalServer(cs,"test",false);
 
         Long start = System.currentTimeMillis();
@@ -79,7 +80,7 @@ public class LearnAndTest {
             for(int i=0;i<numberOfStorage;i++) {
                 server.createStorage(i+"");
                 RetrievalIndexer ri = new RetrievalIndexerLocalStorage(server.getStorage(i+""),true);
-                IndexMultiServerThread thread = new IndexMultiServerThread(ri,queueIndex);
+                IndexMultiServerThread thread = new IndexMultiServerThread(ri,queueIndex,timesIndex);
                 thread.start();
                 threads.add(thread);
             }
@@ -89,17 +90,19 @@ public class LearnAndTest {
                 threads.get(i).join();
             }
         }
-        Long timeIndex = System.currentTimeMillis() - start;
+        Long totalTimeIndex = System.currentTimeMillis() - start;
 
 
         RetrievalClient client = new RetrievalClient(cc, server);
 
         start = System.currentTimeMillis();
 
+        Queue<Long> timesSearch = new ConcurrentLinkedQueue<Long>();
+
         ConcurrentHashMap<Long,ResultsSimilarities> results = new ConcurrentHashMap<Long,ResultsSimilarities>();
         List<SearchMultiServerThread> threads = new ArrayList<SearchMultiServerThread>();
         for(int i=0;i<numberOfSearchThreads;i++) {
-            SearchMultiServerThread thread = new SearchMultiServerThread(results,new RetrievalClient(cc, server),queueSearch,numberOfSearchThreads,searchFiles.size());
+            SearchMultiServerThread thread = new SearchMultiServerThread(results,new RetrievalClient(cc, server),queueSearch,numberOfSearchThreads,searchFiles.size(),timesSearch);
             thread.start();
             threads.add(thread);
         }
@@ -120,17 +123,27 @@ public class LearnAndTest {
             total++;
         }
 
+        Long timeSearch = 0l;
+        int sizeSearch = timesSearch.size();
+        while(!timesSearch.isEmpty()) {
+            timeSearch = timeSearch+timesSearch.poll();
+        }
 
+        Long timeIndex = 0l;
+        int sizeIndex = timesIndex.size();
+        while(!timesIndex.isEmpty()) {
+            timeIndex = timeIndex+timesIndex.poll();
+        }
 
         System.out.println("total="+total);
         System.out.println("positive="+positive);
-        System.out.println("%="+(double)((double)positive/(double)total));
+        System.out.println("%="+((double)positive/(double)total));
         System.out.println(searchFiles.size() + "images index");
         System.out.println(indexFiles.size() + "images search");
-        System.out.println((timeIndex) + "ms for index");
+        System.out.println((totalTimeIndex) + "ms for index");
         System.out.println((System.currentTimeMillis()-start) + "ms for search");
-        System.out.println((timeIndex/indexFiles.size()) + "ms for index / image");
-        System.out.println(((System.currentTimeMillis()-start)/searchFiles.size()) + "ms for search / image");
+        System.out.println(((double)timeIndex/(double)sizeIndex) + "ms for index / image");
+        System.out.println(((double)timeSearch/(double)sizeSearch) + "ms for search / image");
 
     }
 }
@@ -140,10 +153,12 @@ class IndexMultiServerThread extends Thread {
 
     private Queue<String> queue;
     private RetrievalIndexer indexer;
+    private Queue<Long> times;
 
-    public IndexMultiServerThread(RetrievalIndexer indexer,Queue<String> queue) {
+    public IndexMultiServerThread(RetrievalIndexer indexer,Queue<String> queue,Queue<Long> times) {
         this.queue = queue;
         this.indexer = indexer;
+        this.times = times;
     }
 
     public void run() {
@@ -153,7 +168,9 @@ class IndexMultiServerThread extends Thread {
                 File imageFile = new File(path);
                 System.out.println(indexer + " => Index File:"+imageFile.getName().split("\\.")[0]);
                 String imageName = imageFile.getName().split("\\.")[0];
+                Long start = System.currentTimeMillis();
                 indexer.index(imageFile, Long.parseLong(imageName));
+                this.times.add(System.currentTimeMillis()-start);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -170,14 +187,16 @@ class SearchMultiServerThread extends Thread {
     private RetrievalClient client;
     private int numberOfThread;
     private int numberOfItems;
+    private Queue<Long> times;
 
 
-    public SearchMultiServerThread(ConcurrentHashMap<Long,ResultsSimilarities> results,RetrievalClient search,Queue<String> queue, int numberOfThread,int numberOfItems) {
+    public SearchMultiServerThread(ConcurrentHashMap<Long,ResultsSimilarities> results,RetrievalClient search,Queue<String> queue, int numberOfThread,int numberOfItems,Queue<Long> times) {
         this.results = results;
         this.queue = queue;
         this.client = search;
         this.numberOfThread = numberOfThread;
         this.numberOfItems = numberOfItems;
+        this.times = times;
     }
 
     public void run() {
@@ -186,16 +205,18 @@ class SearchMultiServerThread extends Thread {
             while (!queue.isEmpty()) {
                 String path = queue.poll();
 
-                ResultsSimilarities rs = client.search(ImageIO.read(new File(path)), 10);
+                Long start = System.currentTimeMillis();
 
+                ResultsSimilarities rs = client.search(ImageIO.read(new File(path)), 10);
+                this.times.add(System.currentTimeMillis()-start);
                 File imageFile = new File(path);
                 String imageName = imageFile.getName().split("\\.")[0];
                 this.results.put(Long.parseLong(imageName),rs);
-                System.out.println("*********************** approx "+ (i*numberOfThread) + "/" + (numberOfItems)+" *************************");
+//                System.out.println("*********************** approx "+ (i*numberOfThread) + "/" + (numberOfItems)+" *************************");
                 System.out.println("SEARCH="+path);
                 System.out.println("RESULTS="+rs);
-                System.out.println("*******************************************************");
-                System.out.println("*******************************************************");
+//                System.out.println("*******************************************************");
+//                System.out.println("*******************************************************");
                 i++;
 
             }

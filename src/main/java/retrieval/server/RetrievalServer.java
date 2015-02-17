@@ -37,6 +37,10 @@ import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.InternalServerException;
 import retrieval.storage.index.ResultSim;
+import retrieval.storage.index.ValueStructure;
+import retrieval.testvector.TestVector;
+import retrieval.testvector.TestVectorListServer;
+import retrieval.testvector.TestVectorServer;
 import retrieval.utils.CollectionUtils;
 import retrieval.utils.FileUtils;
 /**
@@ -501,7 +505,7 @@ public final class RetrievalServer {
      */
     public Map<String, List<ResultSim>> getPicturesSimilarities(Map<String, List<ConcurrentHashMap<String, RequestPictureVisualWord>>> vw, int Niq, int k,List<String> servers) throws Exception {
         Map<String, List<ResultSim>> allPictures = new TreeMap<String, List<ResultSim>>();
-        
+
         Map<String,Storage> serversInstance;
         if(!servers.isEmpty()) {
             serversInstance = getStorageMapByName(servers);
@@ -527,8 +531,78 @@ public final class RetrievalServer {
             threads[i].join();
         }
         return allPictures;
-    }    
-    
+    }
+
+//    public Map<String, List<ResultSim>> getPicturesSimilarities(Map<String, List<ConcurrentHashMap<String, RequestPictureVisualWord>>> vw, int Niq, int k,List<String> servers) throws Exception {
+//        Map<String, List<ResultSim>> allPictures = new TreeMap<String, List<ResultSim>>();
+//
+//        Map<String,Storage> serversInstance;
+//        if(!servers.isEmpty()) {
+//            serversInstance = getStorageMapByName(servers);
+//        }
+//        else {
+//            serversInstance = storageMap;
+//        }
+//
+//        List<ConcurrentHashMap<String, RequestPictureVisualWord>> vwByVT = vw.entrySet().iterator().next().getValue();
+//        String firstStorageName = serversInstance.keySet().iterator().next();
+//        Storage storage = serversInstance.get(firstStorageName);
+//        TestVectorListServer testVectorList = storage.getTestVectors();
+//
+//        Map<String,List<String>> mapTV = new TreeMap<String,List<String>>();
+//
+//
+//        for(int i=0 ; i<testVectorList.size() ; i++) {
+//            TestVectorServer tvs = testVectorList.get(i);
+//            List<String> keys = new ArrayList<>();
+//            ConcurrentHashMap<String, RequestPictureVisualWord> words = vwByVT.get(i);
+//            for(String word : words.keySet()) {
+//                keys.add(word);
+//            }
+//
+//            mapTV.put(tvs.getName(),keys);
+//        }
+//
+//        Map<String,Map<String,List<String>>> map = new TreeMap<String,Map<String,List<String>>>();
+//
+//        for(String storageName : serversInstance.keySet()) {
+//            map.put(storageName,mapTV);
+//        }
+//
+//
+//        Map<String,Map<String,Map<String,ValueStructure>>> vws = testVectorList.getAll(map);
+//
+//        for(String storageName : serversInstance.keySet()) {
+//            allPictures.put(storageName, storageMap.get(storageName).getPicturesSimilarities(vws.get(storageName),vw.get(storageName), Niq, k));
+//        }
+//        return allPictures;
+//
+//
+//
+//
+//
+////        Iterator<Entry<String, Storage>> it = serversInstance.entrySet().iterator();
+////
+////        SimRequestThread[] threads = new SimRequestThread[serversInstance.size()];
+////        int i = 0;
+////        while (it.hasNext()) {
+////            Entry<String, Storage> entry = it.next();
+////            String idServer = entry.getKey();
+////            Storage server = entry.getValue();
+////            logger.debug("Search on "+ idServer + " with size " + server.getNumberOfItem());
+////            threads[i]=new SimRequestThread(server,idServer,vw,Niq,k,allPictures);
+////            threads[i].start();
+////            i++;
+////        }
+////
+////        for(i=0;i<threads.length;i++) {
+////            threads[i].join();
+////        }
+////        return allPictures;
+//    }
+
+
+
     /**
      * Get all pictures from a storage
      * @param storageName Storage name
@@ -601,7 +675,7 @@ class SimRequestThread extends Thread {
     private int Niq;
     private int k;
     private Map<String, List<ResultSim>> allPictures;
-    
+
     private static Logger logger = Logger.getLogger(SimRequestThread.class);
 
     public SimRequestThread(Storage server, String idServer, Map<String, List<ConcurrentHashMap<String, RequestPictureVisualWord>>> vw, int Niq, int k,Map<String, List<ResultSim>> allPictures) {
