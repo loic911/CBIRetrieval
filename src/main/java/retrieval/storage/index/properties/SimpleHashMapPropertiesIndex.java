@@ -34,6 +34,7 @@ import retrieval.storage.exception.ReadIndexException;
  */
 public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
 
+    private String storage;
     /**
      * Map: id picture - path
      */
@@ -50,9 +51,11 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
      * @throws ReadIndexException Error during the index read
      */
     public SimpleHashMapPropertiesIndex(
+            String storage,
             boolean read)
             throws ReadIndexException {
         logger.info("SimpleHashMapPatchsIndex: start");
+        this.storage =storage;
         if (!read) {
             logger.info("SimpleHashMapPatchsIndex: start");
             map = new HashMap<Long, Map<String,String>>();
@@ -66,8 +69,13 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
     }
     
     public Map<String,String> getPictureProperties(Long id) {
-        if(map.get(id)==null) return new HashMap<String,String>();
-        return map.get(id);
+        if(map.get(id)==null) {
+            return new HashMap<String,String>();
+        }
+        Map<String,String> properties = map.get(id);
+        properties.put("id",id+"");
+        properties.put("storage",storage);
+        return properties;
     }
 
     /**
