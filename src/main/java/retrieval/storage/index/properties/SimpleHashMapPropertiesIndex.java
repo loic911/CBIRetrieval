@@ -15,12 +15,8 @@
  */
 package retrieval.storage.index.properties;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.apache.log4j.Logger;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
@@ -65,7 +61,12 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
     }
     
     public Map<Long, Map<String,String>> getMap() {
-        return map;
+        Map<Long, Map<String,String>> result = new TreeMap<Long, Map<String,String>>();
+        for(Long key : map.keySet()) {
+            result.put(key,getPictureProperties(key));
+        }
+
+        return result;
     }
     
     public Map<String,String> getPictureProperties(Long id) {
