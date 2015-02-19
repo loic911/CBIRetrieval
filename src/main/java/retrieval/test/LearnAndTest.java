@@ -49,7 +49,7 @@ public class LearnAndTest {
         List<String> indexFiles = new ArrayList<String>();
         FileUtils.listFiles(new File(learnPath), indexFiles);
         Collections.sort(indexFiles);
-        indexFiles = indexFiles.subList(0,Math.min(indexFiles.size(), 10000));
+        indexFiles = indexFiles.subList(0,Math.min(indexFiles.size(), 50000));
         Queue<String> queueIndex = new ConcurrentLinkedQueue<String>();
         for(String path : indexFiles) {
             queueIndex.add(path);

@@ -612,8 +612,18 @@ public final class RetrievalServer {
     public Map<Long,Map<String,String>> getInfos(String storageName) throws CBIRException {
         Storage storage = RetrievalServer.this.getStorage(storageName);
         return storage.getAllPicturesMap();
-    }      
-    
+    }
+
+
+    public Map<Long,Map<String,String>> getInfos() throws CBIRException {
+        Map<Long,Map<String,String>> allResults = new HashMap<Long,Map<String,String>>();
+
+        for(Storage storage : this.getStorageList()) {
+            allResults.putAll(storage.getAllPicturesMap());
+        }
+        return allResults;
+    }
+
 
     /**
      * Get request socket port
