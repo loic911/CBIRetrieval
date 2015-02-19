@@ -163,12 +163,11 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
 
         try (Jedis redis = this.redis.getResource()) {
             Map<String,String> properties = redis.hgetAll(this.prefix + id);
+            properties.put("id",id+"");
+            properties.put("storage",idServer);
             properties.remove("CBIRTRUE");
             return properties;
         }
-
-
-
     }
 
 
@@ -179,7 +178,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
     public Map<Long, Map<String,String>> getMap() {
         Map<Long, Map<String,String>> hashmap = new HashMap<Long, Map<String,String>>(2048);
         List<Long> ids = getIdsList();
-
+        //TODO: improve with a single read!
         for(Long id : ids) {
             hashmap.put(id,getPictureProperties(id));
         }
