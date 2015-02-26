@@ -107,7 +107,7 @@ public class ListServerInformationSocket implements Cloneable {
      * Clone function
      * @return Clone object (same object, not same reference)
      */
-    public synchronized Object getServers() {
+    public Object getServers() {
         ListServerInformationSocket listServers = new ListServerInformationSocket();
         TreeMap<Integer,ServerInformationSocket> ser = new TreeMap<Integer,ServerInformationSocket>();
 

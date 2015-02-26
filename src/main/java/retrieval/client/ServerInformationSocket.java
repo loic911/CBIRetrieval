@@ -82,7 +82,7 @@ public class ServerInformationSocket extends ServerInformation implements Clonea
      * @return Clone object
      */
     @Override
-    public synchronized Object clone() {
+    public Object clone() {
         ServerInformationSocket server = new ServerInformationSocket(this.address, this.port);
         server.message = this.message;
         server.connectionState = this.connectionState;

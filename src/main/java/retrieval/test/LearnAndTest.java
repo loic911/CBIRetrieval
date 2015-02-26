@@ -13,7 +13,9 @@ import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
 
 import javax.imageio.ImageIO;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -28,11 +30,14 @@ public class LearnAndTest {
         BasicConfigurator.configure();
         PropertyConfigurator.configure("log4j.properties");
 
-        String learnPath = "/media/DATA_/image/crop";
-        String testPath = "/media/DATA_/image/crop";
+        String learnPath = "/media/DATA_/image/cropClient";
+        String testPath = "/media/DATA_/image/cropClient";
+
+//        Map<String,String> annotationsByProject = buildMapFromListing("/media/DATA_/image/annotationterms.csv",1);
+//        Map<String,String> annotationsByTerm = buildMapFromListing("/media/DATA_/image/annotationterms.csv",2);
 
         int numberOfStorage = 4;
-        int numberOfSearchThreads = 4;
+        int numberOfSearchThreads = 1;
 
         ConfigServer cs = new ConfigServer("config/ConfigServer.prop");
         cs.setStoreName("REDIS"); //KYOTOSINGLEFILE
@@ -146,6 +151,20 @@ public class LearnAndTest {
         System.out.println(((double)timeSearch/(double)sizeSearch) + "ms for search / image");
 
     }
+
+
+    static Map<String,String> buildMapFromListing(String path, int valuePosition) throws Exception {
+        Map<String,String> map = new HashMap<>();
+        try(BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line = br.readLine();
+            while (line != null) {
+                map.put(line.split(",")[0],line.split(",")[valuePosition]);
+                line = br.readLine();
+            }
+        }
+        return map;
+    }
+
 }
 
 

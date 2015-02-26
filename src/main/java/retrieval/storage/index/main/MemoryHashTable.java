@@ -74,7 +74,7 @@ public class MemoryHashTable extends HashTableIndex {
      * Get the Hash Map
      * @return Hash Map
      */
-    public synchronized Map<String, ValueStructure> getHashMap() {
+    public Map<String, ValueStructure> getHashMap() {
         return hashmap;
     }
 
@@ -83,7 +83,7 @@ public class MemoryHashTable extends HashTableIndex {
      * @param key Key
      * @param Value Value
      */
-    public synchronized void put(String key, ValueStructure Value) {
+    public void put(String key, ValueStructure Value) {
         hashmap.put(key, Value);
     }
 
@@ -92,7 +92,7 @@ public class MemoryHashTable extends HashTableIndex {
      * @param key Key
      * @return Value
      */
-    public synchronized ValueStructure get(String key) {
+    public ValueStructure get(String key) {
         return hashmap.get(key);
     }
 
