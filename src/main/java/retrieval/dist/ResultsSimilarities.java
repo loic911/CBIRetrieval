@@ -62,14 +62,14 @@ public class ResultsSimilarities {
         this.totalSize = 0;
     }
 
-    /**
-     * Add the size (number of picture indexed) of a server to the total size
-     * @param size Size of server s
-     */
-    public void add(int size)
-    {
-        this.setTotalSize(this.getTotalSize() + size);
-    }
+//    /**
+//     * Add the size (number of picture indexed) of a server to the total size
+//     * @param size Size of server s
+//     */
+//    public void add(int size)
+//    {
+//        this.setTotalSize(this.getTotalSize() + size);
+//    }
 
     /**
      * Get only the k first similar pictures
@@ -125,21 +125,21 @@ public class ResultsSimilarities {
         this.listsServer = servers;
     }
 
-    /**
-     * Total number of pictures on available server
-     * @return Total number of pictures
-     */
-    public int getTotalSize() {
-        return totalSize;
-    }
-
-    /**
-     * Set total pictures indexed on available server
-     * @param totalSize Total number of pictures
-     */
-    public void setTotalSize(int totalSize) {
-        this.totalSize = totalSize;
-    }
+//    /**
+//     * Total number of pictures on available server
+//     * @return Total number of pictures
+//     */
+//    public int getTotalSize() {
+//        return totalSize;
+//    }
+//
+//    /**
+//     * Set total pictures indexed on available server
+//     * @param totalSize Total number of pictures
+//     */
+//    public void setTotalSize(int totalSize) {
+//        this.totalSize = totalSize;
+//    }
 
     
     public void print() {

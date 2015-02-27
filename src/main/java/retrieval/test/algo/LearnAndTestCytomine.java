@@ -26,11 +26,11 @@ import java.util.stream.Collectors;
  */
 public class LearnAndTestCytomine {
 
-//    static int MAX_INDEX = 1000; //Integer.MAX_VALUE;
+    //static int MAX_INDEX = 1000; //Integer.MAX_VALUE;
     static int MAX_SEARCH = 10000; //Integer.MAX_VALUE;
 
     static int MAX_INDEX = Integer.MAX_VALUE;
-//    static int MAX_SEARCH = Integer.MAX_VALUE;
+    //static int MAX_SEARCH = Integer.MAX_VALUE;
 
     String learnPath = "/media/DATA_/backup/retrieval/set";
     String testPath = "/media/DATA_/backup/retrieval/set";
@@ -60,14 +60,14 @@ public class LearnAndTestCytomine {
 
     public LearnAndTestCytomine() throws Exception {
         cs = new ConfigServer("config/ConfigServer.prop");
-        cs.setStoreName("MEMORY"); //KYOTOSINGLEFILE
+        cs.setStoreName("REDIS"); //KYOTOSINGLEFILE
         cs.setIndexPath("index");
-        cs.setNumberOfPatch(100);
-        cs.setNumberOfTV(3);
+        cs.setNumberOfPatch(1000);
+        cs.setNumberOfTV(10);
 
         cc = new ConfigClient("config/ConfigClient.prop");
-        cc.setNumberOfTV(3);
-        cc.setNumberOfPatch(100);
+        cc.setNumberOfTV(10);
+        cc.setNumberOfPatch(1000);
 
         projectByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",1);
         termByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",2);
@@ -117,7 +117,7 @@ public class LearnAndTestCytomine {
         System.out.println("***************************************************");
         for(String project : projects) {
             System.out.println(project);
-            System.out.println(project+"="+listIndexByProject.get(project).size());
+            //System.out.println(project+"="+listIndexByProject.get(project).size());
 
         }
         System.out.println("***************************************************");
@@ -136,10 +136,13 @@ public class LearnAndTestCytomine {
             List<IndexMultiServerThread> threads = new ArrayList<IndexMultiServerThread>();
             for(String project : projects) {
                 server.createStorage(project);
-                RetrievalIndexer ri = new RetrievalIndexerLocalStorage(server.getStorage(project),true);
-                IndexMultiServerThread thread = new IndexMultiServerThread(ri,listIndexByProject.get(project), timesIndex,termByAnnotation,projectsCount2.get(project).size());
-                thread.start();
-                threads.add(thread);
+                if(listIndexByProject.get(project)!=null) {
+                    RetrievalIndexer ri = new RetrievalIndexerLocalStorage(server.getStorage(project),true);
+                    IndexMultiServerThread thread = new IndexMultiServerThread(ri,listIndexByProject.get(project), timesIndex,termByAnnotation,projectsCount2.get(project).size());
+                    thread.start();
+                    threads.add(thread);
+                }
+
             }
 
             for(int i=0;i<threads.size();i++) {
@@ -233,14 +236,18 @@ public class LearnAndTestCytomine {
             if(resultsWithoutRequestImage.size()>0) {
                 //check if 5 first has same term
                 DoubleSummaryStatistics subResults = new DoubleSummaryStatistics();
+                System.out.println("****************************");
                 for(int i=0;i<5;i++) {
+                    System.out.println("=> " + termByAnnotation.get(idImage+""));
                     if(i<resultsWithoutRequestImage.size()) {
                         String term = results.get(i).getProperties().get("term");
+                        System.out.println("====> " + term);
                         subResults.accept(term.equals(termByAnnotation.get(idImage+""))?1:0);
                     } else {
                         subResults.accept(0); //no results
                     }
                 }
+                System.out.println("========> " + subResults.getAverage());
                 statsFive.accept(subResults.getAverage());
 
             } else {
@@ -271,7 +278,7 @@ public class LearnAndTestCytomine {
         Queue<String> queueIndex  = new ConcurrentLinkedQueue<String>();
         List<String> indexFiles = new ArrayList<String>();
         FileUtils.listFiles(new File(path), indexFiles);
-        Collections.shuffle(indexFiles);
+        Collections.sort(indexFiles);
 
         indexFiles = indexFiles.subList(0,Math.min(indexFiles.size(), max));
         for(String p : indexFiles) {
@@ -294,6 +301,8 @@ public class LearnAndTestCytomine {
 
         LearnAndTestCytomine cyto = new LearnAndTestCytomine();
         cyto.index();
+        System.gc();
+        Thread.sleep(1000);
         cyto.search();
         cyto.printStats();
     }

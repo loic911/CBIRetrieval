@@ -42,15 +42,15 @@ public class MultiServerMessageResults implements Message {
      * Lists of ordered similar pictures
      */
     Map<String,List<ResultSim>> serverlists;
-    Map<String,Long> serverSizelists;
+//    Map<String,Long> serverSizelists;
     /**
      * Lists of server
      */
     private ListServerInformationSocket servers;
-    /**
-     * Total number of pictures of all servers
-     */
-    private long numberOfPicturesInIndex;
+//    /**
+//     * Total number of pictures of all servers
+//     */
+//    private long numberOfPicturesInIndex;
     
     /**
      * Constructor for a result message
@@ -60,8 +60,8 @@ public class MultiServerMessageResults implements Message {
     public MultiServerMessageResults(Document document) throws NotValidMessageXMLException {
         try {
             serverlists = new TreeMap<String,List<ResultSim>>();
-            serverSizelists=new TreeMap<String,Long>();
-            numberOfPicturesInIndex = 0;
+//            serverSizelists=new TreeMap<String,Long>();
+//            numberOfPicturesInIndex = 0;
 
             Element root = document.getRootElement();
 
@@ -72,9 +72,9 @@ public class MultiServerMessageResults implements Message {
            while (itServer.hasNext()) {
                 Element serverSim = (Element) itServer.next();
                 String idServer = serverSim.getAttributeValue("id");
-                Long size = Long.parseLong(serverSim.getAttributeValue("size"));
-                numberOfPicturesInIndex = numberOfPicturesInIndex + size;
-                serverSizelists.put(idServer, size);
+//                Long size = Long.parseLong(serverSim.getAttributeValue("size"));
+//                numberOfPicturesInIndex = numberOfPicturesInIndex + size;
+//                serverSizelists.put(idServer, size);
                  List pictures = serverSim.getChildren("pict");
                  List<ResultSim> lists = new ArrayList<ResultSim>();
 
@@ -104,20 +104,20 @@ public class MultiServerMessageResults implements Message {
      * @param serverlists List of results
      * @param numberOfPictures Size of index
      */
-    public MultiServerMessageResults(Map<String,List<ResultSim>> lists, Map<String,Long> listsSize) {
+    public MultiServerMessageResults(Map<String,List<ResultSim>> lists) { //, Map<String,Long> listsSize
         this.serverlists = lists;
-        this.serverSizelists = listsSize;
-        this.numberOfPicturesInIndex = 0;
-        for (Long serverSize : listsSize.values()) {
-            numberOfPicturesInIndex=numberOfPicturesInIndex+serverSize;
-        }
+//        this.serverSizelists = listsSize;
+//        this.numberOfPicturesInIndex = 0;
+//        for (Long serverSize : listsSize.values()) {
+//            numberOfPicturesInIndex=numberOfPicturesInIndex+serverSize;
+//        }
         this.servers = null;
     }
 
     public Document toXML() throws Exception {
         Element root = new Element("MultiServerMessage");
         root.setAttribute("type","SEARCH3");
-        root.setAttribute("size", numberOfPicturesInIndex + "");
+//        root.setAttribute("size", numberOfPicturesInIndex + "");
         Document document = new Document(root);
 
         Iterator<Entry<String,List<ResultSim>>> it = serverlists.entrySet().iterator();
@@ -128,7 +128,7 @@ public class MultiServerMessageResults implements Message {
             List<ResultSim> result = entry.getValue();
             Element serverRoot = new Element("server");
             serverRoot.setAttribute("id", idServer);
-            serverRoot.setAttribute("size", this.serverSizelists.get(idServer)+"");
+//            serverRoot.setAttribute("size", this.serverSizelists.get(idServer)+"");
             for (int i = 0; i < result.size(); i++) {
                 Element pict = new Element("pict");
                 pict.setAttribute(
@@ -168,11 +168,11 @@ public class MultiServerMessageResults implements Message {
         return servers;
     }
 
-    /**
-     * Get the number of indexed pictures
-     * @return Number of indexed pictures
-     */
-    public long getNumberOfPicturesInIndex() {
-        return numberOfPicturesInIndex;
-    }
+//    /**
+//     * Get the number of indexed pictures
+//     * @return Number of indexed pictures
+//     */
+//    public long getNumberOfPicturesInIndex() {
+//        return numberOfPicturesInIndex;
+//    }
 }

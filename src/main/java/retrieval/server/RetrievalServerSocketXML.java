@@ -218,11 +218,11 @@ class NewClientThread extends Thread {
             //send results messages
             logger.debug("run: write response results");
             Map<String,List<ResultSim>> results = multiServer.getPicturesSimilarities(vw, Niq, k,msg2.getContainers());
-            Map<String,Long> serverSize = multiServer.getStoragesSize();
+            //Map<String,Long> serverSize = multiServer.getStoragesSize();
 
-            logger.debug("### Server size:"+serverSize);
-            MultiServerMessageResults msg3 = new MultiServerMessageResults(results, serverSize);
-            logger.debug("### Server size:"+msg3.getNumberOfPicturesInIndex());
+            //logger.debug("### Server size:"+serverSize);
+            MultiServerMessageResults msg3 = new MultiServerMessageResults(results);
+//            logger.debug("### Server size:"+msg3.getNumberOfPicturesInIndex());
             NetworkUtils.writeXmlToSocket(client, msg3.toXML());
 
             client.close();

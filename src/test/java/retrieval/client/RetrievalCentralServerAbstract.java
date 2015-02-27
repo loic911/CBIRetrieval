@@ -64,7 +64,7 @@ public abstract class RetrievalCentralServerAbstract extends TestUtils{
                 properties = sim.getProperties();
             }
         }
-        assertEquals(2,properties.size());
+        assertEquals(TestUtils.BASE_NUMBER_OF_PROPERTIES+2,properties.size());
         for(String key : LOCALPICTURE1MAP.keySet()) {
             assertEquals(true, properties.containsKey(key)); 
             assertEquals(LOCALPICTURE1MAP.get(key), properties.get(key)); 

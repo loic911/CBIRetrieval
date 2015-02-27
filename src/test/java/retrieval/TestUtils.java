@@ -119,7 +119,9 @@ public class TestUtils {
     public static String LOCALPICTURE5 = LOCALPICTUREPATH+"crop5.jpg";
     public static String LOCALPICTURE6 = LOCALPICTUREPATH+"crop6.jpg";
     public static String LOCALPICTURE7 = LOCALPICTUREPATH+"crop7.jpg";
-    public static String LOCALPICTURE8 = LOCALPICTUREPATH+"crop8.jpg";  
+    public static String LOCALPICTURE8 = LOCALPICTUREPATH+"crop8.jpg";
+
+    public static int BASE_NUMBER_OF_PROPERTIES = 2; //we store id and path
     
   
     

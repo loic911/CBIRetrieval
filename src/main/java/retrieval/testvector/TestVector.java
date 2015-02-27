@@ -99,8 +99,10 @@ public abstract class TestVector implements Comparable {
         List<PatcheInformation> listPatch = new ArrayList<PatcheInformation>();
 
         for (int j = 0; j < numberOfGeneration; j++) {
+
             int minwidth = 1 + 1 * (Math.min(wPicture, hPicture)) / 100;
             int maxwidth = 100 * (Math.min(wPicture, hPicture)) / 100;
+
             int wOfPatch = minwidth + randomGenerator.nextInt(maxwidth - minwidth);
             int hOfPatch = wOfPatch;
             int xOfPatch = randomGenerator.nextInt(wPicture - wOfPatch);
@@ -117,7 +119,7 @@ public abstract class TestVector implements Comparable {
      * @param   patchs   List of patchs
      * @return   Map with visual words
      **/
-    public synchronized ConcurrentHashMap<String, Long> generateVisualWordFromPatchs(List<BufferedImage> patchs) {
+    public ConcurrentHashMap<String, Long> generateVisualWordFromPatchs(List<BufferedImage> patchs) {
 
         ConcurrentHashMap<String, Long> visualWords = new ConcurrentHashMap<String, Long>(patchs.size());
 
@@ -143,7 +145,7 @@ public abstract class TestVector implements Comparable {
      * @param sizeOfPatchH Size of patch (h)
      * @return Visual words
      */
-    public synchronized ConcurrentHashMap<String, Long> generateVisualWordFromPicture(
+    public  ConcurrentHashMap<String, Long> generateVisualWordFromPicture(
             ImageData img,
             Long id,
             int N,
@@ -161,7 +163,7 @@ public abstract class TestVector implements Comparable {
      * @param   img   A patch
      * @return A visual word
      **/
-    public synchronized String analyseToVisualWord(BufferedImage img) {
+    public String analyseToVisualWord(BufferedImage img) {
 
         char[] visualword = new char[tests.size()];
         double[] rbghsv = new double[6];
@@ -230,7 +232,7 @@ public abstract class TestVector implements Comparable {
      * @param   directory   Path where to save test vector
      * @throws   IOException   If directory is not valid
      **/
-    public synchronized void saveTest(String directory) throws IOException {
+    public void saveTest(String directory) throws IOException {
         String[] key = new String[tests.size()];
         String[] val = new String[tests.size()];
         String[] pos = new String[tests.size()];

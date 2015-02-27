@@ -294,7 +294,7 @@ public abstract class MultiServerAbstract extends TestUtils{
         assertNotNull(server2.getStorageList().get(0).getProperties(id1));
         assertEquals(LOCALPICTURE1MAP.size(),server2.getStorageList().get(0).getProperties(id1).size());
         assertNotNull(server2.getStorageList().get(0).getProperties(id2));
-        assertEquals(0,server2.getStorageList().get(0).getProperties(id2).size());
+        assertEquals(TestUtils.BASE_NUMBER_OF_PROPERTIES,server2.getStorageList().get(0).getProperties(id2).size());
     }   
     
      @Test
@@ -324,6 +324,6 @@ public abstract class MultiServerAbstract extends TestUtils{
         assertNotNull(server2.getStorageList().get(0).getProperties(id1));
         assertEquals(LOCALPICTURE1MAP.size(),server2.getStorageList().get(0).getProperties(id1).size());
         assertNotNull(server2.getStorageList().get(0).getProperties(id2));
-        assertEquals(0,server2.getStorageList().get(0).getProperties(id2).size());
+        assertEquals(TestUtils.BASE_NUMBER_OF_PROPERTIES,server2.getStorageList().get(0).getProperties(id2).size());
     }    
 }

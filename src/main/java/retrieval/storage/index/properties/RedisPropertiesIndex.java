@@ -61,7 +61,9 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
             ///if empty insert first tuple
             logger.info("getSize="+getSize());
             if (getSize() == 0) {
-                setCountValue(0);
+                try (Jedis redis = this.redis.getResource()) {
+                    setCountValue(redis, 0);
+                }
             }
             logger.info("getSize="+getSize());
 
@@ -72,32 +74,28 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
 
 
 
-    public int getCountValue() {
-        try (Jedis redis = this.redis.getResource()) {
+    public int getCountValue(Jedis redis) {
             String data = redis.hget("COUNT#" + idServer, "CBIR");
             if(data==null) {
                 return 0;
             }
             return Integer.parseInt(data);
-        }
     }
 
-    public void setCountValue(long value) {
-        try (Jedis redis = this.redis.getResource()) {
+    public void setCountValue(Jedis redis,long value) {
             redis.hset("COUNT#" + idServer, "CBIR", value + "");
-        }
     }
 
-    public void incrCountSize() {
-       int value = getCountValue();
+    public void incrCountSize(Jedis redis) {
+       int value = getCountValue(redis);
        value++;
-       setCountValue(value);
+       setCountValue(redis,value);
     }
 
-    public void decrCountSize() {
-       int value = getCountValue();
+    public void decrCountSize(Jedis redis) {
+       int value = getCountValue(redis);
        value--;
-       setCountValue(value);
+       setCountValue(redis,value);
     }
 
     /**
@@ -105,11 +103,13 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
      * @return Size of the map
      */
     public int getSize() {
-        int count = getCountValue();
-        if(count==-1) {
-            count=0;
+        try (Jedis redis = this.redis.getResource()) {
+            int count = getCountValue(redis);
+            if (count == -1) {
+                count = 0;
+            }
+            return count;
         }
-        return count;
     }
 
     /**
@@ -125,7 +125,8 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
                     redis.hset(this.prefix + id, prop.getKey(), prop.getValue());
                 }
                 redis.sadd(this.prefixIds,id+"");
-                incrCountSize();
+
+                incrCountSize(redis);
                 Date date = Calendar.getInstance().getTime();
                 logger.info(";" + date.getTime() + ";" + "" + id + ";" + properties);
                 return id;
@@ -163,8 +164,6 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
 
         try (Jedis redis = this.redis.getResource()) {
             Map<String,String> properties = redis.hgetAll(this.prefix + id);
-            properties.put("id",id+"");
-            properties.put("storage",idServer);
             properties.remove("CBIRTRUE");
             return properties;
         }
@@ -216,7 +215,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
                     picturesID.put(ids.get(i), 0);
                     redis.del(this.prefix + ids.get(i));
                     redis.srem(this.prefixIds, ids.get(i)+"");
-                    decrCountSize();
+                    decrCountSize(redis);
                 }
 
             }

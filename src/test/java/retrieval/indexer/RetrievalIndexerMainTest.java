@@ -99,7 +99,7 @@ public class RetrievalIndexerMainTest extends TestUtils {
         RetrievalIndexerMain.main(args);
         assertEquals(1, multiServer.getStorage(container).getNumberOfItem()); 
         assertEquals(true,multiServer.getStorage(container).isPictureInIndex(123l));
-        assertEquals(2, multiServer.getStorage(container).getProperties(123l).size()); 
+        assertEquals(TestUtils.BASE_NUMBER_OF_PROPERTIES+2, multiServer.getStorage(container).getProperties(123l).size());
         assertEquals(value1,multiServer.getStorage(container).getProperties(123l).get(key1));
         assertEquals(value2,multiServer.getStorage(container).getProperties(123l).get(key2));
     }       

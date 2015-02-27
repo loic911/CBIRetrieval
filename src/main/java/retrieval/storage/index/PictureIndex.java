@@ -122,7 +122,7 @@ public final class PictureIndex implements Serializable {
      * @return Picture id
      * @throws AlreadyIndexedException Picture path is already in index
      */
-    public synchronized Long putPictureAsIndexed(Long id,Map<String,String> properties, int numberOfPatch)
+    public synchronized Long putPictureAsIndexed(Long id,Map<String,String> properties, int numberOfPatch, String storage)
             throws AlreadyIndexedException {
              //logger.info("putPictureAsIndexed="+fullPathName);
         if (picturePathIndex.containsPicture(id)) {
@@ -132,6 +132,8 @@ public final class PictureIndex implements Serializable {
         if(properties==null) {
             properties = new HashMap<String,String>();
         }
+        properties.put("id",id+"");
+        properties.put("storage",storage);
         picturePathIndex.addPicture(id,properties);
         picturePatchsIndex.put(id, new Integer(numberOfPatch));
         return id;

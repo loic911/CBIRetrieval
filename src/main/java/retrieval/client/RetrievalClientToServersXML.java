@@ -87,8 +87,8 @@ public class RetrievalClientToServersXML{
         logger.debug("sortAndTrimBestResults");
         ResultsSimilarities results = sortAndTrimBestResults(msgSimilar, k);
         //fill the size of each server index (number of picture
-        logger.debug("fillSizeOfServer");
-        fillSizeOfServer(msgSimilar, results);
+//        logger.debug("fillSizeOfServer");
+//        fillSizeOfServer(msgSimilar, results);
         logger.debug("results");
         try {listsServer.closeAll();}catch(Exception e) {logger.warn(e);}
         return results;
@@ -122,14 +122,14 @@ public class RetrievalClientToServersXML{
         return new ResultsSimilarities(sortSimilarities(msgSimilar, k),listsServer);
     }
 
-    protected void fillSizeOfServer(MultiServerMessageResults[] msgSimilar, ResultsSimilarities results) {
-        for (int i = 0; i < msgSimilar.length; i++) {
-            if (msgSimilar[i] != null) {
-                long sizeOfIndex = msgSimilar[i].getNumberOfPicturesInIndex();
-                results.add((int)sizeOfIndex);
-            }
-        }
-    }
+//    protected void fillSizeOfServer(MultiServerMessageResults[] msgSimilar, ResultsSimilarities results) {
+//        for (int i = 0; i < msgSimilar.length; i++) {
+//            if (msgSimilar[i] != null) {
+//                long sizeOfIndex = msgSimilar[i].getNumberOfPicturesInIndex();
+//                results.add((int)sizeOfIndex);
+//            }
+//        }
+//    }
 
     /**
      * Get all NBT info on each server

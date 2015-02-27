@@ -82,7 +82,7 @@ public class IndexMultiThread extends Index {
             }
 
             logger.debug("putPictureAsIndexed " + id + " N=" + N);
-            pictureIndex.putPictureAsIndexed(id,properties, N);
+            pictureIndex.putPictureAsIndexed(id,properties, N,idStorage);
 
             //Extract visualword from patch
             logger.debug("generateVisualWordFromPicture " + id + " N=" + N + " resizeMethod=" + resizeMethod + " sizeOfPatchW=" + sizeOfPatchW + " sizeOfPatchH=" + sizeOfPatchH);

@@ -74,8 +74,6 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
             return new HashMap<String,String>();
         }
         Map<String,String> properties = map.get(id);
-        properties.put("id",id+"");
-        properties.put("storage",storage);
         return properties;
     }
 

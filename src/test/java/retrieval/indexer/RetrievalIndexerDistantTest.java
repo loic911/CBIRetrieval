@@ -120,11 +120,12 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         assertEquals(new Long(1l),retrievalServer.getSize());
         
         Map<String,String> map = retrievalServer.getStorage(container).getProperties(id);
-        assertEquals(2,map.size());
-        for(Map.Entry<String,String> entry : LOCALPICTURE1MAP.entrySet()) {
-            assertEquals(true,map.containsKey(entry.getKey()));
-            assertEquals(entry.getValue(),map.get(entry.getKey()));
-        }
+        assertEquals(TestUtils.BASE_NUMBER_OF_PROPERTIES+2,map.size());
+//        for(Map.Entry<String,String> entry : LOCALPICTURE1MAP.entrySet()) {
+//            assertEquals(true, map.containsKey(entry.getKey()));
+            assertEquals(LOCALPICTURE1MAP.get("date"),map.get("date"));
+        assertEquals(LOCALPICTURE1MAP.get("name"),map.get("name"));
+//        }
         
     }     
     
@@ -257,12 +258,9 @@ public class RetrievalIndexerDistantTest extends TestUtils {
         assertEquals(new Long(1l),retrievalServer.getSize());
         
         Map<String,String> map = retrievalServer.getStorage(container).getProperties(id);
-        assertEquals(2,map.size());
-        for(Map.Entry<String,String> entry : LOCALPICTURE1MAP.entrySet()) {
-            assertEquals(true,map.containsKey(entry.getKey()));
-            assertEquals(entry.getValue(),map.get(entry.getKey()));
-        }
-        
+        assertEquals(TestUtils.BASE_NUMBER_OF_PROPERTIES+2,map.size());
+        assertEquals(LOCALPICTURE1MAP.get("date"),map.get("date"));
+        assertEquals(LOCALPICTURE1MAP.get("name"),map.get("name"));
     }     
     
     
