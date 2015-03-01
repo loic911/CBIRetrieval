@@ -15,18 +15,19 @@
  */
 package retrieval.testvector;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.Config;
 import retrieval.utils.ConvertUtils;
 import retrieval.utils.ImageData;
 import retrieval.utils.PatcheInformation;
 import retrieval.utils.PictureUtils;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class implements a generic Tests Vector

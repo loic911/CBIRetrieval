@@ -15,6 +15,11 @@
  */
 package retrieval.indexer;
 
+import retrieval.dist.NotValidMessageXMLException;
+import retrieval.exception.CBIRException;
+import retrieval.storage.exception.NoValidPictureException;
+import retrieval.utils.FileUtils;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,10 +27,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import retrieval.dist.NotValidMessageXMLException;
-import retrieval.exception.CBIRException;
-import retrieval.storage.exception.NoValidPictureException;
-import retrieval.utils.FileUtils;
 
 /**
  * Abstract class for a retrieval indexer.

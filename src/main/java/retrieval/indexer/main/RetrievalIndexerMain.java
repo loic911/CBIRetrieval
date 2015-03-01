@@ -15,15 +15,16 @@
  */
 package retrieval.indexer.main;
 
-import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import retrieval.indexer.RetrievalIndexer;
 import retrieval.indexer.RetrievalIndexerDistantStorage;
 import retrieval.server.RetrievalServer;
+
+import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class implement a Indexer to manage picture on simple server with socket/xml

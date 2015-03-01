@@ -15,8 +15,6 @@
  */
 package retrieval.server.globaldatabase;
 
-import kyotocabinet.Cursor;
-import kyotocabinet.DB;
 import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
@@ -25,12 +23,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import retrieval.config.ConfigServer;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.ReadIndexException;
-import retrieval.storage.index.compress.compressNBT.RedisCompressIndex;
-import retrieval.storage.index.main.RedisHashTable;
-import retrieval.storage.index.patchs.RedisPatchsIndex;
-import retrieval.storage.index.properties.RedisPropertiesIndex;
 
-import java.io.File;
 import java.util.*;
 
 /**

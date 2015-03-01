@@ -15,14 +15,15 @@
  */
 package retrieval.client.message;
 
+import org.jdom.Document;
+import org.jdom.Element;
+import retrieval.dist.RequestPictureVisualWord;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.jdom.Document;
-import org.jdom.Element;
-import retrieval.dist.RequestPictureVisualWord;
 
 /**
  * Message XML for similarities

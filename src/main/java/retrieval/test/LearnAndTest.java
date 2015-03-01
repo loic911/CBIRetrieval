@@ -9,7 +9,6 @@ import retrieval.dist.ResultsSimilarities;
 import retrieval.indexer.RetrievalIndexer;
 import retrieval.indexer.RetrievalIndexerLocalStorage;
 import retrieval.server.RetrievalServer;
-import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
 
 import javax.imageio.ImageIO;

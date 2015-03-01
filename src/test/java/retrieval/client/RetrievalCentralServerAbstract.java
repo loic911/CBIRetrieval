@@ -1,14 +1,7 @@
 package retrieval.client;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import retrieval.TestUtils;
@@ -17,6 +10,15 @@ import retrieval.config.ConfigServer;
 import retrieval.dist.ResultsSimilarities;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.index.ResultSim;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *

@@ -4,33 +4,22 @@
  */
 package retrieval.indexer;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import retrieval.TestUtils;
-import static retrieval.TestUtils.BADPICTURE1;
-import static retrieval.TestUtils.LOCALPICTURE1;
-import static retrieval.TestUtils.LOCALPICTURE1MAP;
-import static retrieval.TestUtils.LOCALPICTURE2;
-import static retrieval.TestUtils.URLPICTURENOAUTH;
 import retrieval.config.ConfigServer;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.PictureNotFoundException;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.net.URL;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  *

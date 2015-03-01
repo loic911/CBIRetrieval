@@ -15,10 +15,6 @@
  */
 package retrieval.client;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigClient;
 import retrieval.dist.ResultsSimilarities;
@@ -26,6 +22,11 @@ import retrieval.exception.CBIRException;
 import retrieval.server.RetrievalServer;
 import retrieval.testvector.TestVectorListClient;
 import retrieval.testvector.generator.TestVectorReading;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class define a client for servers.

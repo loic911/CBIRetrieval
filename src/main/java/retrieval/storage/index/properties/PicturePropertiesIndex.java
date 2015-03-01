@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 package retrieval.storage.index.properties;
+
+import retrieval.storage.exception.CloseIndexException;
+
 import java.util.List;
 import java.util.Map;
-import retrieval.storage.exception.CloseIndexException;
 
 /**
  * This interface allow to implement methods for a Picture index

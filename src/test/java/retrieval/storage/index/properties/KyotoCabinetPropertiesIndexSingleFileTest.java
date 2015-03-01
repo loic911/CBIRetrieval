@@ -4,7 +4,6 @@
  */
 package retrieval.storage.index.properties;
 
-import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -13,6 +12,8 @@ import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.utils.FileUtils;
+
+import java.io.File;
 
 /**
  *

@@ -15,12 +15,6 @@
  */
 package retrieval.testvector.generator;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import org.apache.commons.io.comparator.NameFileComparator;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
@@ -32,6 +26,13 @@ import retrieval.testvector.TestVectorClient;
 import retrieval.testvector.TestVectorListClient;
 import retrieval.testvector.TestVectorListServer;
 import retrieval.testvector.TestVectorServer;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This class implement a test vector reader (interface ReadTestVector).

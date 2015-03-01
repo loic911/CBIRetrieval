@@ -1,15 +1,5 @@
 package retrieval.storage;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import javax.imageio.ImageIO;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import retrieval.TestUtils;
 import retrieval.config.ConfigClient;
@@ -20,6 +10,16 @@ import retrieval.storage.exception.NoException;
 import retrieval.testvector.TestVectorListClient;
 import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static org.junit.Assert.*;
 
 /**
  *

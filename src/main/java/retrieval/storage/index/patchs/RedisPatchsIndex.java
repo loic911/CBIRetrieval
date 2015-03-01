@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 package retrieval.storage.index.patchs;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -25,6 +23,9 @@ import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.exception.StartIndexException;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by lrollus on 14/01/15.

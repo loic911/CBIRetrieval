@@ -15,8 +15,9 @@
  */
 package retrieval.config;
 
-import java.util.Properties;
 import org.apache.log4j.Logger;
+
+import java.util.Properties;
 
 
 /**

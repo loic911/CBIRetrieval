@@ -15,11 +15,12 @@
  */
 package retrieval.indexer.main;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.log4j.Logger;
 import retrieval.indexer.RetrievalIndexer;
 import retrieval.indexer.RetrievalIndexerDistantStorage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class implement a Indexer to manage picture on simple server with socket/xml

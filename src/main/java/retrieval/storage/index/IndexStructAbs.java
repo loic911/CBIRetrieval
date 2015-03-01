@@ -15,13 +15,13 @@
  */
 package retrieval.storage.index;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import retrieval.config.ConfigServer;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.index.compress.compressNBT.CompressIndexNBT;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Abstract class for index structure

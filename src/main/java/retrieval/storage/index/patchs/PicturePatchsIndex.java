@@ -15,8 +15,9 @@
  */
 package retrieval.storage.index.patchs;
 
-import java.util.Map;
 import retrieval.storage.exception.CloseIndexException;
+
+import java.util.Map;
 /**
  * This interface allow to implement methods for a Picture Patchs Index
  * This index must map image id with their number of patchs

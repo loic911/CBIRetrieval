@@ -4,14 +4,11 @@
  */
 package retrieval.dist;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import retrieval.exception.CBIRException;
 import retrieval.storage.exception.AlreadyIndexedException;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *

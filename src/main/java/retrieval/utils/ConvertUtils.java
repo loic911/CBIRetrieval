@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 package retrieval.utils;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+
+import retrieval.config.ConfigServer;
+import retrieval.storage.index.ValueStructure;
+import retrieval.utils.Value.EntryInfo;
+import retrieval.utils.Value.ValueInfo;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import retrieval.utils.Value.EntryInfo;
-import retrieval.utils.Value.ValueInfo;
-import retrieval.config.ConfigServer;
-import retrieval.storage.index.ValueStructure;
 
 /**
  * Util class use to convert data

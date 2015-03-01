@@ -15,8 +15,6 @@
  */
 package retrieval.storage.index.main;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -27,6 +25,9 @@ import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.exception.StartIndexException;
 import retrieval.storage.index.ValueStructure;
 import retrieval.storage.index.compress.compressNBT.CompressIndexNBT;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by lrollus on 14/01/15.

@@ -15,8 +15,9 @@
  */
 package retrieval.testvector;
 
-import java.util.Random;
 import org.apache.log4j.Logger;
+
+import java.util.Random;
 
 /**
  * This class implement a test vector for generation

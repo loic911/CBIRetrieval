@@ -15,10 +15,6 @@
  */
 package retrieval.storage.index;
 
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.dist.RequestPictureVisualWord;
@@ -28,6 +24,11 @@ import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.NoValidPictureException;
 import retrieval.storage.exception.PictureTooHomogeneous;
 import retrieval.testvector.TestVectorListServer;
+
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class is an abstract class for index

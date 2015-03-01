@@ -15,13 +15,13 @@
  */
 package retrieval.testvector;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.index.PictureIndex;
 import retrieval.storage.index.ValueStructure;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Tests Vectors List from central server which extends Abstract class for

@@ -15,9 +15,10 @@
  */
 package retrieval.storage.index.compress.compressNBT;
 
+import retrieval.config.ConfigServer;
+
 import java.util.HashMap;
 import java.util.Map;
-import retrieval.config.ConfigServer;
 
 /**
  * Compress index for memory db

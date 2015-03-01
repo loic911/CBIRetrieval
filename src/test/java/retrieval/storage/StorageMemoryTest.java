@@ -1,16 +1,12 @@
 package retrieval.storage;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static retrieval.TestUtils.LOCALPICTURE1MAP;
+import org.junit.*;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.MemoryDatabase;
 import retrieval.storage.exception.PictureTooHomogeneous;
 import retrieval.utils.FileUtils;
+
+import static org.junit.Assert.fail;
 
 /**
  *

@@ -15,13 +15,14 @@
  */
 package retrieval.storage.index.patchs;
 
-import java.util.Map;
 import kyotocabinet.Cursor;
 import kyotocabinet.DB;
 import org.apache.log4j.Logger;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
+
+import java.util.Map;
 
 /**
  *

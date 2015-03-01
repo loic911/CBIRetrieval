@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 package retrieval.storage.index;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.exception.StartIndexException;
 import retrieval.storage.index.compress.compressNBT.CompressIndexNBT;
-import retrieval.storage.index.main.*;
+import retrieval.storage.index.main.HashTableIndexOptim;
+import retrieval.storage.index.main.RedisHashTable;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Index struct for an opt. engine like REDIS.

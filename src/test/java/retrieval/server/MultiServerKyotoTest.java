@@ -4,14 +4,16 @@
  */
 package retrieval.server;
 
-import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import retrieval.config.ConfigServer;
 import retrieval.utils.FileUtils;
+
+import java.io.File;
+
+import static org.junit.Assert.fail;
 
 /**
  *

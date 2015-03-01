@@ -4,17 +4,15 @@
  */
 package retrieval.testvector;
 
-import java.io.File;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import retrieval.TestUtils;
 import retrieval.config.ConfigClient;
 import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
+
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *

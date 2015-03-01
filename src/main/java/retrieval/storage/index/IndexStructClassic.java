@@ -15,10 +15,6 @@
  */
 package retrieval.storage.index;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.storage.exception.CloseIndexException;
@@ -28,6 +24,10 @@ import retrieval.storage.index.compress.compressNBT.CompressIndexNBT;
 import retrieval.storage.index.main.HashTableIndex;
 import retrieval.storage.index.main.KyotoCabinetHashTable;
 import retrieval.storage.index.main.MemoryHashTable;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A visual word index which is implemented by:

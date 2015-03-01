@@ -15,14 +15,15 @@
  */
 package retrieval.client.message;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import retrieval.dist.Message;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Message for XML request NBT message

@@ -15,10 +15,6 @@
  */
 package retrieval.storage.index;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
@@ -34,6 +30,11 @@ import retrieval.storage.index.properties.KyotoCabinetPropertiesIndexSingleFile;
 import retrieval.storage.index.properties.PicturePropertiesIndex;
 import retrieval.storage.index.properties.RedisPropertiesIndex;
 import retrieval.storage.index.properties.SimpleHashMapPropertiesIndex;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Picture index (not visual word index!)

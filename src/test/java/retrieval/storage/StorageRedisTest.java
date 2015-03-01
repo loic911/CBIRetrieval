@@ -7,12 +7,7 @@ import org.junit.BeforeClass;
 import retrieval.RedisInstance;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.server.globaldatabase.RedisDatabase;
-import retrieval.storage.StorageTestAbstract;
-import retrieval.utils.FileUtils;
-
-import java.io.File;
 
 import static org.junit.Assert.fail;
 

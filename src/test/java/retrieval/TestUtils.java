@@ -4,14 +4,7 @@
  */
 
 package retrieval;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -27,6 +20,11 @@ import retrieval.storage.Storage;
 import retrieval.storage.index.ResultSim;
 import retrieval.utils.CollectionUtils;
 import retrieval.utils.FileUtils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.util.*;
 /**
 /**
  *

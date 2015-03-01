@@ -1,17 +1,19 @@
 package retrieval.client;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.server.RetrievalServer;
 import retrieval.utils.FileUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.fail;
 
 /**
  *

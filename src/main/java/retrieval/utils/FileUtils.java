@@ -15,6 +15,10 @@
  */
 package retrieval.utils;
 
+import org.apache.log4j.Logger;
+import retrieval.storage.exception.PictureNotFoundException;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,9 +27,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.util.List;
-import javax.imageio.ImageIO;
-import org.apache.log4j.Logger;
-import retrieval.storage.exception.PictureNotFoundException;
 
 /**
  * This class store util method for IO

@@ -15,36 +15,24 @@
  */
 package retrieval.storage;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.dist.RequestPictureVisualWord;
 import retrieval.exception.CBIRException;
 import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.storage.exception.AlreadyIndexedException;
-import retrieval.storage.exception.CloseIndexException;
-import retrieval.storage.exception.InternalServerException;
-import retrieval.storage.exception.NoException;
-import retrieval.storage.exception.NoValidPictureException;
-import retrieval.storage.exception.PictureInIndexQueueException;
-import retrieval.storage.exception.PictureNotFoundException;
-import retrieval.storage.exception.PictureTooHomogeneous;
-import retrieval.storage.exception.ReadIndexException;
-import retrieval.storage.exception.StartIndexException;
-import retrieval.storage.exception.TestsVectorsNotFoundServerException;
-import retrieval.storage.exception.TooMuchIndexRequestException;
-import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
-import retrieval.storage.index.*;
+import retrieval.storage.exception.*;
+import retrieval.storage.index.Index;
+import retrieval.storage.index.IndexMultiThread;
+import retrieval.storage.index.PictureIndex;
+import retrieval.storage.index.ResultSim;
 import retrieval.testvector.TestVectorListServer;
 import retrieval.testvector.generator.TestVectorReading;
 import retrieval.utils.FileUtils;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class implement a storage which index pictures and response to

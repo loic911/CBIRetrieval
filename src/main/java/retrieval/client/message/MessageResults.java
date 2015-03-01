@@ -15,9 +15,10 @@
  */
 package retrieval.client.message;
 
-import java.util.List;
 import retrieval.client.ListServerInformationSocket;
 import retrieval.storage.index.ResultSim;
+
+import java.util.List;
 
 /**
  * Message for XML results

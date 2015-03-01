@@ -15,27 +15,17 @@
  */
 package retrieval.indexer;
 
+import org.apache.log4j.Logger;
+import org.jdom.Document;
+import retrieval.dist.*;
+import retrieval.exception.CBIRException;
+import retrieval.utils.NetworkUtils;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
-import org.apache.log4j.Logger;
-import org.jdom.Document;
-import retrieval.dist.MessageError;
-import retrieval.dist.MultiServerMessageAction;
-import retrieval.dist.MultiServerMessageDelete;
-import retrieval.dist.MultiServerMessageIndex;
-import retrieval.dist.MultiServerMessageIndexResults;
-import retrieval.dist.MultiServerMessageInfos;
-import retrieval.dist.MultiServerMessageStorages;
-import retrieval.dist.NotValidMessageXMLException;
-import retrieval.exception.CBIRException;
-import retrieval.utils.NetworkUtils;
 
 /**
  * Retrieval indexer for a distant RetrievalServer (a server).

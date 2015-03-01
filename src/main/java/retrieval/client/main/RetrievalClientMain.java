@@ -15,10 +15,6 @@
  */
 package retrieval.client.main;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import retrieval.client.ListServerInformationSocket;
@@ -29,6 +25,11 @@ import retrieval.dist.ResultsSimilarities;
 import retrieval.indexer.main.RetrievalIndexerMain;
 import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

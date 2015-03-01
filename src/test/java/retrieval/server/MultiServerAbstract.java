@@ -4,22 +4,20 @@
  */
 package retrieval.server;
 
-import java.util.ArrayList;
-import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
 import retrieval.RedisInstance;
 import retrieval.TestUtils;
-import static retrieval.TestUtils.LOCALPICTURE1;
-import static retrieval.TestUtils.LOCALPICTURE1MAP;
-import static retrieval.TestUtils.LOCALPICTURE2;
 import retrieval.config.ConfigServer;
-import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.Storage;
 import retrieval.utils.FileUtils;
 import retrieval.utils.NetworkUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *

@@ -4,15 +4,11 @@
  */
 package retrieval.server;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static retrieval.TestUtils.LOCALPICTURE1;
+import org.junit.*;
 import retrieval.config.ConfigServer;
 import retrieval.utils.FileUtils;
+
+import static org.junit.Assert.fail;
 
 /**
  *

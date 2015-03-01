@@ -15,9 +15,10 @@
  */
 package retrieval.indexer.main;
 
-import java.util.Map;
 import retrieval.indexer.RetrievalIndexer;
 import retrieval.indexer.RetrievalIndexerDistantStorage;
+
+import java.util.Map;
 
 /**
  * This class implement a Indexer to manage picture on simple server with socket/xml

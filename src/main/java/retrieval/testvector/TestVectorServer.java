@@ -15,8 +15,6 @@
  */
 package retrieval.testvector;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.dist.RequestPictureVisualWord;
@@ -25,6 +23,12 @@ import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.exception.StartIndexException;
 import retrieval.storage.index.*;
 import retrieval.storage.index.main.RedisHashTable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A tests vector or Server used so it has an index

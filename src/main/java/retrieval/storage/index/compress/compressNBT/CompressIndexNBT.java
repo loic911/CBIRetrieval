@@ -15,10 +15,11 @@
  */
 package retrieval.storage.index.compress.compressNBT;
 
-import java.util.Map;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.exception.StartIndexException;
+
+import java.util.Map;
 
 /**
  * The main Retrieval map store a lot of key value

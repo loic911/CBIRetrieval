@@ -15,6 +15,18 @@
  */
 package retrieval.server;
 
+import org.apache.log4j.Logger;
+import org.jdom.Document;
+import org.jdom.Element;
+import retrieval.dist.*;
+import retrieval.exception.CBIRException;
+import retrieval.storage.Storage;
+import retrieval.storage.exception.InternalServerException;
+import retrieval.storage.exception.NoException;
+import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
+import retrieval.storage.index.ResultSim;
+import retrieval.utils.NetworkUtils;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -24,27 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.Element;
-import retrieval.dist.MessageError;
-import retrieval.dist.MultiServerMessageDelete;
-import retrieval.dist.MultiServerMessageIndex;
-import retrieval.dist.MultiServerMessageIndexResults;
-import retrieval.dist.MultiServerMessageInfos;
-import retrieval.dist.MultiServerMessageNBT;
-import retrieval.dist.MultiServerMessageResults;
-import retrieval.dist.MultiServerMessageSimilarities;
-import retrieval.dist.MultiServerMessageStorages;
-import retrieval.dist.NotValidMessageXMLException;
-import retrieval.dist.RequestPictureVisualWord;
-import retrieval.exception.CBIRException;
-import retrieval.storage.Storage;
-import retrieval.storage.exception.InternalServerException;
-import retrieval.storage.exception.NoException;
-import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
-import retrieval.storage.index.ResultSim;
-import retrieval.utils.NetworkUtils;
 
 /**
  * Server side Communication class between Client and server

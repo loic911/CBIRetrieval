@@ -5,16 +5,14 @@
 package retrieval.storage.index.properties;
 
 
-import java.util.HashMap;
-import java.util.Map;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import retrieval.TestUtils;
 import retrieval.config.ConfigServer;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *

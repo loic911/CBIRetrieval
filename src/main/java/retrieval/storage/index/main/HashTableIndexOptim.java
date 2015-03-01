@@ -15,12 +15,12 @@
  */
 package retrieval.storage.index.main;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import retrieval.storage.index.ValueStructure;
 import retrieval.storage.index.compress.compressNBT.CompressIndexNBT;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Interface which force to implements method for HashTable

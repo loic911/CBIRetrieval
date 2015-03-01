@@ -5,12 +5,12 @@
 
 package retrieval.storage.index.compress.compressNBT;
 
-import java.io.File;
 import org.junit.BeforeClass;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.KyotoCabinetDatabase;
-import static retrieval.storage.index.compress.compressNBT.CompressIndexAbstract.database;
 import retrieval.utils.FileUtils;
+
+import java.io.File;
 
 /**
  *

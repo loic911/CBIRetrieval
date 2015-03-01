@@ -15,11 +15,11 @@
  */
 package retrieval.storage.index.properties;
 
-import java.util.*;
-
 import org.apache.log4j.Logger;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
+
+import java.util.*;
 
 /**
  * Picture index path in memory

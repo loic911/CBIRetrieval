@@ -15,12 +15,13 @@
  */
 package retrieval.storage;
 
+import org.apache.log4j.Logger;
+import retrieval.storage.exception.TooMuchIndexRequestException;
+
 import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import org.apache.log4j.Logger;
-import retrieval.storage.exception.TooMuchIndexRequestException;
 
 /**
  * This class in a index thread which will receive picture from indexed and put them on a waiting queue.

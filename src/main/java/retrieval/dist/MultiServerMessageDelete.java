@@ -15,12 +15,13 @@
  */
 package retrieval.dist;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Rollus Loic

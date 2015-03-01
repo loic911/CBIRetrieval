@@ -15,27 +15,18 @@
  */
 package retrieval.client;
 
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
-import retrieval.dist.MessageError;
-import retrieval.dist.MultiServerMessageNBT;
-import retrieval.dist.MultiServerMessageResults;
-import retrieval.dist.MultiServerMessageSimilarities;
-import retrieval.dist.NotValidMessageXMLException;
-import retrieval.dist.ResultsSimilarities;
+import retrieval.dist.*;
 import retrieval.exception.CBIRException;
 import retrieval.storage.index.ResultSim;
 import retrieval.utils.NetworkUtils;
+
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Client side of Communication class between Client and servers

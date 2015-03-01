@@ -15,13 +15,14 @@
  */
 package retrieval.testvector.generator;
 
-import java.io.File;
-import java.util.Arrays;
 import org.apache.log4j.Logger;
 import retrieval.testvector.TestVectorGeneration;
 import retrieval.testvector.generator.exception.TestsVectorsArgumentException;
 import retrieval.testvector.generator.exception.TestsVectorsWritingException;
 import retrieval.utils.FileUtils;
+
+import java.io.File;
+import java.util.Arrays;
 
 /**
  * This class implement a test vector writer (interface CreateTestVector).

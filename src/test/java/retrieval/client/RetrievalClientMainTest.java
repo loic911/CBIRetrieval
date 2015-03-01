@@ -5,29 +5,15 @@
 package retrieval.client;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import retrieval.TestUtils;
-import static retrieval.TestUtils.LOCALPICTURE1;
-import static retrieval.TestUtils.LOCALPICTURE1MAP;
-import static retrieval.TestUtils.LOCALPICTURE2;
-import static retrieval.TestUtils.LOCALPICTURE3;
-import static retrieval.TestUtils.LOCALPICTURE4;
-import static retrieval.TestUtils.LOCALPICTURE5;
-import static retrieval.TestUtils.LOCALPICTURE6;
-import static retrieval.TestUtils.LOCALPICTURE7;
-import static retrieval.TestUtils.MULTISERVERPORT1;
-import static retrieval.TestUtils.MULTISERVERPORT2;
-import static retrieval.TestUtils.createMultiServer;
 import retrieval.client.main.RetrievalClientMain;
 import retrieval.config.ConfigClient;
 import retrieval.config.ConfigServer;
 import retrieval.server.RetrievalServer;
 import retrieval.utils.FileUtils;
+
+import static org.junit.Assert.fail;
 
 
 public class RetrievalClientMainTest extends TestUtils {

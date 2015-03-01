@@ -15,13 +15,6 @@
  */
 package retrieval.client;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import retrieval.client.message.MessageNBT;
 import retrieval.client.message.MessageResults;
@@ -31,6 +24,9 @@ import retrieval.server.RetrievalServer;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.WrongNumberOfTestsVectorsException;
 import retrieval.storage.index.ResultSim;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Client side communication class between Client and Servers

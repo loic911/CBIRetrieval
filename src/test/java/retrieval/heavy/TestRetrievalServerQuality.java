@@ -5,14 +5,6 @@
  */
 package retrieval.heavy;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.imageio.ImageIO;
 import org.apache.commons.io.FilenameUtils;
 import retrieval.client.RetrievalClient;
 import retrieval.config.ConfigClient;
@@ -23,6 +15,10 @@ import retrieval.indexer.RetrievalIndexerLocalStorage;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.util.*;
 
 /**
  *

@@ -15,14 +15,15 @@
  */
 package retrieval.server.globaldatabase;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.ReadIndexException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *

@@ -15,11 +15,12 @@
  */
 package retrieval.client;
 
+import retrieval.dist.ResultsSimilarities;
+import retrieval.exception.CBIRException;
+
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import retrieval.dist.ResultsSimilarities;
-import retrieval.exception.CBIRException;
 
 /**
  * RetrievalClient interface

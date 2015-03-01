@@ -12,8 +12,6 @@ import retrieval.RedisInstance;
 import retrieval.config.ConfigServer;
 import retrieval.utils.FileUtils;
 
-import java.io.File;
-
 import static org.junit.Assert.fail;
 
 /**

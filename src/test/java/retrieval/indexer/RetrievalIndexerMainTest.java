@@ -5,20 +5,16 @@
 package retrieval.indexer;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import retrieval.TestUtils;
-import static retrieval.TestUtils.LOCALPICTURE1;
 import retrieval.config.ConfigServer;
 import retrieval.indexer.main.RetrievalDeleterMain;
 import retrieval.indexer.main.RetrievalIndexerMain;
 import retrieval.indexer.main.RetrievalPurgerMain;
 import retrieval.server.RetrievalServer;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
     /**
      * Main methode for indexer

@@ -15,10 +15,10 @@
  */
 package retrieval.storage.index;
 
+import retrieval.config.ConfigServer;
+
 import java.io.Serializable;
 import java.util.*;
-
-import retrieval.config.ConfigServer;
 
 /**
  * This class implements a value structure for the index

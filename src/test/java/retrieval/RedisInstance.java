@@ -5,13 +5,10 @@
 
 package retrieval;
 
-import java.io.File;
+import redis.clients.jedis.Jedis;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import redis.clients.jedis.Jedis;
-import retrieval.config.ConfigServer;
-import retrieval.utils.FileUtils;
 
 /**
  *

@@ -15,9 +15,10 @@
  */
 package retrieval.storage.index;
 
-import java.util.Map;
 import org.apache.log4j.Logger;
 import retrieval.server.globaldatabase.GlobalDatabase;
+
+import java.util.Map;
 
 /**
  * This class implement a set of pictures that has been deleted from server but

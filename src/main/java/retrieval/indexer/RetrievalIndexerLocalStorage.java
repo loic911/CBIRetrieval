@@ -15,15 +15,16 @@
  */
 package retrieval.indexer;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import retrieval.dist.NotValidMessageXMLException;
 import retrieval.exception.CBIRException;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.NoValidPictureException;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Retrieval indexer for a local RetrievalServer (a java object).

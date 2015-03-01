@@ -15,11 +15,12 @@
  */
 package retrieval.storage.index.patchs;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Patchs Index implemented with a simple HashMap for memory use only

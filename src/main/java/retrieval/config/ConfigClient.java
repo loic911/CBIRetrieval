@@ -15,8 +15,9 @@
  */
 package retrieval.config;
 
-import java.util.Properties;
 import retrieval.exception.CBIRException;
+
+import java.util.Properties;
 
 /**
  * Configuration file for a client

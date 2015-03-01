@@ -15,11 +15,12 @@
  */
 package retrieval.dist;
 
-import java.util.ArrayList;
-import java.util.List;
 import retrieval.client.ListServerInformationSocket;
 import retrieval.server.RetrievalServer;
 import retrieval.storage.index.ResultSim;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A result object which contains:
