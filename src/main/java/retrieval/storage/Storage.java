@@ -167,7 +167,7 @@ public final class Storage {
         return index.addPicture(
                 image,
                 id,
-                new HashMap<String,String>(properties),
+                (properties!=null? new HashMap<>(properties) : new HashMap<>()),
                 config.getNumberOfPatch(), 
                 config.getResizeMethod(), 
                 config.getSizeOfPatchResizeWidth(), 
@@ -191,7 +191,7 @@ public final class Storage {
                 id = null;
             }
         }
-        threadIndex.addInIndexPicture(image,id,new HashMap<String,String>(properties));
+        threadIndex.addInIndexPicture(image,id,(properties!=null? new HashMap<>(properties) : new HashMap<>()));
         return id;
     }  
     

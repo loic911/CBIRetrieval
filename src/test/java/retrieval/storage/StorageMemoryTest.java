@@ -6,6 +6,10 @@ import retrieval.server.globaldatabase.MemoryDatabase;
 import retrieval.storage.exception.PictureTooHomogeneous;
 import retrieval.utils.FileUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -58,5 +62,16 @@ public class StorageMemoryTest extends StorageTestAbstract {
     public void testServerIndexPictureTooHomogenousWithoutLimit() throws Exception {
        System.out.println("testServerIndexPictureTooHomogenous");
        storage.indexPicture(FileUtils.readPicture(PICTURETOOHOMOGENOUS),5l,LOCALPICTURE1MAP);
-    }    
+    }
+
+    @Test
+    public void testPropertiesShouldBeClone() throws Exception {
+        System.out.println("testPropertiesShouldBeClone");
+        Map<String,String> map = new HashMap<>();
+        storage.indexPicture(FileUtils.readPicture(PICTURETOOHOMOGENOUS),5l,map);
+        map.put("hello","world");
+        Map<String,String> imageMap = storage.getProperties(5l);
+        //the image properties should not be modify, even if we change the object
+        assertNull(imageMap.get("hello"));
+    }
 }
