@@ -115,6 +115,7 @@ public class LearnAndTest {
             threads.get(i).join();
         }
 
+
         int total = 0;
         int positive = 0;
         for(Map.Entry<Long,ResultsSimilarities> map : results.entrySet()) {

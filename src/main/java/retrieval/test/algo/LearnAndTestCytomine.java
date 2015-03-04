@@ -13,9 +13,7 @@ import retrieval.storage.index.ResultSim;
 import retrieval.utils.FileUtils;
 
 import javax.imageio.ImageIO;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -26,11 +24,11 @@ import java.util.stream.Collectors;
  */
 public class LearnAndTestCytomine {
 
-    //static int MAX_INDEX = 1000; //Integer.MAX_VALUE;
-    static int MAX_SEARCH = 10000; //Integer.MAX_VALUE;
+    //static int MAX_INDEX = 100000; //Integer.MAX_VALUE;
+    //static int MAX_SEARCH = 10000; //Integer.MAX_VALUE;
 
     static int MAX_INDEX = Integer.MAX_VALUE;
-    //static int MAX_SEARCH = Integer.MAX_VALUE;
+    static int MAX_SEARCH = Integer.MAX_VALUE;
 
     String learnPath = "/media/DATA_/backup/retrieval/set";
     String testPath = "/media/DATA_/backup/retrieval/set";
@@ -38,7 +36,7 @@ public class LearnAndTestCytomine {
     Map<String,String> projectByAnnotation;// = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",1);
     Map<String,String> termByAnnotation;// = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",2);
 
-    int numberOfSearchThreads = 8;
+    int numberOfSearchThreads = 20;
 
     Queue<String> queueIndex;
     Map<String,List<String>> listIndexByProject;
@@ -60,14 +58,14 @@ public class LearnAndTestCytomine {
 
     public LearnAndTestCytomine() throws Exception {
         cs = new ConfigServer("config/ConfigServer.prop");
-        cs.setStoreName("REDIS"); //KYOTOSINGLEFILE
+        cs.setStoreName("MEMORY"); //KYOTOSINGLEFILE
         cs.setIndexPath("index");
-        cs.setNumberOfPatch(1000);
-        cs.setNumberOfTV(10);
+        cs.setNumberOfPatch(150);//200
+        cs.setNumberOfTV(3);
 
         cc = new ConfigClient("config/ConfigClient.prop");
-        cc.setNumberOfTV(10);
-        cc.setNumberOfPatch(1000);
+        cc.setNumberOfTV(3);
+        cc.setNumberOfPatch(150);
 
         projectByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",1);
         termByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",2);
@@ -210,6 +208,10 @@ public class LearnAndTestCytomine {
         DoubleSummaryStatistics statsFirstSame =  new DoubleSummaryStatistics();
         DoubleSummaryStatistics statsFirst =  new DoubleSummaryStatistics();
         DoubleSummaryStatistics statsFive =  new DoubleSummaryStatistics();
+        Map<String,DoubleSummaryStatistics> statsFirstSameByTerm =  new TreeMap<>();
+        Map<String,DoubleSummaryStatistics> statsFirstByTerm =  new TreeMap<>();
+        Map<String,DoubleSummaryStatistics> statsFiveByTerm =  new TreeMap<>();
+
 
         for(Map.Entry<Long,ResultsSimilarities> map : results.entrySet()) {
             Long idImage = map.getKey();
@@ -218,21 +220,27 @@ public class LearnAndTestCytomine {
             List<ResultSim> resultsWithoutRequestImage = results.stream().filter(x -> !x.getId().equals(idImage)).collect(Collectors.toList());
 
 
+            double valueFirst = 0;
             if(results.size()>0) {
                 //check if first
-                statsFirstSame.accept(results.get(0).getId().equals(idImage)?1:0);
-            } else {
-                statsFirstSame.accept(0);
+                valueFirst = results.get(0).getId().equals(idImage)?1:0;
             }
+            statsFirstSame.accept(valueFirst);
+            addResultForTerm(statsFirstSameByTerm,termByAnnotation.get(idImage+""),valueFirst);
 
+
+            double valueFirstSameTerm = 0;
             if(resultsWithoutRequestImage.size()>0) {
                 //check if first has same term
                 String term = results.get(0).getProperties().get("term");
-                statsFirst.accept(term.equals(termByAnnotation.get(idImage+""))?1:0);
-            } else {
-                statsFirst.accept(0);
+                valueFirstSameTerm = term.equals(termByAnnotation.get(idImage + "")) ? 1 : 0;
             }
+            statsFirst.accept(valueFirstSameTerm);
+            addResultForTerm(statsFirstByTerm,termByAnnotation.get(idImage+""),valueFirstSameTerm);
 
+
+
+            double valueFiveFirstSameTerm = 0;
             if(resultsWithoutRequestImage.size()>0) {
                 //check if 5 first has same term
                 DoubleSummaryStatistics subResults = new DoubleSummaryStatistics();
@@ -248,25 +256,91 @@ public class LearnAndTestCytomine {
                     }
                 }
                 System.out.println("========> " + subResults.getAverage());
-                statsFive.accept(subResults.getAverage());
+                valueFiveFirstSameTerm = subResults.getAverage();
 
-            } else {
-                statsFive.accept(0);
             }
+            statsFive.accept(valueFiveFirstSameTerm);
+            addResultForTerm(statsFiveByTerm,termByAnnotation.get(idImage+""),valueFiveFirstSameTerm);
+
         }
+
+
+
+
+        String filename = new Date().toString();
+        File output = new File("/media/DATA_/backup/retrieval/results/"+filename);
+
+        try {
+            try (PrintStream out = new PrintStream(new FileOutputStream(output))) {
+                for(Map.Entry<Long,ResultsSimilarities> map : results.entrySet()) {
+
+                    String key = map.getKey()+"";
+                    String value = "";
+                    for(ResultSim rs : map.getValue().getResults()) {
+                        value = value + ";"+rs.getId() +";"+rs.getSimilarities();
+                    }
+                    out.print(key+value+"\n");
+
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
 
         System.out.println("Total time INDEX:"+totalTimeIndex);
         System.out.println("Total time SEARCH:"+totalTimeSearch);
 
         System.out.println("ALL INDEX:"+statsIndex);
         System.out.println("ALL SEARCH:"+statsSearch);
-
+        System.out.println("************************************************************************");
+        System.out.println("************************************************************************");
+        System.out.println("************************************************************************");
         System.out.println("STATS result 1 = req annotation:"+statsFirstSame);
+        statsFirstSameByTerm.entrySet().forEach(System.out::println);
+        System.out.println("************************************************************************");
+        System.out.println("************************************************************************");
+        System.out.println("************************************************************************");
         System.out.println("STATS result-(req annotation) 1  = req term :"+statsFirst);
+        statsFirstByTerm.entrySet().forEach(System.out::println);
+        System.out.println("************************************************************************");
+        System.out.println("************************************************************************");
+        System.out.println("************************************************************************");
         System.out.println("STATS result-(req annotation) 5  = req term :"+statsFive);
+        statsFiveByTerm.entrySet().forEach(System.out::println);
+        System.out.println("************************************************************************");
+        System.out.println("************************************************************************");
+        System.out.println("************************************************************************");
+
+        System.out.println("Reuslts in "+output.getAbsolutePath());
     }
 
+    private void addResultForTerm(Map<String,DoubleSummaryStatistics> map, String term, Double value) {
+        DoubleSummaryStatistics stat = map.get(term);
+        if(stat==null) {
+            stat = new DoubleSummaryStatistics();
+        }
+        stat.accept(value);
+        map.put(term,stat);
+    }
 
+//    private Map<String,Double> buildResultTerms(Map<String,DoubleSummaryStatistics> map) {
+////        Aussi vu la distribution très déséquilibrée du nombre d'annotations
+////        par terme, ce serait bien de calculer aussi en plus ces pourcentages
+////        moyennés par termes, c-à-d tu calcules le pourcentage pour chaque terme,
+////                puis à la fin tu fais la somme de ces pourcentages divisé par le nombre
+////        de termes.
+//        Map<String,Double> results = new HashMap<>();
+//        double total = map.values().stream().map(DoubleSummaryStatistics::getAverage).reduce(0d,Double::sum);
+//
+//        for(Map.Entry entry : map.entrySet()) {
+//            results.put(entry.getKey(),)
+//        }
+//
+//
+//    }
 
 
 
@@ -278,7 +352,8 @@ public class LearnAndTestCytomine {
         Queue<String> queueIndex  = new ConcurrentLinkedQueue<String>();
         List<String> indexFiles = new ArrayList<String>();
         FileUtils.listFiles(new File(path), indexFiles);
-        Collections.sort(indexFiles);
+        //Collections.sort(indexFiles);
+        Collections.shuffle(indexFiles);
 
         indexFiles = indexFiles.subList(0,Math.min(indexFiles.size(), max));
         for(String p : indexFiles) {
