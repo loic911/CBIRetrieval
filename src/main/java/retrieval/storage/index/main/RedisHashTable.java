@@ -312,7 +312,7 @@ public class RedisHashTable extends HashTableIndexOptim{
     public void deleteAll(Map<Long, Integer> mapID)  {
 
         try (Jedis redis = this.redis.getResource()) {
-            Set<String> keys = redis.keys("M*");
+            Set<String> keys = redis.keys(this.subPrefix+"*");
             Iterator<String> it = keys.iterator();
 
             while(it.hasNext()) {
@@ -340,7 +340,7 @@ public class RedisHashTable extends HashTableIndexOptim{
 
     public boolean isRessourcePresent(Long id) {
         try (Jedis redis = this.redis.getResource()) {
-            Set<String> keys = redis.keys("M*");
+            Set<String> keys = redis.keys(this.subPrefix+"*");
             Iterator<String> it = keys.iterator();
 
             while(it.hasNext()) {

@@ -12,7 +12,8 @@ public class TestRedisPerf {
 
     public static void main(String[] args) {
         Long start = System.currentTimeMillis();
-        removeBigEntry();
+        countPerStorage();
+        //removeBigEntry();
         System.out.println(System.currentTimeMillis()-start);
     }
 
@@ -54,30 +55,87 @@ public class TestRedisPerf {
 //            System.out.println(num+ "="+map.get(num));
 //        }
     }
+//
+//
+//    public static void method() {
+//        Jedis jedis = new Jedis("localhost",6379,99999);
+//        Set<String> keys = jedis.keys("M#67*");
+//        System.out.println("keys="+keys.size());
+//        TreeMap<Integer,Integer> map = new TreeMap<Integer,Integer>();
+//        TreeMap<Integer,Integer> mapNbt = new TreeMap<Integer,Integer>();
+//        for(String key : keys) {
+//            //int number = jedis.hgetAll(key).size(); //NUMBER OF ENTRIES
+//            int number = Integer.parseInt(jedis.hget(key,"-1")); //NBT
+//            Integer value = map.get(number);
+//            if(value==null) {
+//                value = 1;
+//            } else {
+//                value++;
+//            }
+//            map.put(number,value);
+//        }
+//
+//        for(Integer num : map.keySet()) {
+//            System.out.println(num+ "="+map.get(num));
+//        }
+//    }
 
 
-    public static void method() {
-        Jedis jedis = new Jedis("localhost",6379,2000);
-        Set<String> keys = jedis.keys("M#*");
-        System.out.println("keys="+keys.size());
+    public static void countPerStorage() {
+        Jedis jedis = new Jedis("localhost",6379,99999);
+        Set<String> storages = jedis.smembers("STORAGE");
         TreeMap<Integer,Integer> map = new TreeMap<Integer,Integer>();
         TreeMap<Integer,Integer> mapNbt = new TreeMap<Integer,Integer>();
-        for(String key : keys) {
-            //int number = jedis.hgetAll(key).size(); //NUMBER OF ENTRIES
-            int number = Integer.parseInt(jedis.hget(key,"-1")); //NBT
-            Integer value = map.get(number);
-            if(value==null) {
-                value = 1;
-            } else {
-                value++;
+
+        for(String storage : storages) {
+
+            Set<String> keys = jedis.keys("M#"+storage+"*");
+            System.out.println(storage + " => keys="+keys.size());
+
+            for(String key : keys) {
+                //int number = jedis.hgetAll(key).size(); //NUMBER OF ENTRIES
+                int number = Integer.parseInt(jedis.hget(key,"-1")); //NBT
+
+                Integer value = mapNbt.get(number);
+                if(value==null) {
+                    value = 1;
+                } else {
+                    value++;
+                }
+                mapNbt.put(number,value);
+
+                int size = jedis.hgetAll(key).size()-1;
+                Integer valueCount = mapNbt.get(size);
+                if(valueCount==null) {
+                    valueCount = 1;
+                } else {
+                    valueCount++;
+                }
+                mapNbt.put(size,valueCount);
+
             }
-            map.put(number,value);
+
+        }
+        System.out.println("*********************************");
+        System.out.println("*********************************");
+        System.out.println("COUNT PER SIZE:");
+        System.out.println("*********************************");
+        System.out.println("*********************************");
+        for(Integer num : mapNbt.keySet()) {
+            System.out.println(num+ "="+mapNbt.get(num));
+        }
+        System.out.println("*********************************");
+        System.out.println("*********************************");
+        System.out.println("COUNT PER NBT:");
+        System.out.println("*********************************");
+        System.out.println("*********************************");
+        for(Integer num : mapNbt.keySet()) {
+            System.out.println(num+ "="+mapNbt.get(num));
         }
 
-        for(Integer num : map.keySet()) {
-            System.out.println(num+ "="+map.get(num));
-        }
+
     }
+
 
 
 //    public static void method1(int max) {

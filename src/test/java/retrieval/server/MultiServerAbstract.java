@@ -320,7 +320,7 @@ public abstract class MultiServerAbstract extends TestUtils{
         assert server2.getStorageList().get(0).isPictureInIndex(id1);       
         assert server2.getStorageList().get(0).isPictureInIndex(id2);
         assertNotNull(server2.getStorageList().get(0).getProperties(id1));
-        assertEquals(LOCALPICTURE1MAP.size(),server2.getStorageList().get(0).getProperties(id1).size()+2);
+        assertEquals(LOCALPICTURE1MAP.size()+2,server2.getStorageList().get(0).getProperties(id1).size());
         assertNotNull(server2.getStorageList().get(0).getProperties(id2));
         assertEquals(TestUtils.BASE_NUMBER_OF_PROPERTIES,server2.getStorageList().get(0).getProperties(id2).size());
     }    
