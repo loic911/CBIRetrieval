@@ -12,6 +12,8 @@ public class TestRedisPerf {
 
     public static void main(String[] args) {
         Long start = System.currentTimeMillis();
+        //countPerStorage();
+        //removeEntry();
         countPerStorage();
         //removeBigEntry();
         System.out.println(System.currentTimeMillis()-start);
@@ -105,13 +107,13 @@ public class TestRedisPerf {
                 mapNbt.put(number,value);
 
                 int size = jedis.hgetAll(key).size()-1;
-                Integer valueCount = mapNbt.get(size);
+                Integer valueCount = map.get(size);
                 if(valueCount==null) {
                     valueCount = 1;
                 } else {
                     valueCount++;
                 }
-                mapNbt.put(size,valueCount);
+                map.put(size,valueCount);
 
             }
 
@@ -121,8 +123,8 @@ public class TestRedisPerf {
         System.out.println("COUNT PER SIZE:");
         System.out.println("*********************************");
         System.out.println("*********************************");
-        for(Integer num : mapNbt.keySet()) {
-            System.out.println(num+ "="+mapNbt.get(num));
+        for(Integer num : map.keySet()) {
+            System.out.println(num+ "="+map.get(num));
         }
         System.out.println("*********************************");
         System.out.println("*********************************");
@@ -136,6 +138,62 @@ public class TestRedisPerf {
 
     }
 
+
+    public static void removeEntry() {
+        Jedis jedis = new Jedis("localhost",6379,99999);
+        Set<String> storages = jedis.smembers("STORAGE");
+        TreeMap<Integer,Integer> map = new TreeMap<Integer,Integer>();
+        TreeMap<Integer,Integer> mapNbt = new TreeMap<Integer,Integer>();
+
+        for(String storage : storages) {
+
+            Set<String> keys = jedis.keys("M#"+storage+"*");
+            System.out.println(storage + " => keys="+keys.size());
+
+            for(String key : keys) {
+                //int number = jedis.hgetAll(key).size(); //NUMBER OF ENTRIES
+                double nbt = Double.parseDouble(jedis.hget(key,"-1")); //NBT
+
+                for(String subkey : jedis.hgetAll(key).keySet()) {
+                    if(!subkey.equals("-1")) {
+                        double nbtk = Long.parseLong(jedis.hget(key,subkey));
+                        double ratio = (nbtk/nbt);
+                        if(ratio<0.01d) {
+                            //System.out.println("ratio:"+ratio);
+                            jedis.hdel(key,subkey);
+                            jedis.hincrBy(key,"-1",(long)(-nbtk));
+                            if(jedis.hlen(key)<=1) {
+                                //1 because nbt is store there
+                                System.out.println("remove key");
+                                jedis.del(key);
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+//        System.out.println("*********************************");
+//        System.out.println("*********************************");
+//        System.out.println("COUNT PER SIZE:");
+//        System.out.println("*********************************");
+//        System.out.println("*********************************");
+//        for(Integer num : mapNbt.keySet()) {
+//            System.out.println(num+ "="+mapNbt.get(num));
+//        }
+//        System.out.println("*********************************");
+//        System.out.println("*********************************");
+//        System.out.println("COUNT PER NBT:");
+//        System.out.println("*********************************");
+//        System.out.println("*********************************");
+//        for(Integer num : mapNbt.keySet()) {
+//            System.out.println(num+ "="+mapNbt.get(num));
+//        }
+
+
+    }
 
 
 //    public static void method1(int max) {
