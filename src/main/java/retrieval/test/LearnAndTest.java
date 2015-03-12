@@ -39,14 +39,14 @@ public class LearnAndTest {
         int numberOfSearchThreads = 1;
 
         ConfigServer cs = new ConfigServer("config/ConfigServer.prop");
-        cs.setStoreName("REDIS"); //KYOTOSINGLEFILE
+        cs.setStoreName("MEMORY"); //KYOTOSINGLEFILE
         cs.setIndexPath("index");
-        cs.setNumberOfPatch(200);
-        cs.setNumberOfTV(5);
+        cs.setNumberOfPatch(150);
+        cs.setNumberOfTV(3);
 
         ConfigClient cc = new ConfigClient("config/ConfigClient.prop");
-        cc.setNumberOfTV(5);
-        cc.setNumberOfPatch(200);
+        cc.setNumberOfTV(3);
+        cc.setNumberOfPatch(150);
 
         System.out.println("***************************************************");
 

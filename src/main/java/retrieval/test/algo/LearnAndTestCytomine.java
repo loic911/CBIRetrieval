@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class LearnAndTestCytomine {
 
     //static int MAX_INDEX = 100000; //Integer.MAX_VALUE;
-    static int MAX_SEARCH = 10000; //Integer.MAX_VALUE;
+    static int MAX_SEARCH = 1000; //Integer.MAX_VALUE;
 
     static int MAX_INDEX = Integer.MAX_VALUE;
     //static int MAX_SEARCH = Integer.MAX_VALUE;
@@ -58,14 +58,14 @@ public class LearnAndTestCytomine {
 
     public LearnAndTestCytomine() throws Exception {
         cs = new ConfigServer("config/ConfigServer.prop");
-        cs.setStoreName("REDIS"); //KYOTOSINGLEFILE
+        cs.setStoreName("MEMORY"); //KYOTOSINGLEFILE
         cs.setIndexPath("index");
-        cs.setNumberOfPatch(500);//200
-        cs.setNumberOfTV(5);
+        cs.setNumberOfPatch(150);//200
+        cs.setNumberOfTV(3);
 
         cc = new ConfigClient("config/ConfigClient.prop");
-        cc.setNumberOfTV(5);
-        cc.setNumberOfPatch(500);
+        cc.setNumberOfTV(3);
+        cc.setNumberOfPatch(150);
 
         projectByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",1);
         termByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",2);
