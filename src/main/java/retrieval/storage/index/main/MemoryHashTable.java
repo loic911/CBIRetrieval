@@ -16,7 +16,11 @@
 package retrieval.storage.index.main;
 
 import org.apache.log4j.Logger;
+import redis.clients.jedis.JedisPool;
 import retrieval.config.ConfigServer;
+import retrieval.server.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.MemoryDatabase;
+import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.index.ValueStructure;
 
@@ -29,6 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MemoryHashTable extends HashTableIndex {
 
+    protected String prefix = "";
+    protected String subPrefix = "";
     /**
      * Name of Hashtable
      */
@@ -53,13 +59,15 @@ public class MemoryHashTable extends HashTableIndex {
      * @param read If true, read index (if already exist), else create new index
      * @throws ReadIndexException Error during the read of index
      */
-    public MemoryHashTable(ConfigServer configStore, boolean read) throws ReadIndexException {
+    public MemoryHashTable(MemoryDatabase database,String idServer, String idTestVector,ConfigServer configStore, boolean read) throws ReadIndexException {
         logger.debug("SimpleHashMap: start");
         this.configStore = configStore;
         try {
             logger.debug("SimpleHashMap: read old index");
              if(!read) {
-                hashmap = new HashMap<String, ValueStructure>(configStore.getMemoryStartSize()); 
+                 hashmap = (Map<String, ValueStructure>)(database.getDatabase());
+                 this.prefix = GlobalDatabase.KEY_INDEX_STORE + "#"+idServer+"#"+idTestVector+"#";
+                 this.subPrefix = GlobalDatabase.KEY_INDEX_STORE + "#"+idServer+ "#";
              } 
                  
         } catch (Exception e) {
@@ -68,20 +76,12 @@ public class MemoryHashTable extends HashTableIndex {
     }
 
     /**
-     * Get the Hash Map
-     * @return Hash Map
-     */
-    public Map<String, ValueStructure> getHashMap() {
-        return hashmap;
-    }
-
-    /**
      * Put a key and its value on the store
      * @param key Key
      * @param Value Value
      */
     public void put(String key, ValueStructure Value) {
-        hashmap.put(key, Value);
+        hashmap.put(this.prefix+key, Value);
     }
 
     /**
@@ -90,7 +90,7 @@ public class MemoryHashTable extends HashTableIndex {
      * @return Value
      */
     public ValueStructure get(String key) {
-        return hashmap.get(key);
+        return hashmap.get(this.prefix+key);
     }
 
     public Map<String,ValueStructure> getAll(List<String> key) {
@@ -137,7 +137,7 @@ public class MemoryHashTable extends HashTableIndex {
         }
 
         for(int i=0;i<emptyKeys.size();i++) {
-             hashmap.remove(emptyKeys.get(i));
+             hashmap.remove(this.prefix+emptyKeys.get(i));
         }
 
         
@@ -177,6 +177,6 @@ public class MemoryHashTable extends HashTableIndex {
 
     @Override
     public void delete(String key) {
-        hashmap.remove(key);
+        hashmap.remove(this.prefix+key);
     }
 }

@@ -20,7 +20,6 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import retrieval.config.ConfigServer;
 import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.server.globaldatabase.RedisDatabase;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,7 +48,7 @@ public class RedisCompressIndex extends CompressIndexNBT {
     public RedisCompressIndex(GlobalDatabase global, ConfigServer config, String idStorage, String idTV) {
         super(config.getIndexCompressThreshold());
         logger.info("KyotoCompressIndexSingleFile: start");
-        this.prefix = RedisDatabase.REDIS_COMPRESS_STORE + "#"+idStorage+"#"+idTV+"#";
+        this.prefix = GlobalDatabase.KEY_COMPRESS_STORE + "#"+idStorage+"#"+idTV+"#";
         this.redis = (JedisPool)global.getDatabaseCompress();
        
     }

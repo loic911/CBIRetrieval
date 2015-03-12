@@ -17,6 +17,8 @@ package retrieval.storage.index;
 
 import org.apache.log4j.Logger;
 import retrieval.config.ConfigServer;
+import retrieval.server.globaldatabase.GlobalDatabase;
+import retrieval.server.globaldatabase.MemoryDatabase;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.exception.StartIndexException;
@@ -79,7 +81,7 @@ public final class IndexStructClassic extends IndexStructAbs {
         logger.debug(configStore.getStoreName());
         if (    configStore.getStoreName().equals(MemoryHashTable.NAME)) {
             //MEMORY
-            map = new MemoryHashTable(configStore, false);
+            map = new MemoryHashTable((MemoryDatabase)database,idStorage,idTestVector,configStore, false);
         }  else if (configStore.getStoreName().equals(KyotoCabinetHashTable.NAME)) {
             //KYOTO SINGLE FILE (1 file for N servers and T test vector)
             map = new KyotoCabinetHashTable(database,idStorage,idTestVector,configStore);

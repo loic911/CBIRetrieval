@@ -16,6 +16,7 @@
 package retrieval.storage.index.compress.compressNBT;
 
 import retrieval.config.ConfigServer;
+import retrieval.server.globaldatabase.GlobalDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +28,12 @@ import java.util.Map;
 public class HashMapCompressIndex extends CompressIndexNBT {
     Map<String,Integer> blacklistedVW;
 
-    public HashMapCompressIndex(ConfigServer config) {
+    protected String prefix;
+
+    public HashMapCompressIndex(GlobalDatabase global,ConfigServer config,String idStorage, String idTV) {
         super(config.getIndexCompressThreshold());
-        blacklistedVW = new HashMap<String,Integer>();
+        this.prefix = GlobalDatabase.KEY_COMPRESS_STORE + "#"+idStorage+"#"+idTV+"#";
+        blacklistedVW = (Map<String,Integer>)global.getDatabaseCompress();
     }
 
     /**

@@ -21,6 +21,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 import retrieval.config.ConfigServer;
+import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.exception.StartIndexException;
 import retrieval.storage.index.ValueStructure;
@@ -47,8 +48,8 @@ public class RedisHashTable extends HashTableIndexOptim{
         try {
             this.config = config;
             redis = (JedisPool)((RedisDatabase)database).getDatabase();
-            this.prefix = RedisDatabase.REDIS_INDEX_STORE + "#"+idServer+"#"+idTestVector+"#";
-            this.subPrefix = RedisDatabase.REDIS_INDEX_STORE + "#"+idServer+ "#";
+            this.prefix = GlobalDatabase.KEY_INDEX_STORE + "#"+idServer+"#"+idTestVector+"#";
+            this.subPrefix = GlobalDatabase.KEY_INDEX_STORE + "#"+idServer+ "#";
         }
         catch(Exception e){
             logger.fatal(e.toString());

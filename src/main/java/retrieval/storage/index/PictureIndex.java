@@ -89,7 +89,7 @@ public final class PictureIndex implements Serializable {
     private PictureIndex(String idServer,ConfigServer configStore, GlobalDatabase globalDatabase) throws StartIndexException, ReadIndexException {
         this.configStore = configStore;
         if (configStore.getStoreName().equals("MEMORY")) {
-            picturePathIndex = new SimpleHashMapPropertiesIndex(idServer,false);
+            picturePathIndex = new SimpleHashMapPropertiesIndex(globalDatabase,idServer);
             picturePatchsIndex =  new SimpleHashMapPatchsIndex(false);
         } else if (configStore.getStoreName().equals("KYOTOSINGLEFILE")){
             picturePathIndex = new KyotoCabinetPropertiesIndexSingleFile(globalDatabase,idServer);

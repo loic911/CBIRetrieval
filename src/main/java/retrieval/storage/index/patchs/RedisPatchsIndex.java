@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
 import retrieval.storage.exception.StartIndexException;
@@ -60,7 +59,7 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
     public void delete(Map<Long, Integer> picturesID) {
         try (Jedis redis = this.redis.getResource()) {
             for (Map.Entry<Long, Integer> entry : picturesID.entrySet()) {
-                redis.hdel(RedisDatabase.REDIS_PATCH_STORE,entry.getKey().toString());
+                redis.hdel(GlobalDatabase.KEY_PATCH_STORE,entry.getKey().toString());
             }
         }
 
@@ -73,7 +72,7 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      */
     public void put(Long imageID, Integer N) {
         try (Jedis redis = this.redis.getResource()) {
-            redis.hset(RedisDatabase.REDIS_PATCH_STORE, imageID.toString(), N.toString());
+            redis.hset(GlobalDatabase.KEY_PATCH_STORE, imageID.toString(), N.toString());
         }
 
     }
@@ -85,7 +84,7 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
      */
     public Integer get(Long imageID) {
         try (Jedis redis = this.redis.getResource()) {
-            String numberOfPatch = redis.hget(RedisDatabase.REDIS_PATCH_STORE, imageID.toString());
+            String numberOfPatch = redis.hget(GlobalDatabase.KEY_PATCH_STORE, imageID.toString());
             if (numberOfPatch == null) {
                 return -1;
 
@@ -113,7 +112,7 @@ public class RedisPatchsIndex implements PicturePatchsIndex{
         logger.info("PatchIndex");
 
         try (Jedis redis = this.redis.getResource()) {
-            Map<String,String> map = redis.hgetAll(RedisDatabase.REDIS_PATCH_STORE);
+            Map<String,String> map = redis.hgetAll(GlobalDatabase.KEY_PATCH_STORE);
             Iterator<Map.Entry<String,String>> it = map.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<String,String> entry = it.next();

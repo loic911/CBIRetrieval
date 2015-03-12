@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.StartIndexException;
 
@@ -56,8 +55,8 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
             logger.info("KyotoCabinetPathIndexSingleFile: start");
             this.idServer = idServer;
             this.redis = (JedisPool)global.getDatabaseProperties();
-            this.prefix = RedisDatabase.REDIS_PROPERTIES_STORE + "#" + idServer + "#";
-            this.prefixIds = RedisDatabase.REDIS_LIST_ID + "#" + idServer + "#";
+            this.prefix = GlobalDatabase.KEY_PROPERTIES_STORE + "#" + idServer + "#";
+            this.prefixIds = GlobalDatabase.KEY_LIST_ID + "#" + idServer + "#";
             ///if empty insert first tuple
             logger.info("getSize="+getSize());
             if (getSize() == 0) {

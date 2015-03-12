@@ -36,7 +36,7 @@ public abstract class CompressIndexNBT {
 
     public static CompressIndexNBT getCompressIndexFactory(ConfigServer config, String idStorage, String idTV,Object globalDatabase) throws StartIndexException {
         if(config.getStoreName().equals("MEMORY")) {
-            return new HashMapCompressIndex(config);
+            return new HashMapCompressIndex((GlobalDatabase)globalDatabase,config,idStorage,idTV);
         }  else if(config.getStoreName().equals("KYOTOSINGLEFILE")) {
             return new KyotoCompressIndex((GlobalDatabase)globalDatabase,config,idStorage,idTV);
         }else if(config.getStoreName().equals("REDIS")) {

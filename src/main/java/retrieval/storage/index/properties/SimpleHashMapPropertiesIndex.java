@@ -16,6 +16,7 @@
 package retrieval.storage.index.properties;
 
 import org.apache.log4j.Logger;
+import retrieval.server.globaldatabase.GlobalDatabase;
 import retrieval.storage.exception.CloseIndexException;
 import retrieval.storage.exception.ReadIndexException;
 
@@ -29,12 +30,13 @@ import java.util.*;
  * @author Rollus Loic
  */
 public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
-
+    protected String prefix;
+    protected String prefixIds;
     private String storage;
     /**
      * Map: id picture - path
      */
-    protected Map<Long, Map<String,String>> map;
+    protected Map<String, Map<String,String>> map;
 
     /**
      * Logger
@@ -46,34 +48,35 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
      * @param read Not used
      * @throws ReadIndexException Error during the index read
      */
-    public SimpleHashMapPropertiesIndex(
-            String storage,
-            boolean read)
+    public SimpleHashMapPropertiesIndex(GlobalDatabase global, String idServer)
             throws ReadIndexException {
         logger.info("SimpleHashMapPatchsIndex: start");
-        this.storage =storage;
-        if (!read) {
+        this.prefix = GlobalDatabase.KEY_PROPERTIES_STORE + "#" + idServer + "#";
+        this.prefixIds = GlobalDatabase.KEY_LIST_ID + "#" + idServer + "#";
+        this.storage = idServer;
             logger.info("SimpleHashMapPatchsIndex: start");
-            map = new HashMap<Long, Map<String,String>>();
-        } else {
-            throw new ReadIndexException("SimpleHashMapPatchsIndex: bot implemented");
-        }
+            map = (Map<String, Map<String,String>>)global.getDatabaseProperties();
+    }
+
+    private Long convertKeysToLong(String key) {
+        return Long.parseLong(key.replaceFirst(this.prefix,""));
     }
     
     public Map<Long, Map<String,String>> getMap() {
         Map<Long, Map<String,String>> result = new TreeMap<Long, Map<String,String>>();
-        for(Long key : map.keySet()) {
-            result.put(key,getPictureProperties(key));
+        for(String key : map.keySet()) {
+            if(key.startsWith(this.prefix)) {
+                result.put(convertKeysToLong(key),getPictureProperties(convertKeysToLong(key)));
+            }
         }
-
         return result;
     }
     
     public Map<String,String> getPictureProperties(Long id) {
-        if(map.get(id)==null) {
+        if(map.get(this.prefix+id)==null) {
             return new HashMap<String,String>();
         }
-        Map<String,String> properties = map.get(id);
+        Map<String,String> properties = map.get(this.prefix+id);
         return properties;
     }
 
@@ -86,12 +89,13 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
         Map<Long, Integer> picturesID = new HashMap<Long, Integer>(ids.size());
         for (int i = 0; i < ids.size(); i++) {
             //logger.info("delete: " + ids.get(i));
-            Object o = map.get(ids.get(i));
+            Object o = map.get(this.prefix+ids.get(i));
            // logger.info("delete: id=" + id);
             if(o!=null) {
                 logger.info("delete: " + ids.get(i));
                 picturesID.put(ids.get(i), 0);
-                map.remove(ids.get(i));
+                map.remove(this.prefix+ids.get(i));
+                decrCountSize();
             }
         }
         return picturesID;
@@ -102,7 +106,7 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
      * @return Size of the map
      */
     public int getSize() {
-        return this.map.size();
+        return this.getCountValue();
     }
 
     /**
@@ -114,7 +118,8 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
         if(properties==null) {
             properties = new HashMap<String,String>();
         }
-        map.put(id, properties);
+        incrCountSize();
+        map.put(this.prefix+id, properties);
         Date date = Calendar.getInstance().getTime();
         logger.info(";"+date.getTime() + ";" +"" + id + ";" + properties);
         return id;
@@ -129,7 +134,7 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
 //        return mapReverse.containsKey(path);
 //    }
     public boolean containsPicture(Long id) {
-        return map.containsKey(id);
+        return map.containsKey(this.prefix+id);
     }
    
     /**
@@ -138,8 +143,10 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
      */
     public List<Long> getIdsList() {
         List<Long> pictures = new ArrayList<Long>(map.size());
-        for(Long key : map.keySet()) {
-            pictures.add(key);
+        for(String key : map.keySet()) {
+            if(key.startsWith(this.prefix)) {
+                pictures.add(convertKeysToLong(key));
+            }
         }
         return pictures;
     }    
@@ -155,5 +162,31 @@ public class SimpleHashMapPropertiesIndex implements PicturePropertiesIndex {
     public void sync()
     {
         
+    }
+
+    public int getCountValue() {
+        Map data = map.get("COUNT#" + storage);
+        if(data==null) {
+            return 0;
+        }
+        return Integer.parseInt(data.get("CBIR").toString());
+    }
+
+    public void setCountValue(long value) {
+        Map<String,String> data = new HashMap<>();
+        data.put("CBIR",value+"");
+        map.put("COUNT#" + storage, data);
+    }
+
+    public void incrCountSize() {
+        int value = getCountValue();
+        value++;
+        setCountValue(value);
+    }
+
+    public void decrCountSize() {
+        int value = getCountValue();
+        value--;
+        setCountValue(value);
     }
 }
