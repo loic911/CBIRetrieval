@@ -24,7 +24,15 @@ import java.util.Map;
  * @author lrollus
  */
 public interface GlobalDatabase {
-    
+
+    String KEY_INDEX_STORE = "M";
+    String KEY_PATCH_STORE = "PATCHS";
+    String KEY_PROPERTIES_STORE = "PROPERTIES";
+    String KEY_LIST_ID = "IDS";
+    String KEY_COMPRESS_STORE = "COMPRESS";
+    String KEY_STORAGE_STORE = "STORAGE";
+    String KEY_PURGE_STORE = "PURGE";
+
     Object getDatabase();
     
     Object getDatabasePatchs();

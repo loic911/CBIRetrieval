@@ -39,14 +39,6 @@ public class RedisDatabase implements GlobalDatabase{
     private JedisPool databaseStorage;
     private JedisPool databasePurge;
 
-    public static String REDIS_INDEX_STORE = "M";
-    public static String REDIS_PATCH_STORE = "PATCHS";
-    public static String REDIS_PROPERTIES_STORE = "PROPERTIES";
-    public static String REDIS_LIST_ID = "IDS";
-    public static String REDIS_COMPRESS_STORE = "COMPRESS";
-    public static String REDIS_STORAGE_STORE = "STORAGE";
-    public static String REDIS_PURGE_STORE = "PURGE";
-
     public RedisDatabase(ConfigServer config) throws ReadIndexException {
         logger.info("redis: start");
         try {
@@ -93,7 +85,7 @@ public class RedisDatabase implements GlobalDatabase{
         List<String> storages = new ArrayList<String>();
 
         try (Jedis redis = ((JedisPool)getDatabaseStorage()).getResource()) {
-            Set<String> keys = redis.smembers(REDIS_STORAGE_STORE);
+            Set<String> keys = redis.smembers(KEY_STORAGE_STORE);
 
             for (String key : keys) {
                 storages.add(key);
@@ -107,7 +99,7 @@ public class RedisDatabase implements GlobalDatabase{
     
     public void addStorage(String name) {
         try (Jedis redis = ((JedisPool)getDatabaseStorage()).getResource()) {
-            redis.sadd(REDIS_STORAGE_STORE, name);
+            redis.sadd(KEY_STORAGE_STORE, name);
         }
 
 
@@ -115,7 +107,7 @@ public class RedisDatabase implements GlobalDatabase{
     
     public void deleteStorage(String name) {
         try (Jedis redis = ((JedisPool)getDatabaseStorage()).getResource()) {
-            redis.srem(REDIS_STORAGE_STORE, name);
+            redis.srem(KEY_STORAGE_STORE, name);
         }
     }    
 
@@ -123,14 +115,14 @@ public class RedisDatabase implements GlobalDatabase{
         try (Jedis redis = databasePurge.getResource()) {
             HashMap<Long,Integer> map;
 
-            byte[] data = redis.hget(SerializationUtils.serialize(REDIS_PURGE_STORE),SerializationUtils.serialize(storage));
+            byte[] data = redis.hget(SerializationUtils.serialize(KEY_PURGE_STORE),SerializationUtils.serialize(storage));
             if(data!=null) {
                 map = (HashMap<Long,Integer>) SerializationUtils.deserialize(data);
             } else {
                 map = new HashMap<Long,Integer>();
             }
             map.putAll(toPurge);
-            redis.hset(SerializationUtils.serialize(REDIS_PURGE_STORE), SerializationUtils.serialize(storage), SerializationUtils.serialize(map));
+            redis.hset(SerializationUtils.serialize(KEY_PURGE_STORE), SerializationUtils.serialize(storage), SerializationUtils.serialize(map));
         }
 ;
     }
@@ -139,7 +131,7 @@ public class RedisDatabase implements GlobalDatabase{
          HashMap<Long,Integer> map;
         try (Jedis redis = databasePurge.getResource()) {
 
-            byte[] data = redis.hget(SerializationUtils.serialize(REDIS_PURGE_STORE), SerializationUtils.serialize(storage));
+            byte[] data = redis.hget(SerializationUtils.serialize(KEY_PURGE_STORE), SerializationUtils.serialize(storage));
             if (data != null) {
                 map = (HashMap<Long, Integer>) SerializationUtils.deserialize(data);
             } else {
@@ -151,7 +143,7 @@ public class RedisDatabase implements GlobalDatabase{
 
     public void clearPurge(String storage) {
         try (Jedis redis = databasePurge.getResource()) {
-            redis.hset(SerializationUtils.serialize(REDIS_PURGE_STORE), SerializationUtils.serialize(storage), SerializationUtils.serialize(new HashMap<Long, Integer>()));
+            redis.hset(SerializationUtils.serialize(KEY_PURGE_STORE), SerializationUtils.serialize(storage), SerializationUtils.serialize(new HashMap<Long, Integer>()));
         }
     }
     

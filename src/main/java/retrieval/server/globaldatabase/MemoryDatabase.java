@@ -16,9 +16,11 @@
 package retrieval.server.globaldatabase;
 
 import org.apache.log4j.Logger;
+import redis.clients.jedis.JedisPool;
 import retrieval.config.ConfigServer;
 import retrieval.storage.Storage;
 import retrieval.storage.exception.ReadIndexException;
+import retrieval.storage.index.ValueStructure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,41 +34,49 @@ import java.util.Map;
 public class MemoryDatabase implements GlobalDatabase{
     private static Logger logger = Logger.getLogger(Storage.class);
 
+    private Map<String,ValueStructure> database;
+    private Map<String,String> databasePatchs;
+    private Map<Long, Map<String,String>> databasePath;
+    private Map<String,Integer> databaseCompress;
     private Map<String,String> databaseStorage;
-    
     private Map<String,Map<Long,Integer>> databasePurge;
+
     
     public MemoryDatabase(ConfigServer config) throws ReadIndexException {
         logger.info("MemoryDatabase: start");
+        database = new HashMap<String,ValueStructure>();
+        databasePatchs = new HashMap<String,String>();
+        databasePath = new HashMap<Long, Map<String,String>>();
+        databaseCompress = new HashMap<String,Integer>();
         databaseStorage = new HashMap<String,String>(); 
         databasePurge = new HashMap<String,Map<Long,Integer>>(); 
     }    
 
     public Object getDatabase() {
-        logger.error("getDatabase on memory!");
-        return null;
+        logger.info("getDatabase on memory!");
+        return database;
     }  
     public Object getDatabasePatchs() {
-        logger.error("getDatabase on memory!");
-       return null;
+        logger.info("getDatabase on memory!");
+       return databasePatchs;
     }  
     public Object getDatabaseProperties() {
-        logger.error("getDatabase on memory!");
-       return null;
+        logger.info("getDatabase on memory!");
+       return databasePath;
     } 
     public Object getDatabasePathInverse() {
-        logger.error("getDatabase on memory!");
-       return null; 
+        logger.info("getDatabase on memory!");
+       return databaseCompress;
     } 
     
     public Object getDatabaseCompress() {
-        logger.error("getDatabase on memory!");
-        return null;
+        logger.info("getDatabase on memory!");
+        return databaseStorage;
     }
     
     public Object getDatabaseStorage() {
-        logger.error("getDatabase on memory!");
-        return null;
+        logger.info("getDatabase on memory!");
+        return databasePurge;
     }   
     
     public List<String> getStorages() {
