@@ -5,8 +5,9 @@ https://github.com/loic911/CBIRetrieval/wiki
 
 Installation:
 
-Download last release from https://github.com/loic911/CBIRetrieval/releases
-unzip CBIRetrieval-*.zip
+    Download last release from https://github.com/loic911/CBIRetrieval/releases
+    unzip CBIRetrieval-*.zip
+    
 Quickstart:
 
     # Start 1 server on port 1234
