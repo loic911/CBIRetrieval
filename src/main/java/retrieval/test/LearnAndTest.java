@@ -39,7 +39,7 @@ public class LearnAndTest {
         int numberOfSearchThreads = 1;
 
         ConfigServer cs = new ConfigServer("config/ConfigServer.prop");
-        cs.setStoreName("MEMORY"); //KYOTOSINGLEFILE
+        cs.setStoreName("MEMORY");
         cs.setIndexPath("index");
         cs.setNumberOfPatch(150);
         cs.setNumberOfTV(3);

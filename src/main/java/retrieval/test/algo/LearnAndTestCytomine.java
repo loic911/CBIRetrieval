@@ -35,11 +35,15 @@ import java.util.stream.Collectors;
  */
 public class LearnAndTestCytomine {
 
-    //static int MAX_INDEX = 100000; //Integer.MAX_VALUE;
-    static int MAX_SEARCH = 10; //Integer.MAX_VALUE;
+    //static int MAX_INDEX = 100; //Integer.MAX_VALUE;
+    //static int MAX_SEARCH = 10; //Integer.MAX_VALUE;
+
+    static boolean SEARCH_ON_PROJECT_WITH_SAME_ONTOLOGY = true;
+
+    //static boolean SINGLE_STORAGE = false; => TODO IMPLEMENT
 
     static int MAX_INDEX = Integer.MAX_VALUE;
-    //static int MAX_SEARCH = Integer.MAX_VALUE;
+    static int MAX_SEARCH = Integer.MAX_VALUE;
 
     String learnPath = "/media/DATA_/backup/retrieval/set";
     String testPath = "/media/DATA_/backup/retrieval/set";
@@ -47,11 +51,17 @@ public class LearnAndTestCytomine {
     Map<String,String> projectByAnnotation;// = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",1);
     Map<String,String> termByAnnotation;// = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",2);
 
-    int numberOfSearchThreads = 1;
+    int numberOfSearchThreads = 10;
 
     Queue<String> queueIndex;
     Map<String,List<String>> listIndexByProject;
     Queue<String> queueSearch;
+
+    Map<String, List<String>> projectsPerOntology = buildProjectPerOntology("/media/DATA_/backup/retrieval/ontology_per_term.csv");
+    Map<String, String> ontologyPerProject = buildOntologyPerProject("/media/DATA_/backup/retrieval/ontology_per_term.csv");
+
+    Map<String,List<String>> storagesForAnnotation = new HashMap<>();
+
 
     Queue<Long> timesIndex = new ConcurrentLinkedQueue<Long>();
     Queue<Long> timesSearch = new ConcurrentLinkedQueue<Long>();
@@ -69,7 +79,7 @@ public class LearnAndTestCytomine {
 
     public LearnAndTestCytomine() throws Exception {
         cs = new ConfigServer("config/ConfigServer.prop");
-        cs.setStoreName("REDIS"); //KYOTOSINGLEFILE
+        cs.setStoreName("REDIS");
         cs.setIndexPath("index");
         cs.setNumberOfPatch(500);//200
         cs.setNumberOfTV(5);
@@ -78,8 +88,17 @@ public class LearnAndTestCytomine {
         cc.setNumberOfTV(5);
         cc.setNumberOfPatch(500);
 
-        projectByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",1);
-        termByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",2);
+        System.out.println("N="+cs.getNumberOfPatch());
+        System.out.println("T="+cs.getNumberOfTV());
+        System.out.println("STORENAME="+cs.getStoreName());
+        System.out.println("COMPRESS="+cs.getIndexCompressThreshold());
+
+        if(cs.getNumberOfPatch() != cc.getNumberOfPatch()) throw new Exception("N is different for client and server");
+        if(cs.getNumberOfTV() != cc.getNumberOfTV()) throw new Exception("T is different for client and server");
+
+
+        projectByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/set.csv",1);
+        termByAnnotation = buildMapFromListing("/media/DATA_/backup/retrieval/set.csv",2);
 
         server = new RetrievalServer(cs,"test",false);
     }
@@ -110,6 +129,7 @@ public class LearnAndTestCytomine {
             List<String> images = listIndexByProject.get(project);
             images.add(path);
             listIndexByProject.put(project,images);
+
         }
 
 
@@ -191,9 +211,30 @@ public class LearnAndTestCytomine {
         System.out.println("***************************************************");
         System.out.println("***************************************************");
 
+        for(String searchImage : queueSearch) {
+
+            String imageName = new File(searchImage).getName().split("\\.")[0];
+            String project = projectByAnnotation.get(imageName);
+
+//            System.out.println("project="+project);
+//            System.out.println("ontology="+ontologyPerProject.get(project));
+//            System.out.println(ontologyPerProject);
+
+            String ontology = ontologyPerProject.get(project);
+            List<String> projects = projectsPerOntology.get(ontology);
+
+//            System.out.println("ontology="+ontology);
+//            System.out.println("projects="+projects);
+//            System.out.println("imageName="+imageName);
+
+            storagesForAnnotation.put(imageName,projects);
+        }
+
+
+
         List<SearchMultiServerThread> threads = new ArrayList<SearchMultiServerThread>();
         for(int i=0;i<numberOfSearchThreads;i++) {
-            SearchMultiServerThread thread = new SearchMultiServerThread(results,new RetrievalClient(cc, server),queueSearch,numberOfSearchThreads,numberOfSearch,timesSearch);
+            SearchMultiServerThread thread = new SearchMultiServerThread(results,storagesForAnnotation,new RetrievalClient(cc, server),queueSearch,numberOfSearchThreads,numberOfSearch,timesSearch);
             thread.start();
             threads.add(thread);
         }
@@ -224,10 +265,10 @@ public class LearnAndTestCytomine {
 
         DoubleSummaryStatistics statsFirstSame =  new DoubleSummaryStatistics();
         DoubleSummaryStatistics statsFirst =  new DoubleSummaryStatistics();
-        DoubleSummaryStatistics statsFive =  new DoubleSummaryStatistics();
+        DoubleSummaryStatistics statsTen =  new DoubleSummaryStatistics();
         Map<String,DoubleSummaryStatistics> statsFirstSameByTerm =  new TreeMap<>();
         Map<String,DoubleSummaryStatistics> statsFirstByTerm =  new TreeMap<>();
-        Map<String,DoubleSummaryStatistics> statsFiveByTerm =  new TreeMap<>();
+        Map<String,DoubleSummaryStatistics> statsTenByTerm =  new TreeMap<>();
 
 
         for(Map.Entry<Long,ResultsSimilarities> map : results.entrySet()) {
@@ -257,27 +298,27 @@ public class LearnAndTestCytomine {
 
 
 
-            double valueFiveFirstSameTerm = 0;
+            double valueTenFirstSameTerm = 0;
             if(resultsWithoutRequestImage.size()>0) {
                 //check if 5 first has same term
                 DoubleSummaryStatistics subResults = new DoubleSummaryStatistics();
-                System.out.println("****************************");
-                for(int i=0;i<5;i++) {
-                    System.out.println("=> " + termByAnnotation.get(idImage+""));
+                //System.out.println("****************************");
+                for(int i=0;i<10;i++) {
+                    //System.out.println("=> " + termByAnnotation.get(idImage+""));
                     if(i<resultsWithoutRequestImage.size()) {
                         String term = results.get(i).getProperties().get("term");
-                        System.out.println("====> " + term);
+                        //System.out.println("====> " + term);
                         subResults.accept(term.equals(termByAnnotation.get(idImage+""))?1:0);
                     } else {
                         subResults.accept(0); //no results
                     }
                 }
-                System.out.println("========> " + subResults.getAverage());
-                valueFiveFirstSameTerm = subResults.getAverage();
+                //System.out.println("========> " + subResults.getAverage());
+                valueTenFirstSameTerm = subResults.getAverage();
 
             }
-            statsFive.accept(valueFiveFirstSameTerm);
-            addResultForTerm(statsFiveByTerm,termByAnnotation.get(idImage+""),valueFiveFirstSameTerm);
+            statsTen.accept(valueTenFirstSameTerm);
+            addResultForTerm(statsTenByTerm,termByAnnotation.get(idImage+""),valueTenFirstSameTerm);
 
         }
 
@@ -289,6 +330,9 @@ public class LearnAndTestCytomine {
 
         try {
             try (PrintStream out = new PrintStream(new FileOutputStream(output))) {
+
+                out.print("SEARCH_ON_PROJECT_WITH_SAME_ONTOLOGY = "+ SEARCH_ON_PROJECT_WITH_SAME_ONTOLOGY + " N="+cs.getNumberOfPatch() + "T="+cs.getNumberOfTV() + "STORENAME="+cs.getStoreName() + "COMPRESS="+cs.getIndexCompressThreshold());
+
                 for(Map.Entry<Long,ResultsSimilarities> map : results.entrySet()) {
 
                     String key = map.getKey()+"";
@@ -317,22 +361,49 @@ public class LearnAndTestCytomine {
         System.out.println("************************************************************************");
         System.out.println("STATS result 1 = req annotation:"+statsFirstSame);
         statsFirstSameByTerm.entrySet().forEach(System.out::println);
+        System.out.println("Average percentage:"+computeAverage(statsFirstSameByTerm));
         System.out.println("************************************************************************");
         System.out.println("************************************************************************");
         System.out.println("************************************************************************");
         System.out.println("STATS result-(req annotation) 1  = req term :"+statsFirst);
         statsFirstByTerm.entrySet().forEach(System.out::println);
+        System.out.println("Average percentage:"+computeAverage(statsFirstByTerm));
         System.out.println("************************************************************************");
         System.out.println("************************************************************************");
         System.out.println("************************************************************************");
-        System.out.println("STATS result-(req annotation) 5  = req term :"+statsFive);
-        statsFiveByTerm.entrySet().forEach(System.out::println);
+        System.out.println("STATS result-(req annotation) 10  = req term :"+statsTen);
+        statsTenByTerm.entrySet().forEach(System.out::println);
+        System.out.println("Average percentage:"+computeAverage(statsTenByTerm));
         System.out.println("************************************************************************");
         System.out.println("************************************************************************");
         System.out.println("************************************************************************");
 
-        System.out.println("Reuslts in "+output.getAbsolutePath());
+
+        System.out.println("Results in " + output.getAbsolutePath());
     }
+
+
+//    2. >> Aussi vu la distribution très déséquilibrée du nombre d'annotations
+//            >> par terme, ce serait bien de calculer aussi en plus ces pourcentages
+//    >> moyennés par termes, c-à-d tu calcules le pourcentage pour chaque terme,
+//    >> puis à la fin tu fais la somme de ces pourcentages divisé par le nombre
+//    >> de termes.
+
+    private Double computeAverage(Map<String,DoubleSummaryStatistics> map) {
+        Double sum = map.values().stream()
+                .map(DoubleSummaryStatistics::getAverage)
+                .reduce(0d, Double::sum);
+        return sum/map.size();
+
+//        for(DoubleSummaryStatistics stats : map.values()) {
+//            stats
+//        }
+    }
+
+
+
+
+
 
     private void addResultForTerm(Map<String,DoubleSummaryStatistics> map, String term, Double value) {
         DoubleSummaryStatistics stat = map.get(term);
@@ -417,6 +488,46 @@ public class LearnAndTestCytomine {
         return map;
     }
 
+    static Map<String, List<String>> buildProjectPerOntology(String path) throws Exception {
+        int POSITION_PROJECT = 0;
+        int POSITION_ONTOLOGY = 1;
+
+        List<Map.Entry<String,String>> entries = new ArrayList<>();
+
+        try(BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line = br.readLine();
+            while (line != null) {
+                entries.add(new AbstractMap.SimpleEntry<>(line.split(";")[POSITION_PROJECT].trim(), line.split(";")[POSITION_ONTOLOGY].trim()));
+                line = br.readLine();
+            }
+        }
+
+
+        Map<String, List<String>> map = entries.stream().collect(
+                Collectors.groupingBy(Map.Entry::getValue,
+                                    Collectors.mapping(Map.Entry::getKey,
+                                            Collectors.toList()))
+        );
+        return map;
+    }
+
+    static Map<String, String> buildOntologyPerProject(String path) throws Exception {
+        int POSITION_PROJECT = 0;
+        int POSITION_ONTOLOGY = 1;
+
+        Map<String, String> map = new HashMap<>();
+
+        try(BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line = br.readLine();
+            while (line != null) {
+                map.put(line.split(";")[POSITION_PROJECT].trim(), line.split(";")[POSITION_ONTOLOGY].trim());
+                line = br.readLine();
+            }
+        }
+
+        return map;
+    }
+
 }
 
 
@@ -449,7 +560,9 @@ class IndexMultiServerThread extends Thread {
                 properties.put("term",annotationsByTerm.get(imageName));
                 indexer.index(imageFile, Long.parseLong(imageName),properties);
                 this.times.add(System.currentTimeMillis()-start);
-                System.out.println("*********************** index approx "+ (i) + "/" + (numberOfItems)+" *************************");
+                if(i%50==0) {
+                    System.out.println("*********************** index approx "+ (i) + "/" + (numberOfItems)+" *************************");
+                }
                 i++;
             }
         } catch(Exception e) {
@@ -468,15 +581,17 @@ class SearchMultiServerThread extends Thread {
     private int numberOfThread;
     private int numberOfItems;
     private Queue<Long> times;
+    private Map<String,List<String>> storagesForAnnotation;
 
 
-    public SearchMultiServerThread(Map<Long,ResultsSimilarities> results,RetrievalClient search,Queue<String> queue, int numberOfThread,int numberOfItems,Queue<Long> times) {
+    public SearchMultiServerThread(Map<Long,ResultsSimilarities> results,Map<String,List<String>> storagesForAnnotation,RetrievalClient search,Queue<String> queue, int numberOfThread,int numberOfItems,Queue<Long> times) {
         this.results = results;
         this.queue = queue;
         this.client = search;
         this.numberOfThread = numberOfThread;
         this.numberOfItems = numberOfItems;
         this.times = times;
+        this.storagesForAnnotation = storagesForAnnotation;
     }
 
     public void run() {
@@ -484,13 +599,26 @@ class SearchMultiServerThread extends Thread {
             int i = 0; //ConcurrentLinkedQueue.size is not constant, so i*8
             while (!queue.isEmpty()) {
                 String path = queue.poll();
-                Long start = System.currentTimeMillis();
-                ResultsSimilarities rs = client.search(ImageIO.read(new File(path)), 15);
-                this.times.add(System.currentTimeMillis()-start);
                 File imageFile = new File(path);
+
                 String imageName = imageFile.getName().split("\\.")[0];
+
+
+
+                List<String> storages = null;
+
+                if(LearnAndTestCytomine.SEARCH_ON_PROJECT_WITH_SAME_ONTOLOGY) {
+                    storages = storagesForAnnotation.get(imageName);
+                }
+                //System.out.println(imageFile + "=====>"+storages);
+
+                Long start = System.currentTimeMillis();
+                ResultsSimilarities rs = client.search(ImageIO.read(new File(path)), 15,storages);
+                this.times.add(System.currentTimeMillis()-start);
                 this.results.put(Long.parseLong(imageName),rs);
-                System.out.println("*********************** search approx "+ (i*numberOfThread) + "/" + (numberOfItems)+" *************************");
+                if(i%50==0) {
+                    System.out.println("*********************** search approx " + (i * numberOfThread) + "/" + (numberOfItems) + " *************************");
+                }
                 i++;
 
             }

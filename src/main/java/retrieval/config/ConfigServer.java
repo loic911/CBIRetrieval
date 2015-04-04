@@ -102,7 +102,7 @@ public class ConfigServer extends Config implements Cloneable {
      ***** 
      *************************************************************************/        
     /**
-     * Store name: MEMORY, KYOTO, KYOTOSINGLEFILE, REDIS, NESSDB, BDB, ...
+     * Store name: MEMORY, REDIS, ...
      */
     private String storeName;
     /**
@@ -133,37 +133,6 @@ public class ConfigServer extends Config implements Cloneable {
      * Too hight is not good: hashmap will be too big in memory
      */
     private int memoryStartSize;
-    
-    /**
-     * Apox -> tune_alignment: default 3 (8 = 1 cc 3). 
-     * DB is build and not updated (0), else more
-     */
-    private String kyotoApox;
-    
-    /**
-     * Bnum -> tune_buckets: number of bucket (number eof entry * 2)
-     */
-    private String kyotoBNum;
-    
-    /**
-     * dfunit -> tune_defrag: defrag after x update (default 8): more = quick, less = heavy space
-     */
-    private String kyotoFUnit;
-
-    /**
-     * Cache DB for main index
-     */
-    private String kyotoCacheMainIndex;
-    
-    /**
-     * Cache DB for metadata index
-     */    
-    private String kyotoCacheMetadata;
-    
-    /**
-     * Cache DB for compress index
-     */
-    private String kyotoCacheCompress;
 
     /**
      * Redis host adress
@@ -210,13 +179,6 @@ public class ConfigServer extends Config implements Cloneable {
         
         memoryStartSize = Integer.parseInt(p.getProperty("MEMORYSTARTSIZE", propertiesError));
 
-        kyotoApox = p.getProperty("KYOTOAPOX", propertiesError);
-        kyotoBNum = p.getProperty("KYOTOBNUM", propertiesError);
-        kyotoFUnit = p.getProperty("KYOTODFUNIT", propertiesError);
-        kyotoCacheMainIndex = p.getProperty("KYOTOCACHEMAININDEX", propertiesError);
-        kyotoCacheMetadata = p.getProperty("KYOTOCACHEMETADATA", propertiesError);
-        kyotoCacheCompress = p.getProperty("KYOTOCACHECOMPRESS", propertiesError);
-
         redisHost = p.getProperty("REDISHOST", propertiesError);
         redisPort = p.getProperty("REDISPORT", propertiesError);
     }
@@ -227,46 +189,7 @@ public class ConfigServer extends Config implements Cloneable {
                 return newC;
         }
 
-    
-    /**
-     * Compute Kyoto cache size of one database share accross all index
-     * @return MB value (format XXXMB)
-     */    
-    public String getKyotoCacheSizeForAll() {
-        int s = 1; //int s = NUMBEROFSUBSERVER;
-        int t = 1;
-        String sizeMain = getKyotoCacheMainIndex();
-        Long size = convertLongSize(sizeMain);
-        Long sizeForIndex =  (size/s)/t;
-        String sizeFull = sizeForIndex + "MB"; 
-        logger.info("KYOTOCACHE="+sizeFull);       
-        return sizeFull;
-    }    
 
-    /**
-     * Compute Kyoto cache size of one metadata index
-     * @return MB value (format XXXMB)
-     */
-    public String getKyotoCacheSizeForMetaData() {
-        int s = 1; //NUMBEROFSUBSERVER;
-        String sizeMeta = getKyotoCacheMetadata();
-        logger.info("NUMBEROFSUBSERVER="+s + "KYOTOCACHEMETADATA="+sizeMeta);
-        Long size = convertLongSize(sizeMeta);
-        Long sizeForIndex =  (size/s)/4; //3 because 1 path, 1 reverse path and 1 patchs (4 for optim)
-        return sizeForIndex + "MB";
-    }
-    
-    /**
-     * Convert a G/MB string value to a long value of MB
-     * @param sizeMain String value format X...XG or X...XMB]
-     * @return Number value
-     */
-    private Long convertLongSize(String sizeMain) {
-        sizeMain = sizeMain.replace("G", "000M"); //replace GB size by MB
-        sizeMain = sizeMain.replaceAll("[a-zA-Z]", ""); //Just keep long value in MB
-        logger.info("KYOTOCACHEMAININDEX in MB="+sizeMain);
-        return Long.parseLong(sizeMain);
-    }  
     
    public static ConfigServer getConfigServerForTest() {
        try {
@@ -508,89 +431,6 @@ public class ConfigServer extends Config implements Cloneable {
         this.memoryStartSize = memoryStartSize;
     }
 
-    /**
-     * @return the kyotoApox
-     */
-    public String getKyotoApox() {
-        return kyotoApox;
-    }
-
-    /**
-     * @param kyotoApox the kyotoApox to set
-     */
-    public void setKyotoApox(String kyotoApox) {
-        this.kyotoApox = kyotoApox;
-    }
-
-    /**
-     * @return the kyotoBNum
-     */
-    public String getKyotoBNum() {
-        return kyotoBNum;
-    }
-
-    /**
-     * @param kyotoBNum the kyotoBNum to set
-     */
-    public void setKyotoBNum(String kyotoBNum) {
-        this.kyotoBNum = kyotoBNum;
-    }
-
-    /**
-     * @return the kyotoFUnit
-     */
-    public String getKyotoFUnit() {
-        return kyotoFUnit;
-    }
-
-    /**
-     * @param kyotoFUnit the kyotoFUnit to set
-     */
-    public void setKyotoFUnit(String kyotoFUnit) {
-        this.kyotoFUnit = kyotoFUnit;
-    }
-
-    /**
-     * @return the kyotoCacheMainIndex
-     */
-    public String getKyotoCacheMainIndex() {
-        return kyotoCacheMainIndex;
-    }
-
-    /**
-     * @param kyotoCacheMainIndex the kyotoCacheMainIndex to set
-     */
-    public void setKyotoCacheMainIndex(String kyotoCacheMainIndex) {
-        this.kyotoCacheMainIndex = kyotoCacheMainIndex;
-    }
-
-    /**
-     * @return the kyotoCacheMetadata
-     */
-    public String getKyotoCacheMetadata() {
-        return kyotoCacheMetadata;
-    }
-
-    /**
-     * @param kyotoCacheMetadata the kyotoCacheMetadata to set
-     */
-    public void setKyotoCacheMetadata(String kyotoCacheMetadata) {
-        this.kyotoCacheMetadata = kyotoCacheMetadata;
-    }
-
-    /**
-     * @return the kyotoCacheCompress
-     */
-    public String getKyotoCacheCompress() {
-        return kyotoCacheCompress;
-    }
-
-    /**
-     * @param kyotoCacheCompress the kyotoCacheCompress to set
-     */
-    public void setKyotoCacheCompress(String kyotoCacheCompress) {
-        this.kyotoCacheCompress = kyotoCacheCompress;
-    }
 
     public String getRedisHost() {
         return redisHost;

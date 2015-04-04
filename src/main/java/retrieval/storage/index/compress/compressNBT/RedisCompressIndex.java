@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Compress index for Kyoto db
+ * Compress index for Redis db
  * @author Loïc Rollus
  */
 public class RedisCompressIndex extends CompressIndexNBT {
@@ -39,15 +39,15 @@ public class RedisCompressIndex extends CompressIndexNBT {
     private static Logger logger = Logger.getLogger(RedisCompressIndex.class);
 
     /**
-     * Create a compress NBT index for Kyoto
-     * @param global The main kyoto database
+     * Create a compress NBT index for Redis
+     * @param global The main Redis database
      * @param config Config server
      * @param idStorage Storage name
      * @param idTV Test vector id
      */
     public RedisCompressIndex(GlobalDatabase global, ConfigServer config, String idStorage, String idTV) {
         super(config.getIndexCompressThreshold());
-        logger.info("KyotoCompressIndexSingleFile: start");
+        logger.info("RedisCompressIndex: start");
         this.prefix = GlobalDatabase.KEY_COMPRESS_STORE + "#"+idStorage+"#"+idTV+"#";
         this.redis = (JedisPool)global.getDatabaseCompress();
        

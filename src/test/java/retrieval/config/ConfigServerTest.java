@@ -79,21 +79,7 @@ public class ConfigServerTest {
         
         //memory
         instance.setMemoryStartSize(4096);
-        assertEquals(4096, instance.getMemoryStartSize());         
-        
-        //kyoto
-        instance.setKyotoApox("6");
-        assertEquals("6", instance.getKyotoApox()); 
-        instance.setKyotoBNum("1M");
-        assertEquals("1M", instance.getKyotoBNum());         
-        instance.setKyotoFUnit("100");
-        assertEquals("100", instance.getKyotoFUnit());        
-        instance.setKyotoCacheMainIndex("512M");
-        assertEquals("512M", instance.getKyotoCacheMainIndex());            
-        instance.setKyotoCacheMetadata("50M");
-        assertEquals("50M", instance.getKyotoCacheMetadata());        
-        instance.setKyotoCacheCompress("50M");
-        assertEquals("50M", instance.getKyotoCacheCompress());
+        assertEquals(4096, instance.getMemoryStartSize());
     }
 
    

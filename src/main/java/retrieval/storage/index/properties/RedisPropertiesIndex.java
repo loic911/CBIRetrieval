@@ -52,7 +52,7 @@ public class RedisPropertiesIndex implements PicturePropertiesIndex{
     public RedisPropertiesIndex(GlobalDatabase global, String idServer) throws StartIndexException {
 
         try {
-            logger.info("KyotoCabinetPathIndexSingleFile: start");
+            logger.info("RedisPropertiesIndex: start");
             this.idServer = idServer;
             this.redis = (JedisPool)global.getDatabaseProperties();
             this.prefix = GlobalDatabase.KEY_PROPERTIES_STORE + "#" + idServer + "#";

@@ -58,7 +58,7 @@ SIZEOFINDEXQUEUE=1000000
 ###
 #######################################################
 
-# Store name: MEMORY, KYOTO, KYOTOSINGLEFILE, REDIS, NESSDB, BDB, ...
+# Store name: MEMORY, REDIS,...
 STORENAME=MEMORY
 
 # Path of index files
@@ -82,29 +82,6 @@ SYNCAFTERIMAGE=TRUE
 # Start size for only-memory index (only effect if STORENAME=MEMORY)
 MEMORYSTARTSIZE = 4096
 
-##################
-###
-### KYOTO CABINET
-###
-##################
-
-# apox -> tune_alignment : default 3 (8 = 1 << 3). DB is build and not updated (0), else more
-KYOTOAPOX=6
-
-# bnum -> tune_buckets : number of bucket (number eof entry * 2)
-KYOTOBNUM=1M
-
-# dfunit -> tune_defrag : defrag after x update (default 8): more = quick, less = heavy space
-KYOTODFUNIT=100 
-
-# Cache DB for main index
-KYOTOCACHEMAININDEX=512M
-
-# Cache DB for metadata index
-KYOTOCACHEMETADATA=40M
-
-# Cache DB for compress index
-KYOTOCACHECOMPRESS=50M
 
 ##################
 ###

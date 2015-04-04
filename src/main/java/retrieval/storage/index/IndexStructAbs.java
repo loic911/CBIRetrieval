@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Abstract class for index structure
  * Two type of index structure:
- * Kyoto/Redis/Memory/...: collection = index.get(key) than value=collection.get(subkey)
+ * Memory,...: collection = index.get(key) than value=collection.get(subkey)
  * Redis: index.get(key,subkey,value)
  * @author lrollus
  */

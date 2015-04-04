@@ -21,7 +21,6 @@ import retrieval.dist.MultiServerMessageNBT;
 import retrieval.dist.RequestPictureVisualWord;
 import retrieval.exception.CBIRException;
 import retrieval.server.globaldatabase.GlobalDatabase;
-import retrieval.server.globaldatabase.KyotoCabinetDatabase;
 import retrieval.server.globaldatabase.MemoryDatabase;
 import retrieval.server.globaldatabase.RedisDatabase;
 import retrieval.storage.Storage;
@@ -134,10 +133,7 @@ public final class RetrievalServer {
             
             if(configMain.getStoreName().equals("MEMORY")) {
                 logger.info("Init global memory database");
-               globalDatabase = new MemoryDatabase(configServer); 
-            } else if(configMain.getStoreName().equals("KYOTOSINGLEFILE")) {
-                logger.info("Init global kyoto database");
-               globalDatabase = new KyotoCabinetDatabase(configServer); 
+               globalDatabase = new MemoryDatabase(configServer);
             } else if(configMain.getStoreName().equals("REDIS")) {
                 logger.info("Init global redis database");
                 globalDatabase = new RedisDatabase(configServer);
