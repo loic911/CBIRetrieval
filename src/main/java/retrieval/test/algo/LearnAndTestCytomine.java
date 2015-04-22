@@ -51,7 +51,7 @@ public class LearnAndTestCytomine {
     Map<String,String> projectByAnnotation;// = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",1);
     Map<String,String> termByAnnotation;// = buildMapFromListing("/media/DATA_/backup/retrieval/annotationterms_filtered.csv",2);
 
-    int numberOfSearchThreads = 10;
+    int numberOfSearchThreads = 8;
 
     Queue<String> queueIndex;
     Map<String,List<String>> listIndexByProject;
@@ -65,6 +65,7 @@ public class LearnAndTestCytomine {
 
     Queue<Long> timesIndex = new ConcurrentLinkedQueue<Long>();
     Queue<Long> timesSearch = new ConcurrentLinkedQueue<Long>();
+    Queue<Long> timesSearchSingleThreaded = new ConcurrentLinkedQueue<Long>();
     Map<Long,ResultsSimilarities> results = new ConcurrentHashMap<>();
 
     RetrievalServer server;
@@ -79,14 +80,14 @@ public class LearnAndTestCytomine {
 
     public LearnAndTestCytomine() throws Exception {
         cs = new ConfigServer("config/ConfigServer.prop");
-        cs.setStoreName("REDIS");
+        cs.setStoreName("MEMORY");
         cs.setIndexPath("index");
-        cs.setNumberOfPatch(500);//200
-        cs.setNumberOfTV(5);
+        cs.setNumberOfPatch(100);//200
+        cs.setNumberOfTV(1);
 
         cc = new ConfigClient("config/ConfigClient.prop");
-        cc.setNumberOfTV(5);
-        cc.setNumberOfPatch(500);
+        cc.setNumberOfTV(1);
+        cc.setNumberOfPatch(100);
 
         System.out.println("N="+cs.getNumberOfPatch());
         System.out.println("T="+cs.getNumberOfTV());
@@ -247,6 +248,45 @@ public class LearnAndTestCytomine {
 
     }
 
+    public void searchSingle() throws Exception {
+        Queue<String> queueSearch = addAllFilesToQueue(testPath,1000);
+        int numberOfSearch = queueSearch.size();
+        System.out.println("***************************************************");
+        System.out.println("***************************************************");
+        System.out.println("***************************************************");
+        System.out.println("searchfiles="+numberOfSearch);
+        System.out.println("***************************************************");
+        System.out.println("***************************************************");
+        System.out.println("***************************************************");
+        Map<String,List<String>> storagesForAnnotation = new HashMap<>();
+        for(String searchImage : queueSearch) {
+            String imageName = new File(searchImage).getName().split("\\.")[0];
+            String project = projectByAnnotation.get(imageName);
+            String ontology = ontologyPerProject.get(project);
+            List<String> projects = projectsPerOntology.get(ontology);
+            storagesForAnnotation.put(imageName,projects);
+        }
+        RetrievalClient client = new RetrievalClient(cc, server);
+        int i = 0;
+        while (!queueSearch.isEmpty()) {
+            String path = queueSearch.poll();
+            File imageFile = new File(path);
+            String imageName = imageFile.getName().split("\\.")[0];
+            List<String> storages = null;
+
+            if(LearnAndTestCytomine.SEARCH_ON_PROJECT_WITH_SAME_ONTOLOGY) {
+                storages = storagesForAnnotation.get(imageName);
+            }
+            Long start = System.currentTimeMillis();
+            ResultsSimilarities rs = client.search(ImageIO.read(new File(path)), 15,storages);
+            timesSearchSingleThreaded.add(System.currentTimeMillis()-start);
+            if(i%10==0) {
+                System.out.println("*********************** search single thread " + (i) + "/" + (numberOfSearch) + " *************************");
+            }
+            i++;
+
+        }
+    }
 
     public void printStats() {
 
@@ -257,6 +297,13 @@ public class LearnAndTestCytomine {
                 );
 
         LongSummaryStatistics statsSearch = timesSearch.stream().
+                collect(LongSummaryStatistics::new,
+                        LongSummaryStatistics::accept,
+                        LongSummaryStatistics::combine
+                );
+
+
+        LongSummaryStatistics statsSearchSingle = timesSearchSingleThreaded.stream().
                 collect(LongSummaryStatistics::new,
                         LongSummaryStatistics::accept,
                         LongSummaryStatistics::combine
@@ -290,7 +337,7 @@ public class LearnAndTestCytomine {
             double valueFirstSameTerm = 0;
             if(resultsWithoutRequestImage.size()>0) {
                 //check if first has same term
-                String term = results.get(0).getProperties().get("term");
+                String term = resultsWithoutRequestImage.get(0).getProperties().get("term");
                 valueFirstSameTerm = term.equals(termByAnnotation.get(idImage + "")) ? 1 : 0;
             }
             statsFirst.accept(valueFirstSameTerm);
@@ -306,9 +353,9 @@ public class LearnAndTestCytomine {
                 for(int i=0;i<10;i++) {
                     //System.out.println("=> " + termByAnnotation.get(idImage+""));
                     if(i<resultsWithoutRequestImage.size()) {
-                        String term = results.get(i).getProperties().get("term");
+                        String term = resultsWithoutRequestImage.get(i).getProperties().get("term");
                         //System.out.println("====> " + term);
-                        subResults.accept(term.equals(termByAnnotation.get(idImage+""))?1:0);
+                        subResults.accept((term!=null && term.equals(termByAnnotation.get(idImage+"")))?1:0);
                     } else {
                         subResults.accept(0); //no results
                     }
@@ -355,7 +402,9 @@ public class LearnAndTestCytomine {
         System.out.println("Total time SEARCH:"+totalTimeSearch);
 
         System.out.println("ALL INDEX:"+statsIndex);
-        System.out.println("ALL SEARCH:"+statsSearch);
+        System.out.println("ALL SEARCH "+numberOfSearchThreads+" thread:"+statsSearch);
+        System.out.println("ALL SEARCH SINGLE THREAD:"+statsSearchSingle);
+
         System.out.println("************************************************************************");
         System.out.println("************************************************************************");
         System.out.println("************************************************************************");
@@ -466,7 +515,10 @@ public class LearnAndTestCytomine {
         cyto.index();
         System.gc();
         Thread.sleep(1000);
+
+        cyto.searchSingle();
         cyto.search();
+
         cyto.printStats();
     }
 
