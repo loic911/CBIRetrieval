@@ -13,7 +13,7 @@
 
         <sonar.sources>src/main</sonar.sources>
         <sonar.language>java</sonar.language>
-        <sonar.exclusions>src/main/java/retrieval/test</sonar.exclusions>
+        <sonar.exclusions>src/main/java/retrieval/test/****.java</sonar.exclusions>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
         <sonar.surefire.reportsPath>build/test/results</sonar.surefire.reportsPath>
