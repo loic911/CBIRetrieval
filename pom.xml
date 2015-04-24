@@ -128,6 +128,26 @@
     </build>
 
 
+    <properties>
+        <sonar.sources>src/main</sonar.sources>
+        <sonar.language>java</sonar.language>
+         <!--<sonar.exclusions></sonar.exclusions>-->
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 
+        <sonar.surefire.reportsPath>build/test/results</sonar.surefire.reportsPath>
+
+        <!--<sonar.jdbc.url>jdbc:postgresql://localhost/sonar</sonar.jdbc.url>
+        <sonar.jdbc.driver>org.postgresql.Driver</sonar.jdbc.driver>
+        <sonar.jdbc.username>postgres</sonar.jdbc.username>
+        <sonar.jdbc.password></sonar.jdbc.password>-->
+
+        <sonar.jdbc.url>jdbc:postgresql://localhost/sonar</sonar.jdbc.url>
+        <sonar.jdbc.driver>org.postgresql.Driver</sonar.jdbc.driver>
+        <sonar.jdbc.username>postgres</sonar.jdbc.username>
+        <sonar.jdbc.password></sonar.jdbc.password>
+        <!-- test -->
+        <sonar.host.url>http://sonar.cytomine.be</sonar.host.url>
+
+    </properties>
 
 </project>
