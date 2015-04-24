@@ -91,7 +91,6 @@ public class RedisHashTable extends HashTableIndexOptim{
                         compress.blacklistVW(entry.getKey());
                         p.del(this.prefix +entry.getKey());
                     } else {
-                        //System.out.println(this.prefix +entry.getKey() + "=>"  +String.valueOf(I) + "=" + entry.getValue());
                         p.hincrBy(this.prefix + entry.getKey(), String.valueOf(I), entry.getValue());
                         p.hincrBy(this.prefix +entry.getKey(),"-1",entry.getValue());
                     }
@@ -99,8 +98,6 @@ public class RedisHashTable extends HashTableIndexOptim{
             }
             p.sync();
         }
-
-        //try{Thread.sleep(1000000);}catch(Exception e){};
     }
 
     public String getHashValue(String mainkey, String haskey) {
@@ -127,7 +124,6 @@ public class RedisHashTable extends HashTableIndexOptim{
                 String k = searchKey.next();
                 k=prefix+k;
                 keys.add(k);
-                //System.out.println(j+" => getAllValues="+k);
                 try {
                     hgetsR.add(p.hget(k, "-1"));
                 } catch (Exception e) {
@@ -141,7 +137,7 @@ public class RedisHashTable extends HashTableIndexOptim{
             for(int i=0;i<keys.size();i++) {
                 Response<String> value = hgetsR.get(i);
                 try {
-                    if(value.get()!=null) { //????
+                    if(value.get()!=null) {
                         String[] keyParts =  keys.get(i).split("#");
                         result.put(keyParts[3], Long.parseLong(value.get()));
                     }
@@ -238,71 +234,10 @@ public class RedisHashTable extends HashTableIndexOptim{
             map.put(entry.getKey(),subMap);
 
         }
-//        System.out.println("PWET:"+(System.currentTimeMillis()-start));
         return map;
 
 
     }
-
-//    @Override
-//    public Map<String,Map<String,Map<String,ValueStructure>>> getAll(Map<String,Map<String,List<String>>> keysForTVAndForStorage) {
-//        Long start = System.currentTimeMillis();
-//        TreeMap<String,TreeMap<String,List<Response<Map<String, String>>>>> hgetAllsR = new  TreeMap<String,TreeMap<String,List<Response<Map<String, String>>>>>();
-//        try (Jedis redis = this.redis.getResource()) {
-//            Pipeline p = redis.pipelined();
-//
-//            for(Map.Entry<String,Map<String,List<String>>> entryStorage : keysForTVAndForStorage.entrySet()) {
-//                TreeMap<String,List<Response<Map<String, String>>>> hgetAllsRForTV = new  TreeMap<String,List<Response<Map<String, String>>>>();
-//                for (Map.Entry<String, List<String>> entryTV : entryStorage.getValue().entrySet()) {
-//                    List<Response<Map<String, String>>> req = new ArrayList<>();
-//                    String prefixForTV = this.subPrefix + entryStorage.getKey() + "#"+entryTV.getKey() + "#";
-//                    Iterator<String> searchKey = entryTV.getValue().iterator();
-//                    while (searchKey.hasNext()) {
-//                        String k = searchKey.next();
-//                        req.add(p.hgetAll(prefixForTV + k));
-//
-//                    }
-//                    hgetAllsRForTV.put(entryTV.getKey(), req);
-//                }
-//
-//
-//                String storage = entryStorage.getKey();
-//                hgetAllsR.put(storage,hgetAllsRForTV);
-//            }
-//            p.sync();
-//        }
-//
-//        TreeMap<String,Map<String,Map<String,ValueStructure>>> map = new TreeMap<String,Map<String,Map<String,ValueStructure>>>();
-//
-//        for(Map.Entry<String,TreeMap<String,List<Response<Map<String, String>>>>> entry : hgetAllsR.entrySet()) {
-//            String storage = entry.getKey();
-//            TreeMap<String,Map<String,ValueStructure>> mapTV = new TreeMap<String,Map<String,ValueStructure>>();
-//            for(Map.Entry<String,List<Response<Map<String, String>>>> entryTV : entry.getValue().entrySet()) {
-//                List<Response<Map<String, String>>> value = entryTV.getValue();
-//                List<String> visualwords = keysForTVAndForStorage.get(storage).get(entry.getKey());
-//                Map<String,ValueStructure> subMap = new HashMap<String,ValueStructure>();
-//                int k=0;
-//                for(int i=0;i<value.size();i++) {
-//                    Map<String, String> submap = value.get(i).get();
-//                    if(submap!=null) {
-//                        String nbt = submap.get("-1");
-//                        if(nbt!=null)
-//                            subMap.put(visualwords.get(k), new ValueStructure(config, submap, Long.parseLong(nbt)));
-//                    }
-//                    k++;
-//                }
-//                mapTV.put(entry.getKey(),subMap);
-//            }
-//            map.put(storage,mapTV);
-//
-//
-//        }
-//        System.out.println("PWET:"+(System.currentTimeMillis()-start));
-//        return map;
-//
-//
-//    }
-
 
     public void delete(String key) {
         try (Jedis redis = this.redis.getResource()) {
@@ -335,7 +270,6 @@ public class RedisHashTable extends HashTableIndexOptim{
                 }
             }
         }
-        //try{Thread.sleep(1000000);}catch(Exception e){};
     }
 
 
@@ -346,12 +280,8 @@ public class RedisHashTable extends HashTableIndexOptim{
 
             while(it.hasNext()) {
                 String key = it.next();
-//            System.out.println("key="+key + " id="+id);
-//            System.out.println();
                 Map<String, String> submap = redis.hgetAll(key);
-//            System.out.println("submap="+submap);
                 if(submap.containsKey(id+"")) return true;
-                //try{Thread.sleep(10000);}catch(Exception e){};
             }
         }
 
