@@ -7,6 +7,7 @@ package retrieval;
 
 import redis.clients.jedis.Jedis;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,7 @@ public class RedisInstance {
         for(int i=0;i<numberOfRedis;i++) {
             int portRedis = PORT+i;
             System.out.println("Redis: open database localhost:" + portRedis);
+            new File(DATA_PATH).mkdirs();
             String command = REDIS_EXEC_PATH + " " +  REDIS_CONF + " --port " + portRedis + " --dir "+DATA_PATH+" --dbfilename " + portRedis+".db";
             System.out.println(command);
             processRedis.add(runtime.exec(command));
