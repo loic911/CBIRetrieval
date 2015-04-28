@@ -1,14 +1,15 @@
 # CBIRetrieval
 
-Documentation:
+## Documentation
+
 https://github.com/loic911/CBIRetrieval/wiki
 
-Installation:
+## Installation
 
     Download last release from https://github.com/loic911/CBIRetrieval/releases
     unzip CBIRetrieval-*.zip
     
-Quickstart:
+## Quickstart
 
     # Start 1 server on port 1234
     bin/server.sh config/ConfigServer.prop 1234 &
@@ -27,3 +28,11 @@ Quickstart:
     1 ====> 1.3519999999999987E-4 //first result is the same image, no surprise :-)
     5 ====> 4.633333333333334E-6
     2 ====> 3.168548387096774E-6
+
+# How to run test
+
+* Download redis
+* make
+* make install
+* copy src/redis-server into $CBIRetrievalPATH/testdata/redis
+
