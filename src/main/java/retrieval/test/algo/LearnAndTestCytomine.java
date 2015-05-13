@@ -38,7 +38,7 @@ public class LearnAndTestCytomine {
     //static int MAX_INDEX = 100; //Integer.MAX_VALUE;
     //static int MAX_SEARCH = 10; //Integer.MAX_VALUE;
 
-    static boolean SEARCH_ON_PROJECT_WITH_SAME_ONTOLOGY = true;
+    static boolean SEARCH_ON_PROJECT_WITH_SAME_ONTOLOGY = false;
 
     //static boolean SINGLE_STORAGE = false; => TODO IMPLEMENT
 
@@ -82,12 +82,12 @@ public class LearnAndTestCytomine {
         cs = new ConfigServer("config/ConfigServer.prop");
         cs.setStoreName("MEMORY");
         cs.setIndexPath("index");
-        cs.setNumberOfPatch(100);//200
-        cs.setNumberOfTV(1);
+        cs.setNumberOfPatch(500);//200
+        cs.setNumberOfTV(5);
 
         cc = new ConfigClient("config/ConfigClient.prop");
-        cc.setNumberOfTV(1);
-        cc.setNumberOfPatch(100);
+        cc.setNumberOfTV(5);
+        cc.setNumberOfPatch(500);
 
         System.out.println("N="+cs.getNumberOfPatch());
         System.out.println("T="+cs.getNumberOfTV());

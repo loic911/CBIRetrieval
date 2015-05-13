@@ -144,6 +144,9 @@ public class RetrievalClient implements RetrievalClientInterface{
      * @throws CBIRException Error during search
      */
     public ResultsSimilarities search(BufferedImage img, int k,List<String> storages) throws CBIRException {
+        if(storages==null) {
+            storages = new ArrayList<>();
+        }
         return this.search(img, configClient.getNumberOfPatch(), k,(String[])storages.toArray(new String[storages.size()]));
     }    
     
